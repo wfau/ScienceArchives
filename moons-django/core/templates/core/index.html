@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container flex-grow-1">
+
+    <div class="row m-4">
+        <div class="col d-flex flex-column justify-content-between">
+            <h1>MOONS</h1>
+            <p>
+                MOONS will be a multi-objects spectrograph mounted at a Nasmyth focus at the VLT. It will have ~1000 fibers deployable over a field of view of ~500 square arcmin. The total wavelength coverage is from 0.6 micron to 1.8 micron, accessed in medium and high resolution modes. In the medium resolution mode (R~4,000-6,000) the entire wavelength range 0.65-1.8 micron is observed simultaneously, while the high resolution mode covers simultaneously two selected spectral regions: one around the CaII triplet (at R~9,000) to measure radial velocities, a second at  R~20,000  in the H-band, for detailed measurements of chemical abundances.
+            </p>
+        </div>
+        <div class="col-sm-3 col-12">
+            <img class="img-fluid" src="{% static 'images/MOONS-logo.jpg' %}" alt="MOONS logo">
+        </div>
+    </div>
+    <div class="row m-4">
+        <p class="lead">Scientific Objectives</p>
+        <p>
+            MOONS will be a versatile instrument that will provide ESO and the astronomical community with the observational power necessary to tackle a wide range of Galactic, extragalactic and cosmological studies. Some of the main science cases that are driving the MOONS design are the following:
+        </p>
+        <dl class="row">
+            <dt class="col-sm-3">Galactic archeology.</dt> 
+            <dd class="col-sm-9">
+                The study of the resolved stellar populations of the Milky Way and other Local Group galaxies can provide us with a fossil record of their chemo-dynamical and star-fomation histories. MOONS will provide a crucial follow-up for the Gaia mission and for Galactic surveys with the VISTA telescope, delivering accurate radial velocities, metallicitites and chemical abundances for several million stars. The near-IR coverage of MOONS will allow to investigate the nature of the heavily-obscured regions of the Galactic bulge.
+            </dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-3">The growth of galaxies.</dt>
+            <dd class="col-sm-9">
+            Tracing the assembly history of galaxies over cosmic time remains a primary goal for observational and theoretical studies of the Universe. Exploiting the large multiplex and wavelength coverage of MOONS will allow for the first time to obtain high quality spectra for a statistically significant number of galaxies (~1 million) at z>1.
+            </dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-3">The first galaxies.</dt>
+            <dd class="col-sm-9">
+            The light from the first galaxies, just a few handred million years after the Big Bang is of great importance to understand the cosmic reionization. The unique combination of the 8m VLT aperture, wide-area coverage, and near-IR spectroscopy offered by MOONS will provide accurate distances, relative veleocities and emission-line diagnositcs for statistical samples of z>7 galaxies.
+            </dd>
+        </dl>
+            Finally, MOONS will provide the essential deep spectroscopic follow-up of current and future optical and near-IR imaging surveys (e.g. VISTA, VST, Pan-STARRS, LSST) and space mission (e.g. WISE, Athena).
+            
+            </p>
+    </div>
+    
+</div>
+{% endblock %}
