@@ -14,22 +14,32 @@ Software repository for the curation and website hosting of the WFAU Science Arc
 * Website pages and server backend code
 
 ## Dependencies
-* Python 3.12.4
+* Python 3.12.8
 ### Python libraries
-* psycopg-3.2.1
-* astropy-6.1.2
-* numpy-2.0.1
-* scipy-1.14.0
+* psycopg-3.2.4
+* astropy-7.0.0
+* numpy-2.2.2
+* scipy-1.15.1
 
 ## Installation
 
 ### VM
 
-TBD
+See https://github.com/wfau/ScienceArchives/wiki/Server-Configuration-Details
 
 ### Python library installation
 
-Use pip
+Python is installed from miniconda3 in /home/dev-env
+
+Enable the correct Python environment via:
+
+    source /home/dev-env/miniconda3/bin/activate
+
+Use pip3 to install:
+
+    pip3 install psycopg
+    pip3 install astropy
+    pip3 install scipy
 
 ### Code installation
 
