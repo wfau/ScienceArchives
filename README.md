@@ -38,6 +38,7 @@ Enable the correct Python environment via:
 Use pip3 to install:
 
     pip3 install psycopg
+    pip3 install "psycopg[binary]"
     pip3 install astropy
     pip3 install scipy
 
