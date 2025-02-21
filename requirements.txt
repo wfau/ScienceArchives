@@ -1,4 +1,10 @@
+adbc-driver-manager==1.4.0
+adbc-driver-sqlite==1.4.0
+celery==5.4.0
 crispy-bootstrap5==2024.10
 Django==5.1.4
 django-bootstrap5==24.3
 django-crispy-forms==2.3
+django-tables2==2.7.5
+importlib_resources==6.5.2
+pyarrow==19.0.0

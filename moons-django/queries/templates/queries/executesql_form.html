@@ -1,0 +1,182 @@
+{% extends 'core/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'queries/tree.css' %}">
+<style>
+/* Split the screen in half */
+.split {
+  height: 90%;
+  position: fixed;
+  z-index: 1;
+  overflow: scroll;
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+  width: 30%;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+  width: 70%;
+}
+</style>
+
+<style>
+    /* Set editor dimensions */
+    #editor {
+        height: 40vh;
+        width: 100%;
+    }
+
+    /* Stretch editor to fit inside its containing div */
+    .cm-editor {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+<script>
+    function populateQueryField(obj) {
+        console.log('on submit')
+        return false;
+        // const editor = document.getElementById("editor")
+        // console.log(editor.state.doc.toString())
+        // var contents = document.querySelector('input[name=query]');
+        // contents.value = editor.state.doc.toString()
+    };
+</script>
+
+
+<div class="split left p-4">
+    <h5>Database Schema</h5>
+    <div>
+        <ul class="tree">
+        <li>
+            <details open>
+            <summary>GES</summary>
+            <ul>
+                <li>
+                    <details open>
+                        <summary>gesiDR5</summary>
+                        <ul id="gesiDR5">
+                        </ul>
+                    </details>
+                </li>
+                </ul>
+            </details>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="split right p-4">
+
+    <div class="">
+
+        <h1>Freeform SQL Query</h1>
+    
+        <p>This form allows you to submit an SQL query to the MOONS database.</p>
+    
+    </div>
+    
+    <div class="">
+
+        <form method="post" enctype="multipart/form-data" id="query-form">
+
+            <div id="div_id_editor" class="mb-3">
+                <label for="editor" class="form-label">
+                    Query
+                </label>
+                <div id="editor" class="form-control"></div>
+            </div>
+
+            {% crispy form %}
+
+            <input type="submit" class="btn btn-primary" value="Submit" />
+
+        </form>
+
+    </div>
+
+
+</div>
+
+<script src="{% static 'cm6.bundle.js' %}"></script>
+
+<script>
+(() => {
+    document.body.addEventListener('dragstart', (e) => {
+        const data = e.target.innerText
+        e.dataTransfer.setData('text', data);
+    });
+
+    const codeSchema = {}
+    fetch('{% static "queries/gesiDR5.json" %}')
+    .then(response => {
+        return response.json()
+    })
+    .then(schema => {
+        const gesiDR5 = document.getElementById('gesiDR5')
+        // console.log(schema)
+        var listText = ''
+        for (let tableName of Object.keys(schema).sort()) {
+            let tableData = schema[tableName]
+            codeSchema[tableName] = []
+            var rowText = `<li><details><summary><span draggable="true">${tableName}</span></summary><ul>`
+            for (let col of tableData.data) {
+                rowText += `<li><span draggable="true">${col[0]}</span>: <span class="fst-italic">${col[1]}</span></li>`
+                codeSchema[tableName].push(col[0])
+            }
+            rowText += '</ul></details></li>\n'
+            listText += rowText
+        }
+        gesiDR5.innerHTML = listText
+
+        // get current theme (light or dark)
+        theme = document.documentElement.getAttribute('data-bs-theme')
+        if (theme == 'auto') {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+        let options = (theme == 'dark') ? {oneDark: true} : {}
+        // initialise editor
+        const initialState = cm6.createEditorState(
+            "SELECT ",
+            {
+                upperCaseKeywords: true,
+                schema: codeSchema,
+            },
+            options,
+        );
+        const view = cm6.createEditorView(initialState, document.getElementById("editor"));
+
+        document
+            .querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    var theme = toggle.getAttribute('data-bs-theme-value')
+                    if (theme == 'auto') {
+                        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                    }
+                    cm6.updateTheme(view, theme === 'dark')
+                })
+            })
+
+        // on submission set the contents of the query field to the editor document
+        var form = document.getElementById("query-form");
+        form.addEventListener('submit', () => {
+            const editor = document.getElementById("editor")
+            const contents = document.querySelector('input[name=query]');
+            contents.value = view.state.doc.toString()
+        });
+
+     })
+})()
+</script>
+    
+{% endblock %}

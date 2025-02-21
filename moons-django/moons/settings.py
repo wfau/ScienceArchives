@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
+    'django_tables2',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'core',
+    'queries',
 ]
 
 MIDDLEWARE = [
@@ -124,4 +128,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+CELERY_TIMEZONE = 'Europe/London'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 10800
+
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
+
+LOCAL_FILE_DIR = BASE_DIR / 'files'

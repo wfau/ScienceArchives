@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+
+<div class="container p-4">
+
+    {% render_table table %}
+
+</div>
+
+{% endblock %}

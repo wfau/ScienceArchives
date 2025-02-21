@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container p-4">
+
+    <div class="row">
+        <div class="col-3 lead">Query</div>
+        <div class="col font-monospace border rounded p-2">
+            {{ object.query | linebreaksbr }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">Status</div>
+        <div class="col">{{ object.complete_status }}</div>
+    </div>
+    {% if object.started %}
+    <div class="row">
+        <div class="col-3">Start</div>
+        <div class="col">{{ object.started | date:'d/m/Y H:i' }}</div>
+    </div>
+    {% endif %}
+    {% if object.completed %}
+    <div class="row">
+        <div class="col-3">End</div>
+        <div class="col">{{ object.completed | date:'d/m/Y H:i' }}</div>
+    </div>
+    {% endif %}
+    {% if object.results_error %}
+    <div class="row">
+        <div class="col-3">Error</div>
+        <div class="col font-monospace border rounded p-2">{{ object.results_error | linebreaksbr }}</div>
+    </div>
+    {% endif %}
+
+    {% if object.results_file %}
+    <div>
+        <table class="table table-bordered table-striped table-hover table-sm" id="results-table">
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.1/datatables.min.css" rel="stylesheet">
+<!-- <link href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.css" rel="stylesheet"> -->
+<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.1/datatables.min.js"></script>
+
+<script>
+(() => {
+    fetch('{% url "queries:query-result" object.pk %}')
+    .then(response => {
+        return response.json()
+    })
+    .then(results => {
+        console.log(results)
+        // table_text = ''
+        // for (const row of results['data']) {
+        //     table_text += "<tr>"
+        //     for (const col of row) {
+        //         table_text += `<td>${col}</td>`
+        //     }
+        //     table_text += "</tr>"
+        // }
+        // console.log(table_text)
+        // document.getElementById('results-body').innerHTML = table_text
+        const columns = []
+        for (const col of results['schema']) {
+            columns.push({title: col[0]})
+        }
+        console.log('construct table')
+        let table = new DataTable(
+            '#results-table', {
+                data: results['data'],
+                columns: columns,
+                order: [],
+                language: {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ rows",
+                    "lengthMenu": "Show _MENU_ rows",
+                }
+            }
+        );
+    })
+})()
+</script>
+
+{% endblock %}
