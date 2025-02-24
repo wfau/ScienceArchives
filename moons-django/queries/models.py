@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from django.conf import settings
 from django.db import models
@@ -10,7 +11,7 @@ class ExecuteSQL(models.Model):
 
     StatusType = models.TextChoices("StatusType", "CREATED RUNNING COMPLETED")
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     query = models.TextField(blank=True, null=True)
     timeout = models.PositiveSmallIntegerField(null=True, blank=True)
     format = models.CharField(max_length=127, null=True, blank=True)
@@ -29,3 +30,7 @@ class ExecuteSQL(models.Model):
                 return 'Success'
         else:
             return self.get_status_display()
+
+class AnonymousQuery(models.Model):
+    sqlquery = models.ForeignKey(ExecuteSQL, on_delete=models.CASCADE)
+    slug = models.UUIDField(unique=True, default=uuid.uuid4)

@@ -53,12 +53,12 @@
 
 <script>
 (() => {
-    fetch('{% url "queries:query-result" object.pk %}')
+    fetch('{{ resulturl }}')
     .then(response => {
         return response.json()
     })
     .then(results => {
-        console.log(results)
+        // console.log(results)
         // table_text = ''
         // for (const row of results['data']) {
         //     table_text += "<tr>"

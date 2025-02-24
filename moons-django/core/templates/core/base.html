@@ -28,8 +28,12 @@
                   Freeform SQL
                 </a>
                 <ul class="dropdown-menu">
+                  {% if user.is_authenticated %}
                   <li><a class="dropdown-item" href="{% url 'queries:query-list' %}">Your Queries</a></li>
-                  <li><a class="dropdown-item" href="{% url 'queries:query-create' %}">New</a></li>
+                  <li><a class="dropdown-item" href="{% url 'queries:query-create' %}">New Query</a></li>
+                  {% else %}
+                  <li><a class="dropdown-item" href="{% url 'queries:anonymous-query-create' %}">New Query</a></li>
+                  {% endif %}
                 </ul>
               </li>
               <li class="nav-item dropdown">
