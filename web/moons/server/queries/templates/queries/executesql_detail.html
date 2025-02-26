@@ -70,8 +70,8 @@
         // console.log(table_text)
         // document.getElementById('results-body').innerHTML = table_text
         const columns = []
-        for (const col of results['schema']) {
-            columns.push({title: col[0]})
+        for (const col of results['columns']) {
+            columns.push({title: col})
         }
         console.log('construct table')
         let table = new DataTable(

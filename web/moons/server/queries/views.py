@@ -54,10 +54,9 @@ def get_results(results_file):
         try:
             table = read_table(results_file)
             if table:
-                schema = to_json(table.schema)
                 df = table.to_pandas()
                 result = {
-                    'schema': schema,
+                    'columns': table.colnames,
                     'data': df.to_dict(orient='split', index=False)['data'],
                 }
                 return result
