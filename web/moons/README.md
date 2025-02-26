@@ -14,6 +14,7 @@ Create a files directory `server/files/moons-web` for storing query results.
 Build the image:
 ```
 docker compose build
+```
 
 Start the containers with django, database, celery worker, celerybeat:
 ```
