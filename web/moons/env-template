@@ -1,0 +1,12 @@
+DEBUG=1
+SECRET_KEY=SECRET_KEY_HERE
+ALLOWED_HOSTS=*
+
+DB_ENGINE=django.db.backends.postgresql
+DB_DATABASE=moons
+DB_USER=moons
+DB_PASSWORD=moonspassword
+DB_HOST=db
+DB_PORT=5432
+
+CELERY_BROKER=amqp://rabbitmq:5672/
