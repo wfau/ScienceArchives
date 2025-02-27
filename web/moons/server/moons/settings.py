@@ -126,6 +126,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -143,8 +146,8 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 
 LOCAL_FILE_DIR = BASE_DIR / 'files' / 'moons-web'
 QUERY_DATABASE = {
-    'CONNECTION_STRING': 'file:///app/resources/mock-gesiDR5.sqlite3',
-    'DRIVER': 'adbc_driver_sqlite.dbapi',
+    'CONNECTION_STRING': os.environ.get('QUERY_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
+    'DRIVER': os.environ.get('QUERY_DB_DRIVER', 'adbc_driver_sqlite.dbapi'),
     # 'CONNECTION_STRING': 'postgresql://postgres:12345@localhost:5432/',
     # 'DRIVER': 'adbc_driver_postgresql.dbapi',
 }

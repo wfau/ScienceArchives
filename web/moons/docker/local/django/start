@@ -6,5 +6,15 @@ set -o nounset
 
 python manage.py migrate
 python manage.py collectstatic --no-input
+
+# create a superuser if required
+if [ -v DJANGO_SUPERUSER_USERNAME ] && [ -v DJANGO_SUPERUSER_PASSWORD ] && [ -v DJANGO_SUPERUSER_EMAIL ]; then
+    # check if user exists - don't overwrite
+    userexists=$(python manage.py shell -c "from django.contrib.auth.models import User; print(User.objects.filter(is_superuser=True, username='${DJANGO_SUPERUSER_USERNAME}').exists())")
+    if [ "$userexists" = "False" ]; then
+        echo "Create superuser for Django"
+        python manage.py createsuperuser --no-input
+    fi
+fi
 # python manage.py runserver 0.0.0.0:8000
 gunicorn moons.wsgi --bind 0.0.0.0:8000

@@ -9,4 +9,12 @@ DB_PASSWORD=moonspassword
 DB_HOST=db
 DB_PORT=5432
 
+QUERY_DB_DRIVER=adbc_driver_sqlite.dbapi
+QUERY_DB_CONNECTION=file:///app/resources/mock-gesiDR5.sqlite3
+
 CELERY_BROKER=amqp://rabbitmq:5672/
+
+# optional - all are required if creating a superuser
+DJANGO_SUPERUSER_NAME=moons
+DJANGO_SUPERUSER_PASS=somepass999
+DJANGO_SUPERUSER_EMAIL=someone@example.com
