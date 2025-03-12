@@ -8,34 +8,34 @@
 
     <div class="row">
         <div class="col-3 lead">Query</div>
-        <div class="col font-monospace border rounded p-2">
+        <div class="col font-monospace border rounded p-2 m-2">
             {{ object.query | linebreaksbr }}
         </div>
     </div>
-    <div class="row">
+    <div class="row my-3">
         <div class="col-3">Status</div>
-        <div class="col">{{ object.complete_status }}</div>
+        <div class="col">
+            <div class="h5">
+                <span id="job-badge" class="badge text-bg-secondary p-2">
+                    <span id="job-spinner" class="d-none spinner-border spinner-border-sm pe-2" aria-hidden="true"></span>
+                    <span id="job-status" role="status">{{ object.current_status }}</span>
+                </span>
+            </div>
+        </div>
     </div>
-    {% if object.started %}
-    <div class="row">
+    <div id="div-started" class="row{% if not object.started %} d-none{% endif %}">
         <div class="col-3">Start</div>
-        <div class="col">{{ object.started | date:'d/m/Y H:i' }}</div>
+        <div id="job-started" class="col">{{ object.started | date:'d/m/Y H:i' }}</div>
     </div>
-    {% endif %}
-    {% if object.completed %}
-    <div class="row">
+    <div id="div-completed" class="row{% if not object.completed %} d-none{% endif %}">
         <div class="col-3">End</div>
-        <div class="col">{{ object.completed | date:'d/m/Y H:i' }}</div>
+        <div id="job-completed" class="col">{{ object.completed | date:'d/m/Y H:i' }}</div>
     </div>
-    {% endif %}
-    {% if object.results_error %}
-    <div class="row">
+    <div id="div-error" class="row{% if not object.results_error %} d-none{% endif %}">
         <div class="col-3">Error</div>
-        <div class="col font-monospace border rounded p-2">{{ object.results_error | linebreaksbr }}</div>
+        <div id="job-error" class="col font-monospace border rounded p-2 m-2">{{ object.results_error | linebreaksbr }}</div>
     </div>
-    {% endif %}
 
-    {% if object.results_file %}
     <div>
         <table class="table table-bordered table-striped table-hover table-sm" id="results-table">
             <thead>
@@ -44,36 +44,81 @@
             </thead>
         </table>
     </div>
-    {% endif %}
 </div>
 
 <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.1/datatables.min.css" rel="stylesheet">
-<!-- <link href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.css" rel="stylesheet"> -->
 <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.1/datatables.min.js"></script>
 
 <script>
-(() => {
-    fetch('{{ resulturl }}')
+
+const datetimeFormat = new Intl.DateTimeFormat("en-GB", {dateStyle: "short", timeStyle: "short"})
+const fetchStatus = (updateStatus) => {
+    return fetch('{{ statusurl }}')
     .then(response => {
         return response.json()
     })
     .then(results => {
         // console.log(results)
-        // table_text = ''
-        // for (const row of results['data']) {
-        //     table_text += "<tr>"
-        //     for (const col of row) {
-        //         table_text += `<td>${col}</td>`
-        //     }
-        //     table_text += "</tr>"
-        // }
-        // console.log(table_text)
-        // document.getElementById('results-body').innerHTML = table_text
+        if (results['started']) {
+            $('#div-started').removeClass('d-none')
+            $('#job-started').text(datetimeFormat.format(new Date(results['started'])))
+        }
+        if (results['completed']) {
+            $('#div-completed').removeClass('d-none')
+            $('#job-completed').text(datetimeFormat.format(new Date(results['completed'])))
+        }
+        if (results['results_error']) {
+            console.log('has')
+            $('#div-error').removeClass('d-none')
+            $('#job-error').html(results['results_error'])
+        }
+        const status = results['status']
+        $('#job-status').text(status)
+        $("#job-badge").removeClass();
+        if (status == 'Queued') {
+            $('#job-spinner').removeClass('d-none')
+            $('#job-badge').addClass('badge text-bg-warning p-2')
+        }
+        else if (status == 'Running') {
+            $('#job-spinner').removeClass('d-none')
+            $('#job-badge').addClass('badge text-bg-primary p-2')
+        }
+        else if (status == 'Success' || status == 'Error') {
+            $('#job-spinner').addClass('d-none')
+            if (status == 'Success') {
+                $('#job-badge').addClass('badge text-bg-success p-2')
+            }
+            if (status == 'Error') {
+                $('#job-badge').addClass('badge text-bg-danger p-2')
+            }
+            clearInterval(updateStatus)
+            return true
+        }
+        return false
+    })
+    .then((isComplete) => {
+        // console.log(`is complete? ${isComplete}`)
+        if (isComplete) {
+            fetchResults()
+        }
+        return isComplete
+    })
+}
+
+const fetchResults = () => {
+    fetch('{{ resulturl }}')
+    .then(response => {
+        return response.json()
+    })
+    .then(results => {
+        if (!('columns' in results)) {
+            return
+        }
         const columns = []
         for (const col of results['columns']) {
             columns.push({title: col})
         }
-        console.log('construct table')
+        // console.log('construct table')
         let table = new DataTable(
             '#results-table', {
                 data: results['data'],
@@ -86,6 +131,19 @@
             }
         );
     })
+
+}
+(() => {
+    fetchStatus().then((isComplete) => {
+        // console.log(`is complete? ${isComplete}`)
+        if (!isComplete) {
+            const updateStatus = setInterval(function () {
+                fetchStatus(updateStatus)
+            }, 1000);
+        }
+    })
+
+    // get results table if ready
 })()
 </script>
 

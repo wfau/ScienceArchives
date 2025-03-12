@@ -22,14 +22,16 @@ class ExecuteSQL(models.Model):
     results_file = models.CharField(max_length=1023, blank=True, null=True)
     results_error = models.TextField(blank=True, null=True)
 
-    def complete_status(self):
+    @property
+    def current_status(self):
         if self.status == ExecuteSQL.StatusType.COMPLETED:
             if self.results_error:
                 return 'Error'
             else:
                 return 'Success'
-        else:
-            return self.get_status_display()
+        elif self.status == ExecuteSQL.StatusType.CREATED:
+            return 'Queued'
+        return self.get_status_display()
 
 class AnonymousQuery(models.Model):
     sqlquery = models.ForeignKey(ExecuteSQL, on_delete=models.CASCADE)

@@ -11,7 +11,9 @@ urlpatterns = [
     path('query', views.QueryListView.as_view(), name='query-list'),
     path('query/<int:pk>', views.QueryDetailView.as_view(), name='query-detail'),
     path('query/result/<int:pk>', views.QueryResultView.as_view(), name='query-result'),
+    path('query/status/<int:pk>', views.QueryStatusView.as_view(), name='query-status'),
     path('query/an', views.AnonymousQueryCreateView.as_view(), name='anonymous-query-create'),
     path('query/an/<slug>', views.AnonymousQueryDetailView.as_view(), name='anonymous-query-detail'),
     path('query/an/result/<slug>', views.AnonymousQueryResultView.as_view(), name='anonymous-query-result'),
+    path('query/an/status/<slug>', views.AnonymousQueryStatusView.as_view(), name='anonymous-query-status'),
 ]
