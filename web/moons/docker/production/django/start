@@ -4,7 +4,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-mkdir -p ./files/moons-web/
+mkdir -p ./files
 python manage.py migrate
 python manage.py collectstatic --no-input
 
@@ -17,5 +17,6 @@ if [ -v DJANGO_SUPERUSER_USERNAME ] && [ -v DJANGO_SUPERUSER_PASSWORD ] && [ -v 
         python manage.py createsuperuser --no-input
     fi
 fi
-python manage.py runserver 0.0.0.0:8000
-# gunicorn moons.wsgi --bind 0.0.0.0:8000
+
+# python manage.py runserver 0.0.0.0:8000
+gunicorn moons.wsgi --bind 0.0.0.0:8000

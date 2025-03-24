@@ -1,0 +1,16 @@
+192.41.122.237, 192.41.122.237:80 {
+
+	tls internal
+
+	encode zstd gzip
+
+	handle_path /static/* {
+		file_server {
+			root "/app/staticfiles"
+		}
+	}
+
+	handle {
+		reverse_proxy web:8000
+	}
+}
