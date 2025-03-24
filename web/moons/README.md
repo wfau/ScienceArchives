@@ -87,6 +87,8 @@ Start docker compose in detached mode, running containers with django, database,
 docker compose up -d
 ```
 
+In local deployment, access the server at http://localhost:9000.
+
 ### Shut down
 
 Stop containers:

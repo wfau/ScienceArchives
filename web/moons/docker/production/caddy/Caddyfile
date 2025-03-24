@@ -1,16 +1,35 @@
-192.41.122.237, 192.41.122.237:80 {
+{
+    fallback_sni 192.41.122.237
+}
+
+:80 {
+
+	encode zstd gzip
+
+	handle_path /static/* {
+			file_server {
+					root "/app/staticfiles"
+			}
+	}
+
+	handle {
+			reverse_proxy web:8000
+	}
+}
+
+192.41.122.237 {
 
 	tls internal
 
 	encode zstd gzip
 
 	handle_path /static/* {
-		file_server {
-			root "/app/staticfiles"
-		}
+			file_server {
+					root "/app/staticfiles"
+			}
 	}
 
 	handle {
-		reverse_proxy web:8000
+			reverse_proxy web:8000
 	}
 }
