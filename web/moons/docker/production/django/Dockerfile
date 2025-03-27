@@ -8,6 +8,7 @@ RUN apt-get update
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 RUN pip install "psycopg[binary]"
+RUN pip install mozilla-django-oidc
 
 COPY ./docker/production/django/start /start
 RUN chmod +x /start
