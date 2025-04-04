@@ -1,7 +1,7 @@
 import pytest
 from pyspark.testing import assertDataFrameEqual
 from pyspark.sql import SparkSession
-from array_columns import transform_passbands, pivot_aggregate_col, merge_all, make_array_cols
+from array_columns import _transform_passbands, _pivot_aggregate_col, _merge_all, make_array_cols
 
 
 @pytest.fixture
@@ -33,7 +33,7 @@ def sample_data(spark_context):
 
 def test_transform_passbands(sample_data, spark_context):
 
-    actual = transform_passbands(sample_data, filter_col="filterID", new_col_name="passband")
+    actual = _transform_passbands(sample_data, filter_col="filterID", new_col_name="passband")
     expected = spark_context.createDataFrame(
         [
         (1, 1, 1.234, 2.567, "Z"),
@@ -55,10 +55,10 @@ def test_transform_passbands(sample_data, spark_context):
 
     assertDataFrameEqual(actual, expected)
 
-def test_pivot_aggregate_columns(sample_data, spark_context):
-    df = transform_passbands(sample_data, filter_col="filterID", new_col_name="passband")
+def test_pivot_aggregate_col(sample_data, spark_context):
+    df = _transform_passbands(sample_data, filter_col="filterID", new_col_name="passband")
     grouped = df.groupBy("sourceID")
-    actual = pivot_aggregate_col(grouped, col_name="mjd", pivot_on="passband")
+    actual = _pivot_aggregate_col(grouped, key="sourceID", col_name="mjd", pivot_on="passband")
     expected = spark_context.createDataFrame(
     [
         (1, [7.234], [5.234], [9.234], [3.234], [1.234]),       
@@ -69,7 +69,7 @@ def test_pivot_aggregate_columns(sample_data, spark_context):
     
     assertDataFrameEqual(actual, expected)
 
-def test_merge_all(spark_context, sample_data):
+def test_merge_all(spark_context):
 
     agg_df = spark_context.createDataFrame(
         [
@@ -82,12 +82,9 @@ def test_merge_all(spark_context, sample_data):
     df2 = agg_df.select("id", "col2")
     df3 = agg_df.select("id", "col3")
 
-    merged = merge_all([df1, df2, df3], "id")
+    merged = _merge_all([df1, df2, df3], "id")
 
     assertDataFrameEqual(merged, agg_df)
-
-
-
 
 def test_make_array_cols(spark_context, sample_data):
     expected = spark_context.createDataFrame(
