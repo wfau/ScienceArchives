@@ -37,20 +37,25 @@ def _merge_all(aggregated_dfs: list[sql.DataFrame],
     return reduce(lambda df1, df2: df1.join(df2, on=join_key), aggregated_dfs)
 
 
-def make_array_cols(df: sql.DataFrame, key: str, filter_col:str) -> sql.DataFrame:
+def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: str = None) -> sql.DataFrame:
     """Transform df to array-valued columns.
 
     Args:
         df (sql.DataFrame): Dataframe in wide format.
         key (str): Unique key to group by.
-        filter_col (str): Column (int) containing passbands to pivot on
+        filter_col (str): Column (int) containing passbands to pivot on.
+        order_by (str): Column to sort data by (thus sorting resulting arrays on this column).
 
     Returns:
         sql.DataFrame: Dataframe with array-valued columns.
     """
 
-    assert key in df.columns, f"Key {key} not in columns of dataframe {df}"
-    assert filter_col in df.columns, f"Filter columns {filter_col} not in columns of dataframe {df}"
+    for col in [key, filter_col]:
+        assert col in df.columns, f"Column {col} not in dataframe {df}"
+
+    if order_by:
+        df = df.orderBy(order_by)
+        assert order_by in df.columns, f"Column {order_by} not in dataframe {df}"
 
     grouped = _transform_passbands(df = df, 
                                    filter_col=filter_col, 
