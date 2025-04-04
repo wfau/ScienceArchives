@@ -1,5 +1,15 @@
 from pyspark import sql
 from functools import reduce
+import re
+
+def _cast_to_single_floats(df: sql.DataFrame, pattern:str):
+    """Cast columns that match pattern to single precision floats for efficient storage"""
+    df = df.select(
+    *(
+        (sql.functions.col(c).cast("float").alias(c) if re.match(pattern, c) else sql.functions.col(c))
+        for c in df.columns
+    ))
+    return df
 
 def _transform_passbands(df: sql.DataFrame, filter_col: str = "filterID", new_col_name: str = "passband"):
     """Convert numeric filter references to letter-encoded passbands"""
@@ -49,6 +59,8 @@ def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: str =
     Returns:
         sql.DataFrame: Dataframe with array-valued columns.
     """
+
+    df = _cast_to_single_floats(df, pattern=r"aperMag|averageConf|modelDistSec")
 
     for col in [key, filter_col]:
         assert col in df.columns, f"Column {col} not in dataframe {df}"

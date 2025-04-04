@@ -1,6 +1,7 @@
 import pytest
 from pyspark.testing import assertDataFrameEqual
 from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, IntegerType, DoubleType, FloatType, StringType, ArrayType
 from array_columns import _transform_passbands, _pivot_aggregate_col, _merge_all, make_array_cols
 
 
@@ -11,6 +12,14 @@ def spark_context():
 
 @pytest.fixture
 def sample_data(spark_context):
+
+    schema = StructType([
+        StructField("sourceID", IntegerType(), False),
+        StructField("filterID", IntegerType(), False),
+        StructField("mjd", DoubleType(), False),
+        StructField("aperMag1", FloatType(), False)])
+
+
     return spark_context.createDataFrame(
     [
         (1, 1, 1.234, 2.567),
@@ -28,12 +37,19 @@ def sample_data(spark_context):
         (3, 3, 5.234, 6.567),
         (3, 4, 7.234, 8.567),
         (3, 5, 9.234, 10.567)],
-    ["sourceID", "filterID", "mjd", "aperMag1"])
+    schema = schema)
 
 
 def test_transform_passbands(sample_data, spark_context):
 
     actual = _transform_passbands(sample_data, filter_col="filterID", new_col_name="passband")
+
+    expected_schema = StructType([
+        StructField("sourceID", IntegerType(), False),
+        StructField("filterID", IntegerType(), False),
+        StructField("mjd", DoubleType(), False),
+        StructField("aperMag1", FloatType(), False),
+        StructField("passband", StringType(), False)])
     expected = spark_context.createDataFrame(
         [
         (1, 1, 1.234, 2.567, "Z"),
@@ -51,7 +67,7 @@ def test_transform_passbands(sample_data, spark_context):
         (3, 3, 5.234, 6.567, "J"),
         (3, 4, 7.234, 8.567, "H"),
         (3, 5, 9.234, 10.567, "K")],
-    ["sourceID", "filterID", "mjd", "aperMag1", "passband"])
+    schema = expected_schema)
 
     assertDataFrameEqual(actual, expected)
 
@@ -59,12 +75,20 @@ def test_pivot_aggregate_col(sample_data, spark_context):
     df = _transform_passbands(sample_data, filter_col="filterID", new_col_name="passband")
     grouped = df.groupBy("sourceID")
     actual = _pivot_aggregate_col(grouped, key="sourceID", col_name="mjd", pivot_on="passband")
+
+    expected_schema = StructType([
+        StructField("sourceID", IntegerType(), False),
+        StructField("H_mjd", ArrayType(DoubleType()), False),
+        StructField("J_mjd", ArrayType(DoubleType()), False),
+        StructField("K_mjd", ArrayType(DoubleType()), False),
+        StructField("Y_mjd", ArrayType(DoubleType()), False),
+        StructField("Z_mjd", ArrayType(DoubleType()), False)])
     expected = spark_context.createDataFrame(
     [
         (1, [7.234], [5.234], [9.234], [3.234], [1.234]),       
         (2, [7.234], [5.234], [9.234], [3.234], [1.234]),
         (3, [7.234], [5.234], [9.234], [3.234], [1.234])],
-    ["sourceID", "H_mjd", "J_mjd", "K_mjd", "Y_mjd", "Z_mjd"]
+    schema = expected_schema
 )
     
     assertDataFrameEqual(actual, expected)
@@ -87,11 +111,25 @@ def test_merge_all(spark_context):
     assertDataFrameEqual(merged, agg_df)
 
 def test_make_array_cols(spark_context, sample_data):
+
+    expected_schema = StructType([
+        StructField("sourceID", IntegerType(), False),
+        StructField("H_mjd", ArrayType(DoubleType()), False),
+        StructField("J_mjd", ArrayType(DoubleType()), False),
+        StructField("K_mjd", ArrayType(DoubleType()), False),
+        StructField("Y_mjd", ArrayType(DoubleType()), False),
+        StructField("Z_mjd", ArrayType(DoubleType()), False),
+        StructField("H_aperMag1", ArrayType(FloatType()), False),
+        StructField("J_aperMag1", ArrayType(FloatType()), False),
+        StructField("K_aperMag1", ArrayType(FloatType()), False),
+        StructField("Y_aperMag1", ArrayType(FloatType()), False),
+        StructField("Z_aperMag1", ArrayType(FloatType()), False)])
+    
     expected = spark_context.createDataFrame(
     [(1, [7.234], [5.234], [9.234], [3.234], [1.234], [8.567], [6.567], [10.567], [4.567], [2.567]),
      (2, [7.234], [5.234], [9.234], [3.234], [1.234], [8.567], [6.567], [10.567], [4.567], [2.567]),
      (3, [7.234], [5.234], [9.234], [3.234], [1.234], [8.567], [6.567], [10.567], [4.567], [2.567])],
-     ["sourceID", "H_mjd", "J_mjd", "K_mjd", "Y_mjd", "Z_mjd", "H_aperMag1", "J_aperMag1", "K_aperMag1", "Y_aperMag1", "Z_aperMag1"])
+     schema = expected_schema)
     actual = make_array_cols(sample_data, key="sourceID", filter_col="filterID")
     assertDataFrameEqual(actual, expected)
 
