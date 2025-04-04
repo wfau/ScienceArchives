@@ -8,12 +8,14 @@ def convert_sql(sql):
         r'\btinyint\b': 'SMALLINT',
         r'\bdatetime\b': 'TIMESTAMP',
         r'\bGO\b': '',
-        r'\bON [A-Za-z_]+\s*$': ''
     }
 
     # Add schema prefix to table and view creation
     table_view_pattern = re.compile(r'(CREATE TABLE|CREATE VIEW)\s+(\w+)', re.IGNORECASE)
     sql = table_view_pattern.sub(r'\1 GES.\2', sql)
+
+    # Remove ON ... statements
+    sql = re.sub(r'\bON\s+\w+', '', sql)
 
     # Convert data types and remove unsupported syntax
     for pattern, replacement in replacements.items():
@@ -58,6 +60,7 @@ def process_file(file_path, filename):
 
     new_file_path = os.path.join("/Users/rsc/Code/git/ScienceArchives/schema/ges", filename)
     with open(new_file_path, 'w') as file:
+        print("Writing %s" % new_file_path)
         file.writelines(new_lines)
 
 def process_directory(directory):
