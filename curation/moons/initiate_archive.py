@@ -32,7 +32,7 @@ def execute_statements(file_path, conn):
                 statement_lines = []
 
 if __name__ == "__main__":
-    directory = "/Users/rsc/Code/git/ScienceArchives/schema/ges"
+    directory = "/home/rsc/ScienceArchives/schema/ges"
     with psycopg.connect("dbname=sa user=rsc") as conn:
         conn.autocommit = True
         for filename in os.listdir(directory):
