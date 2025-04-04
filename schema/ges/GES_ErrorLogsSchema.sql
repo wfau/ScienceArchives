@@ -34,7 +34,7 @@ gratings    varchar(36) not null default 'NONE',    --/D Gratings setup.
 givenFileName  varchar(256) not null default 'NONE', --/D Given file name.
 singleSpecFile varchar(256) not null default 'NONE', --/D SingleSpec file name.
 description varchar(256) not null default 'NONE' --/D Description of the problem.
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ gratings    varchar(36) not null default 'NONE',  --/D Gratings setup.
 aaFileList  varchar(512) not null default 'NONE', --/D List of astroanalysis files in the group.
 specGroup   varchar(512) not null default 'NONE', --/D Files defining the spectrum group.
 description varchar(256) not null default 'NONE'  --/D Description of the problem.
-) ON Spectrum_FG
+) 
 
 
 
@@ -74,7 +74,7 @@ instrument  varchar(8) not null default 'NONE',  --/D Instrument name.
 gratings    varchar(36) not null default 'NONE', --/D Gratings setup.
 specGroupID bigint not null default -99999999,   --/D Spectrum group identifier: unique identifier for each group of spectra that went into an analysis.
 primKeyRepn varchar(256) not null default 'NONE' --/D Character representation of the primary key.
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ cName        varchar(16) not null default 'NONE',  --/D Object name formed from 
 manySpecFile varchar(256) not null default 'NONE', --/D ManySpec file name.
 predSingleSpecFile varchar(256) not null default 'NONE', --/D Predicted singleSpec file name.
 description  varchar(256) not null default 'NONE'  --/D Description of the problem.
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ errType     varchar(16) not null default 'NONE',    --/D Code identifying the ty
 filename    varchar(256) not null default 'NONE',   --/D Name of any file associated with the error.
 manyspeckey varchar(512) not null default 'NONE',   --/D Name of any ManySpec provenance key associated with the error.
 message     varchar(256) not null default 'NONE'    --/D Message associated with the error.
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------

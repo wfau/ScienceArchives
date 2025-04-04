@@ -162,7 +162,7 @@ telPar20 real not null default -9.999995e+08,  --/D Telescope model parameter 20
 deprecated INTEGER not null default 0,  --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
 cuEventID  INTEGER not null,            --/D UID of curation event giving rise to this record  --/C REFER_CODE
 CONSTRAINT pk_SpecFrame PRIMARY KEY (specFrameID)
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------
@@ -357,7 +357,7 @@ resArc     float not null default -9.999995e+08,  --/D The average resolution of
 --
 deprecated INTEGER not null default 0,                --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
 CONSTRAINT pk_SpectrumNightly PRIMARY KEY (specNightlyID)
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------
@@ -383,7 +383,7 @@ value       varchar(128) not null default 'NONE',  --/D Value of the FITS keywor
 units       varchar(128) not null default 'NONE',  --/D Any units for the FITS keyword
 description varchar(128) not null default 'NONE',  --/D  Description of the FITS keyword
 CONSTRAINT pk_SpecFrameFitsKey PRIMARY KEY (specFrameID, extNum, name)
-) ON Spectrum_FG
+) 
 
 
 -- ----------------------------------------------------------------------------
@@ -403,7 +403,7 @@ fileName     varchar(256) not null default 'NONE', --/D File name of the spectru
 completeness varchar(1) not null default 'U' --/D Flag, is the spectrum group complete: R - all files resolved ok; U one or more files undefined.
 -- HACK: Primary key should be (specGroupID, specID) but we don't have all spectra
 CONSTRAINT pk_SpectrumGroup PRIMARY KEY (specGroupID, specID, fileName)
-) ON Spectrum_FG
+) 
 
 
 
