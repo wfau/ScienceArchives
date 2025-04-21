@@ -133,6 +133,6 @@ def test_make_array_cols(spark_context, sample_data):
     actual = make_array_cols(sample_data, key="sourceID", filter_col="filterID")
     assertDataFrameEqual(actual, expected)
 
-@pytest.mark.xfail(raises=AssertionError)
 def test_make_array_cols_with_bad_colname(spark_context, sample_data):
-    make_array_cols(sample_data, key="this_key_should_throw_an_exception", filter_col="filterID", order_by="mjd")
+    with pytest.raises(ValueError):
+        make_array_cols(sample_data, key="this_key_should_throw_an_exception", filter_col="filterID", order_by="mjd")

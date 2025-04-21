@@ -63,11 +63,13 @@ def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: str =
     df = _cast_to_single_floats(df, pattern=r"aperMag|averageConf|modelDistSec")
 
     for col in [key, filter_col]:
-        assert col in df.columns, f"Column {col} not in dataframe {df}"
+        if col not in df.columns:
+            raise ValueError(f"Column {col} not in dataframe {df}")
 
     if order_by:
         df = df.orderBy(order_by)
-        assert order_by in df.columns, f"Column {order_by} not in dataframe {df}"
+        if order_by not in df.columns:
+            raise ValueError(f"Column {order_by} not in dataframe {df}")
 
     grouped = _transform_passbands(df = df, 
                                    filter_col=filter_col, 
