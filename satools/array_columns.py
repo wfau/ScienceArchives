@@ -63,7 +63,7 @@ def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: Union
 
     df = _cast_by_regex(df, pattern=r"aperMag|averageConf|modelDistSec|classStat", 
                         cast_to=sql.types.FloatType())
-    df = _cast_by_regex(df, pattern=r"objID|multiframeID", cast_to=sql.types.IntegerType())
+    df = _cast_by_regex(df, pattern=r"objID", cast_to=sql.types.IntegerType())
     df = _cast_by_regex(df, pattern=r"extNums", cast_to=sql.types.ByteType())
 
     for col in [key, filter_col]:
