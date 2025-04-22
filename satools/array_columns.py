@@ -1,12 +1,13 @@
 from pyspark import sql
 from functools import reduce
 import re
+from typing import Union
 
-def _cast_to_single_floats(df: sql.DataFrame, pattern:str):
-    """Cast columns that match pattern to single precision floats for efficient storage"""
+def _cast_by_regex(df: sql.DataFrame, pattern:str, cast_to: sql.types.DataType):
+    """Cast columns that match pattern to desired type"""
     df = df.select(
     *(
-        (sql.functions.col(c).cast("float").alias(c) if re.match(pattern, c) else sql.functions.col(c))
+        (sql.functions.col(c).cast(cast_to).alias(c) if re.match(pattern, c) else sql.functions.col(c))
         for c in df.columns
     ))
     return df
@@ -47,7 +48,7 @@ def _merge_all(aggregated_dfs: list[sql.DataFrame],
     return reduce(lambda df1, df2: df1.join(df2, on=join_key), aggregated_dfs)
 
 
-def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: str = None) -> sql.DataFrame:
+def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: Union[str, None] = None) -> sql.DataFrame:
     """Transform df to array-valued columns.
 
     Args:
@@ -60,7 +61,9 @@ def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: str =
         sql.DataFrame: Dataframe with array-valued columns.
     """
 
-    df = _cast_to_single_floats(df, pattern=r"aperMag|averageConf|modelDistSec")
+    df = _cast_by_regex(df, pattern=r"aperMag|averageConf|modelDistSec|objID|multiframeID|classStats", 
+                        cast_to=sql.types.FloatType())
+    df = _cast_by_regex(df, pattern="extNums", cast_to=sql.types.ByteType())
 
     for col in [key, filter_col]:
         if col not in df.columns:
