@@ -61,9 +61,10 @@ def make_array_cols(df: sql.DataFrame, key: str, filter_col:str, order_by: Union
         sql.DataFrame: Dataframe with array-valued columns.
     """
 
-    df = _cast_by_regex(df, pattern=r"aperMag|averageConf|modelDistSec|objID|multiframeID|classStats", 
+    df = _cast_by_regex(df, pattern=r"aperMag|averageConf|modelDistSec|classStats", 
                         cast_to=sql.types.FloatType())
-    df = _cast_by_regex(df, pattern="extNums", cast_to=sql.types.ByteType())
+    df = _cast_by_regex(df, pattern=r"objID|multiframeID", cast_to=sql.types.IntegerType())
+    df = _cast_by_regex(df, pattern=r"extNums", cast_to=sql.types.ByteType())
 
     for col in [key, filter_col]:
         if col not in df.columns:
