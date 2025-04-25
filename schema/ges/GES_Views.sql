@@ -19,8 +19,7 @@
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='LineMolAtomHfs')
-   DROP VIEW LineMolAtomHfs
-GO
+   DROP VIEW LineMolAtomHfs;
 CREATE VIEW GES.LineMolAtomHfs
 -------------------------------------------------------------------------------
 --/H LineMolAtomHfs contains molecular lines and atomic lines with HFS.
@@ -54,12 +53,10 @@ FROM
   LineList l
 WHERE
   l.ltype in (1, 2);
-GO
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='LineMol')
-   DROP VIEW LineMol
-GO
+   DROP VIEW LineMol;
 CREATE VIEW GES.LineMol
 -------------------------------------------------------------------------------
 --/H LineMol contains only molecular lines.
@@ -91,11 +88,9 @@ FROM
 WHERE 
   l.ltype = 1;
 
-
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='LineAtomHfs')
-   DROP VIEW LineAtomHfs
-
+   DROP VIEW LineAtomHfs;
 CREATE VIEW GES.LineAtomHfs
 -------------------------------------------------------------------------------
 --/H LineAtomHfs contains only atomic lines with HFS
@@ -129,11 +124,9 @@ FROM
 WHERE 
   l.ltype = 2;
 
-
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='LineAtomNoHfs')
-   DROP VIEW LineAtomNoHfs
-
+   DROP VIEW LineAtomNoHfs;
 CREATE VIEW GES.LineAtomNoHfs
 -------------------------------------------------------------------------------
 --/H LineAtomHfs contains only atomic lines without HFS
@@ -167,7 +160,6 @@ FROM
 WHERE 
   l.ltype = 3;
 
-
 --
 -------------------------------------------------------------------------------
 -- ****************************************************************************
@@ -179,8 +171,7 @@ WHERE
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='RecommendedAstroAnalysis')
-   DROP VIEW RecommendedAstroAnalysis
-
+   DROP VIEW RecommendedAstroAnalysis;
 CREATE VIEW GES.RecommendedAstroAnalysis
 -------------------------------------------------------------------------------
 --/H Overall recommended astrophysical parameter and abundances analyses
@@ -214,13 +205,11 @@ AS
 SELECT specGroupID, nodeID, nodeName, recWg, ravailWg, wg, wgSource, isWgParams, GesType, specGroupStr, primKeyStr, uniqueness, aaID, releaseName, releaseDate, instrument, recGratings, ravailGratings, gratings, gesField, gesObject, constFiles, targetID, cName, Teff, TeffErr, nnTeff, ennTeff, nneTeff, logg, loggErr, nnlogg, ennlogg, nnelogg, limlogg, FeH, FeHErr, nnFeH, ennFeH, nneFeH, Xi, XiErr, nnXi, ennXi, nneXi, alphaFe, alphaFeErr, nnAlphaFe, alphaFeNodeErr, nnAlphaFeNodeErr, objRa, objDec, snr, radVel, radVelErr, rotVel, rotVelErr, Vrad, VradErr, VradProv, VradOffset, VradFilename, vsini, vsiniErr, vsiniLim, FbolIrfm, SpT, veil, veilErr, EWLi, limEWLi, EWLiErr, EWLiProv, EWcLi, EWcLiLim, EWcLiErr, EWHaAcc, EWHaAccErr, Ha10, Ha10Err, EWHaChr, EWHaChrErr, EWHbChr, EWHbChrErr, logMdotAcc, logMdotAccErr, peculi, remark, tech, TeffSysErr, loggSysErr, FeHSysErr, fHaChr, fHaChrErr, fHbChr, fHbSysErr, fwzi, fwziErr, gamma, gammaErr, mGrid, mName, vmic, vmac, limTeff, logQWind, logQWindErr, limLogQWind, nnLogQWind, pureVsini, vMacroturbulence, peculiHa, tau, tauErr, mu, muErr, alphaW, alphaWErr, alphaC, alphaCErr, betaT, betaTErr, gamma1, gamma1Err, zeta1, zeta1Err, Teff0, Teff0Err, logg0, logg0Err, Teff1, Teff1Err, logg1, logg1Err, FeH1, FeH1Err, Al1, upperCombinedAl1, Al1Err, nnAl1, nnAl1Err, nlAl1, Al1Prov, Al2, upperAl2, Al2Err, nnAl2, nnAl2Err, nlAl2, Al2Prov, Ba2, upperBa2, Ba2Err, nnBa2, nnBa2Err, nlBa2, Ba2Prov, C1, upperCombinedC1, C1Err, nnC1, nnC1Err, nlC1, C1Prov, C2, upperC2, C2Err, nnC2, nnC2Err, nlC2, C2Prov, C3, upperC3, C3Err, nnC3, nnC3Err, nlC3, C3Prov, CC2, upperCC2, CC2Err, nnCC2, nnCC2Err, nlCC2, CC2Prov, Ca1, upperCombinedCa1, Ca1Err, nnCa1, nnCa1Err, nlCa1, Ca1Prov, Ca2, upperCa2, Ca2Err, nnCa2, nnCa2Err, nlCa2, Ca2Prov, Ce2, upperCe2, Ce2Err, nnCe2, nnCe2Err, nlCe2, Ce2Prov, Co1, upperCombinedCo1, Co1Err, nnCo1, nnCo1Err, nlCo1, Co1Prov, Cr1, upperCombinedCr1, Cr1Err, nnCr1, nnCr1Err, nlCr1, Cr1Prov, Cr2, upperCr2, Cr2Err, nnCr2, nnCr2Err, nlCr2, Cr2Prov, Cu1, upperCombinedCu1, Cu1Err, nnCu1, nnCu1Err, nlCu1, Cu1Prov, Dy2, Eu2, upperCombinedEu2, Eu2Err, nnEu2, nnEu2Err, nlEu2, Eu2Prov, Fe1, upperCombinedFe1, Fe1Err, nnFe1, nnFe1Err, nlFe1, Fe1Prov, Fe2, upperFe2, Fe2Err, nnFe2, nnFe2Err, nlFe2, Fe2Prov, Fe3Err, nnFe3, nlGd2, He1, upperCombinedHe1, He1Err, nnHe1, nnHe1Err, nlHe1, He1Prov, La2, upperLa2, La2Err, nnLa2, nnLa2Err, nlLa2, La2Prov, Li1, upperCombinedLi1, Li1Err, nnLi1, nnLi1Err, nlLi1, Li1Prov, Mg1, upperCombinedMg1, Mg1Err, nnMg1, nnMg1Err, nlMg1, Mg1Prov, Mn1, upperCombinedMn1, Mn1Err, nnMn1, nnMn1Err, nlMn1, Mn1Prov, Mo1, upperCombinedMo1, Mo1Err, nnMo1, nnMo1Err, nlMo1, Mo1Prov, N3, upperN3, N3Err, nnN3, nnN3Err, nlN3, N3Prov, NCN, upperNCN, NCNErr, nnNCN, nnNCNErr, nlNCN, NCNProv, Na1, upperCombinedNa1, Na1Err, nnNa1, nnNa1Err, nlNa1, Na1Prov, Nd2, upperNd2, Nd2Err, nnNd2, nnNd2Err, nlNd2, Nd2Prov, Ni1, upperCombinedNi1, Ni1Err, nnNi1, nnNi1Err, nlNi1, Ni1Prov, O1, upperCombinedO1, O1Err, nnO1, nnO1Err, nlO1, O1Prov, O2, upperO2, O2Err, nnO2, nnO2Err, nlO2, O2Prov, S1, upperCombinedS1, S1Err, nnS1, nnS1Err, nlS1, S1Prov, Sc1, upperCombinedSc1, Sc1Err, nnSc1, nnSc1Err, nlSc1, Sc1Prov, Sc2, upperSc2, Sc2Err, nnSc2, nnSc2Err, nlSc2, Sc2Prov, Si1, upperCombinedSi1, Si1Err, nnSi1, nnSi1Err, nlSi1, Si1Prov, Si2, upperSi2, Si2Err, nnSi2, nnSi2Err, nlSi2, Si2Prov, Si3, upperSi3, Si3Err, nnSi3, nnSi3Err, nlSi3, Si3Prov, Si4, upperSi4, Si4Err, nnSi4, nnSi4Err, nlSi4, Si4Prov, Ti1, upperCombinedTi1, Ti1Err, nnTi1, nnTi1Err, nlTi1, Ti1Prov, Ti2, upperTi2, Ti2Err, nnTi2, nnTi2Err, nlTi2, Ti2Prov, V1, upperCombinedV1, V1Err, nnV1, nnV1Err, nlV1, V1Prov, Y2, upperY2, Y2Err, nnY2, nnY2Err, nlY2, Y2Prov, Zn1, upperCombinedZn1, Zn1Err, nnZn1, nnZn1Err, nlZn1, Zn1Prov, Zr1, upperCombinedZr1, Zr1Err, nnZr1, nnZr1Err, nlZr1, Zr1Prov, Zr2, upperZr2, Zr2Err, nnZr2, nnZr2Err, nlZr2, Zr2Prov, deprecated, cuEventID
   FROM AstroAnalysis
  WHERE nodeID = 1
-   AND WG = 'WG15'
-GO
+   AND WG = 'WG15';
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='WgRecommendedAstroAnalysis')
-   DROP VIEW WgRecommendedAstroAnalysis
-GO
+   DROP VIEW WgRecommendedAstroAnalysis;
 CREATE VIEW GES.WgRecommendedAstroAnalysis
 -------------------------------------------------------------------------------
 --/H Individual working group recommended astrophysical parameter and abundances analyses
@@ -253,13 +242,11 @@ AS
 SELECT *
   FROM AstroAnalysis
  WHERE nodeID = 1
-   AND WG != 'WG15'
-GO
+   AND WG != 'WG15';
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='WpNaAstroAnalysis')
-   DROP VIEW WpNaAstroAnalysis
-GO
+   DROP VIEW WpNaAstroAnalysis;
 CREATE VIEW GES.WpNaAstroAnalysis
 -------------------------------------------------------------------------------
 --/H Individual node abundances with working group parameters
@@ -293,13 +280,11 @@ AS
 SELECT *
   FROM AstroAnalysis
  WHERE nodeID != 1
-   AND isWgParams = 1
-GO
+   AND isWgParams = 1;
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='NpNaAstroAnalysis')
-   DROP VIEW NpNaAstroAnalysis
-GO
+   DROP VIEW NpNaAstroAnalysis;
 CREATE VIEW GES.NpNaAstroAnalysis
 -------------------------------------------------------------------------------
 --/H Individual node parameters and abundances
@@ -332,13 +317,11 @@ AS
 SELECT *
   FROM AstroAnalysis
  WHERE nodeID != 1
-   AND isWgParams = 0
-GO
+   AND isWgParams = 0;
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='SpectrumAndFrame')
-   DROP VIEW SpectrumAndFrame
-GO
+   DROP VIEW SpectrumAndFrame;
 CREATE VIEW GES.SpectrumAndFrame
 -------------------------------------------------------------------------------
 --/H Spectrum and SpecFrame combination 
@@ -350,14 +333,12 @@ AS
 SELECT sp.*, frame.instrument, frame.grating, frame.gesType, frame.object
   FROM Spectrum sp,
        SpecFrame frame
- WHERE sp.specFrameId = frame.specFrameId
-
+ WHERE sp.specFrameId = frame.specFrameId;
 
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='RecommendedOutlierAnalysis')
-   DROP VIEW RecommendedOutlierAnalysis
-
+   DROP VIEW RecommendedOutlierAnalysis;
 CREATE VIEW GES.RecommendedOutlierAnalysis
 -------------------------------------------------------------------------------
 --/H Flags identifying and characterising outlier stars.
@@ -399,14 +380,12 @@ WHERE wg14.wg = 'WG14'
   AND wg15.wg = 'WG15'
   AND wg14.specGroupID = spg14.specGroupID
   AND wg15.specGroupID = spg15.specGroupID
-  AND spg14.specID = spg15.specID
-
+  AND spg14.specID = spg15.specID;
 
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects WHERE NAME='SpectrumOutlierAnalysis')
-   DROP VIEW SpectrumOutlierAnalysis
-
+   DROP VIEW SpectrumOutlierAnalysis;
 CREATE VIEW GES.SpectrumOutlierAnalysis
 -------------------------------------------------------------------------------
 --/H Flags identifying and characterising outlier stars.
@@ -440,5 +419,4 @@ FROM
   WgRecommendedAstroAnalysis AS wg14,
   SpectrumGroup spg
 WHERE wg14.wg='WG14'
-  AND wg14.specGroupID = spg.specGroupID
-
+  AND wg14.specGroupID = spg.specGroupID;

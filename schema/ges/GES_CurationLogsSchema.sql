@@ -87,8 +87,7 @@ ewFlag4      real not null default -9.999995e+08,  --/D Usefulness for EW analys
 lType        SMALLINT not null default 0,           --/D Line type: <table border="1" class='v'> <tr> <th>ltype</th> <th>Description</th> </tr> <tr> <td>1</td> <td>Molecular lines only.</td> </tr> <tr> <td>2</td> <td>Atomic lines including data for unresolved fine, hyper-fine or isotopic splitting, if present.</td> </tr> <tr> <td>3</td> <td>Atomic lines excluding data for unresolved fine, hyper-fine or isotopic splitting.</td> </tr> </table>
 deprecated   SMALLINT not null default 0,           --/D Deprecation code: a value other than 0 means the data are deprecated and should not be used  --/N 0
 CONSTRAINT pk_LineList PRIMARY KEY (lineID)
-)
-
+);
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects where name='Target') DROP TABLE Target
@@ -141,7 +140,7 @@ kMag2massErr real not null default -9.999995e+08,  --/D 2MASS K magnitude error 
 dist2mass    real not null default -9.999995e+08,  --/D 2MASS source separation distance from GES target  --/U arcsec  --/F PHOTOM.dist_2mass
 --
 -- The following columns contain magnitudes and separations from other surveys.
--- They were added following a request from Anna (message 13/5/14) on 8/8/14.
+-- They were added following a request from Anna (message 13/5/14)/8/14.
 --
 jMagUkidss    real not null default -9.999995e+08,  --/D UKIDSS j magnitude --/U mag  --/N -9.999995e+08  --/F PHOTOM.j_ukidss
 jMagUkidssErr real not null default -9.999995e+08,  --/D Error on UKIDSS j magnitude --/U mag  --/N -9.999995e+08  --/F PHOTOM.j_ukidss_err
@@ -195,8 +194,7 @@ pmDecUcac     real not null default -9.999995e+08,  --/D UCAC proper motion in d
 pmDecErrUcac  real not null default -9.999995e+08,  --/D Error on UCAC proper motion in dec  --/U marcsec/yr  --/N -9.999995e+08  --/F PHOTOM.pmdec_ucac_err
 distUcac      real not null default -9.999995e+08,  --/D UCAC source separation distance from GES target  --/U arcsec  --/N -9.999995e+08  --/F PHOTOM.dist_ucac
 CONSTRAINT pk_Target PRIMARY KEY (targetID)
-)
-
+);
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects where name='CnameAlias') DROP TABLE CnameAlias
@@ -211,8 +209,7 @@ CREATE TABLE GES.CnameAlias(
 cNameAlias  varchar(16) not null default 'NONE',   --/D Unique Gaia-ESO Survey object name formed from the coordinates of the object (at epoch of first observation) --/F FIBINFO.CNAME
 cName       varchar(16) not null default 'NONE',   --/D Definitive unique Gaia-ESO Survey object name formed from the coordinates of the object (at epoch of observation) --/F FIBINFO.Cname_alias
 CONSTRAINT pk_CnameAlias PRIMARY KEY (cNameAlias)
-)
-
+);
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects where name='Programme') DROP TABLE Programme
@@ -244,8 +241,7 @@ url        varchar(80) not null default 'NONE',    --/D URL for a Web page descr
 propPeriod         INTEGER not null default -99999999,       --/D the proprietory period for any data taken for the programme in months, e.g. 12 for open time --/U months  --/C TIME_PERIOD
 dfsIDString        varchar(64) not null default 'NONE',  --/D The description used within the data flow system (i.e. the value of the appropriate FITS keyword) --/C ??
 CONSTRAINT pk_Programme PRIMARY KEY (programmeID)
-)
-
+);
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects where name='Release') DROP TABLE Release
@@ -266,8 +262,7 @@ description  varchar(256) not null default 'NONE', --/D A brief description of t
 dbName       varchar(128) not null default 'NONE', --/D The name of the SQL Server database containing this release  --/C ??
 deprecated   SMALLINT not null default 0,           --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
 CONSTRAINT pk_Release PRIMARY KEY (surveyID, releaseNum)
-)
-
+);
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects where name='ArchiveCurationHistory') DROP TABLE ArchiveCurationHistory
@@ -292,8 +287,7 @@ curator      varchar(16) not null default 'NONE',  --/D The archive curation sci
 comment      varchar(256) not null default 'NONE', --/D Comment string supplied by the curator --/C ??
 rolledBack   SMALLINT not null,                     --/D Flag for roll-back of this event: 0=no, 1 = yes --/C ??
 CONSTRAINT pk_Arc_Cur_Hist PRIMARY KEY (cuEventID)
-)
-
+);
 
 -- ----------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sysobjects where name='CurationTask') DROP TABLE CurationTask
@@ -306,7 +300,5 @@ CREATE TABLE GES.CurationTask(
 cuID         smallint not null,                    --/D the unique curation task ID   --/C REFER_CODE
 description  varchar(256) not null default 'NONE', --/D description in words for this task --/C NOTE
 CONSTRAINT pk_Cur_Task PRIMARY KEY (cuID)
-)
-
+);
 -- ----------------------------------------------------------------------------
-

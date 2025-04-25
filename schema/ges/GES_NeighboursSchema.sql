@@ -30,8 +30,7 @@ masterObjID  bigint not null, --/D The unique ID in Target (=targetID ) --/C met
 slaveObjID   bigint not null, --/D The unique ID of the neighbour in GAIADR1..gaia_source (=source_id) --/C meta.id.cross
 distanceMins real not null,   --/D Angular separation between neighbours --/U arcminutes --/C pos.angDistance
 CONSTRAINT pk_TargetXGAIADR1gaia_source PRIMARY KEY (masterObjID, slaveObjID)
-) 
-
+)GO
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.TargetXGAIADR1tgas_source(
 -------------------------------------------------------------------------------
@@ -47,8 +46,7 @@ masterObjID  bigint not null, --/D The unique ID in Target (=targetID ) --/C met
 slaveObjID   bigint not null, --/D The unique ID of the neighbour in GAIADR1..gaia_source (=source_id) --/C meta.id.cross
 distanceMins real not null,   --/D Angular separation between neighbours --/U arcminutes --/C pos.angDistance
 CONSTRAINT pk_TargetXGAIADR1tgas_source PRIMARY KEY (masterObjID, slaveObjID)
-) 
-
+)GO
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.TargetXSSASource(
 -------------------------------------------------------------------------------
@@ -64,8 +62,7 @@ masterObjID  bigint not null, --/D The unique ID in Target (=targetID ) --/C met
 slaveObjID   bigint not null, --/D The unique ID of the neighbour in SSA..Source (=objID) --/C meta.id.cross
 distanceMins real not null,   --/D Angular separation between neighbours --/U arcminutes --/C pos.angDistance
 CONSTRAINT pk_TargetXSSASource PRIMARY KEY (masterObjID, slaveObjID)
-) 
-
+)GO
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.TargetXtwomass_psc(
 -------------------------------------------------------------------------------
@@ -81,8 +78,7 @@ masterObjID  bigint not null, --/D The unique ID in Target (=targetID ) --/C met
 slaveObjID   bigint not null, --/D The unique ID of the neighbour in TWOMASS..Twomass_psc (=pts_key) --/C meta.id.cross
 distanceMins real not null,   --/D Angular separation between neighbours --/U arcminutes --/C pos.angDistance
 CONSTRAINT pk_TargetXtwomass_psc PRIMARY KEY (masterObjID, slaveObjID)
-) 
-
+)GO
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.TargetXvhsDR4Source(
 -------------------------------------------------------------------------------
@@ -98,8 +94,7 @@ masterObjID  bigint not null, --/D The unique ID in Target (=targetID ) --/C met
 slaveObjID   bigint not null, --/D The unique ID of the neighbour in VSA..vhsSource (=sourceID) --/C meta.id.cross
 distanceMins real not null,   --/D Angular separation between neighbours --/U arcminutes --/C pos.angDistance
 CONSTRAINT pk_TargetXvhsDR4Source PRIMARY KEY (masterObjID, slaveObjID)
-) 
-
+)GO
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.TargetXatlasDR3Source(
 -------------------------------------------------------------------------------
@@ -115,6 +110,5 @@ masterObjID  bigint not null, --/D The unique ID in Target (=targetID ) --/C met
 slaveObjID   bigint not null, --/D The unique ID of the neighbour in OSA..atlasSource (=sourceID) --/C meta.id.cross
 distanceMins real not null,   --/D Angular separation between neighbours --/U arcminutes --/C pos.angDistance
 CONSTRAINT pk_TargetXatlasDR3Source PRIMARY KEY (masterObjID, slaveObjID)
-) 
-
+)GO
 -- ----------------------------------------------------------------------------

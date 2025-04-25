@@ -162,8 +162,7 @@ telPar20 real not null default -9.999995e+08,  --/D Telescope model parameter 20
 deprecated INTEGER not null default 0,  --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
 cuEventID  INTEGER not null,            --/D UID of curation event giving rise to this record  --/C REFER_CODE
 CONSTRAINT pk_SpecFrame PRIMARY KEY (specFrameID)
-) 
-
+)GO
 
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.Spectrum(
@@ -192,15 +191,15 @@ fileName    varchar(256) not null default 'NONE', --/D The GES Science Archive f
 --   + means use these columns to associate records across FITS table extensions; 
 --   comma specifies column must be present in one OR another extension (exclusive OR: only one extension specified should be present!);
 --   NoNameX specifies an unnamed extension at position X (counting from 0 for the PHDU).  
-nSpec      int not null default -99999999,       --/D The number of the spectrum --/F velclass.Nspec+Fibinfo.Nspec,NoName4.NSPEC,NoName3.NSPEC
-nSpecOld   int not null default -99999999,       --/D The number of the spectrum before unused fibres were culled (equivalent to the number of the fibre) --/F velclass.Nspec_old+Fibinfo.Nspec_old,NoName3.NSPEC_OLD
---specFrameIndex int not null,                     --/D Index of the spectrum in the SpecFrame identified by specFrameID
---obsDate    datetime  not null,                   --/D Date of observation (UT) --/U MM-DD-YYYY
+nSpec      INTEGER not null default -99999999,       --/D The number of the spectrum --/F velclass.Nspec+Fibinfo.Nspec,NoName4.NSPEC,NoName3.NSPEC
+nSpecOld   INTEGER not null default -99999999,       --/D The number of the spectrum before unused fibres were culled (equivalent to the number of the fibre) --/F velclass.Nspec_old+Fibinfo.Nspec_old,NoName3.NSPEC_OLD
+--specFrameIndex INTEGER not null,                     --/D Index of the spectrum in the SpecFrame identified by specFrameID
+--obsDate    TIMESTAMP  not null,                   --/D Date of observation (UT) --/U MM-DD-YYYY
 cName      varchar(16) not null default 'NONE', --/D Object name formed from the coordinates of the object (can be used in place of object to give a unique name) --/F Fibinfo.Cname
 type       varchar(32) not null default 'NONE', --/D M for programme objects or S for sky fibres --/F Fibinfo.TYPE,NoName4.TYPE,NoName3.TYPE
 spClass    varchar(8) not null default 'NONE',  --/D The spectral class (STAR, SKY or LOWSN; the latter two classes do not have spectral fits done for them) --/F Fibinfo.OBJ_CLASS,velclass.SPCLASS
 mag        real not null default -9.999995e+08, --/D A magnitude estimate --/U mag --/F Fibinfo.MAGNITUDE,NoName4.MAGNITUDE
-priority   int not null default -99999999,      --/D Observation priority --/F Fibinfo.GES_RANK,Fibinfo.PRIORITY,NoName4.PRIORITY
+priority   INTEGER not null default -99999999,      --/D Observation priority --/F Fibinfo.GES_RANK,Fibinfo.PRIORITY,NoName4.PRIORITY
 snr        real not null default -9.999995e+08, --/D The mean signal-to-noise ratio in the spectrum --/F Fibinfo.S_N,velclass.S_N
 skyOff     real not null default -9.999995e+08, --/D Offset to get the mean sky into coincidence with the current spectrum --/U pixels --/F Fibinfo.sky_off
 skyScale   real not null default -9.999995e+08, --/D The scaling factor applied to the mean sky before subtracting from the current spectrum --/F Fibinfo.sky_scale,NoName4.SKY_SCALE
@@ -237,13 +236,13 @@ tmplFeH    real not null default -9.999995e+08, --/D The value of [Fe/H] for the
 --rError     float not null default -9.999995e+08, --/D Unknown --/F NoName4.R_ERROR
 --theta     float not null default -9.999995e+08, --/D Unknown --/F NoName4.THETA
 --thetaError     float not null default -9.999995e+08, --/D Unknown --/F NoName4.THETA_ERROR
---button int not null default -99999999, --/D Unknown --/F NoName4.BUTTON
+--button INTEGER not null default -99999999, --/D Unknown --/F NoName4.BUTTON
 --orient float not null default -9.999995e+08, --/D Unknown --/F NoName4.ORIENT
 --inTol varchar(1) not null default '-', --/D Unknown --/F NoName4.IN_TOL
 --comment varchar(256) not null default 'NONE', --/D A comment --/F NoName4.COMMENT 
 --ccdRON float not null default -9.999995e+08, --/D Detector readout noise --/F NoName4.CCDRON
 --ccdGain float not null default -9.999995e+08, --/D Detector gain --/F NoName4.CCDGAIN
---numObs int not null default -99999999, --/D Number of observations coadded --/F NoName4.NUM_OBS
+--numObs INTEGER not null default -99999999, --/D Number of observations coadded --/F NoName4.NUM_OBS
 --snrMean float not null default -9.999995e+08, --/D Mean signal-to-noise ratio --/F NoName4.SNR_MEAN
 --rvCcfWid float not null default -9.999995e+08, --/D Unknown --/F NoName4.RV_CCFWID
 --rvCcfSnr float not null default -9.999995e+08, --/D Unknown --/F NoName4.RV_CCFSNR
@@ -257,12 +256,12 @@ tmplFeH    real not null default -9.999995e+08, --/D The value of [Fe/H] for the
 --rbName varchar(32) not null default 'NONE', --/D Unknown --/F NoName4.RBNAME
 --version varchar(4) not null default 'NONE', --/D Unknown --/F NoName4.VERSION
 --fibreAtn float not null default -9.999995e+08, --/D Unknown --/F NoName4.FIBRE_ATN
---skyType int not null default -99999999, --/D Unknown --/F NoName4.SKY_TYPE
---telSet int not null default -99999999, --/D Unknown --/F NoName4.TEL_SET
---rvType int not null default -99999999, --/D Unknown --/F NoName4.RV_TYPE
+--skyType INTEGER not null default -99999999, --/D Unknown --/F NoName4.SKY_TYPE
+--telSet INTEGER not null default -99999999, --/D Unknown --/F NoName4.TEL_SET
+--rvType INTEGER not null default -99999999, --/D Unknown --/F NoName4.RV_TYPE
 --fibreName varchar(4) not null default 'NONE', --/D Unknown --/F NoName4.FIBRE_NAME
---stat int not null default -99999999, --/D Unknown --/F NoName4.STAT
---rvStdNum int not null default -99999999, --/D Unknown --/F NoName4.RVSTD_NUM
+--stat INTEGER not null default -99999999, --/D Unknown --/F NoName4.STAT
+--rvStdNum INTEGER not null default -99999999, --/D Unknown --/F NoName4.RVSTD_NUM
 --vFit float not null default -9.999995e+08, --/D Unkown --/F NoName4.VFIT
 --rvAbsRms float not null default -9.999995e+08, --/D Unknown --/F NoName4.RVABS_RMS
 --wlCorRms float not null default -9.999995e+08, --/D Unknown --/F NoName4.WLCOR_RMS
@@ -284,10 +283,9 @@ FeH       real not null default -9.999995e+08, --/D The value of [Fe/H] of the b
 --
 --   Other WFAU-added attributes:
 --
-deprecated int not null default 0,  --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
+deprecated INTEGER not null default 0,  --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
 CONSTRAINT pk_Spectrum PRIMARY KEY (specID)
-) ON Spectrum_FG
-GO
+)GO
 
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.SpectrumNightly(
@@ -357,8 +355,7 @@ resArc     float not null default -9.999995e+08,  --/D The average resolution of
 --
 deprecated INTEGER not null default 0,                --/D Deprecated flag: coded as current=0 or deprecated !=0   --/C CODE_MISC  --/N 0  --/G allTables::deprecated
 CONSTRAINT pk_SpectrumNightly PRIMARY KEY (specNightlyID)
-) 
-
+)GO
 
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.SpecFrameFitsKey(
@@ -383,8 +380,7 @@ value       varchar(128) not null default 'NONE',  --/D Value of the FITS keywor
 units       varchar(128) not null default 'NONE',  --/D Any units for the FITS keyword
 description varchar(128) not null default 'NONE',  --/D  Description of the FITS keyword
 CONSTRAINT pk_SpecFrameFitsKey PRIMARY KEY (specFrameID, extNum, name)
-) 
-
+)GO
 
 -- ----------------------------------------------------------------------------
 CREATE TABLE GES.SpectrumGroup(
@@ -403,8 +399,7 @@ fileName     varchar(256) not null default 'NONE', --/D File name of the spectru
 completeness varchar(1) not null default 'U' --/D Flag, is the spectrum group complete: R - all files resolved ok; U one or more files undefined.
 -- HACK: Primary key should be (specGroupID, specID) but we don't have all spectra
 CONSTRAINT pk_SpectrumGroup PRIMARY KEY (specGroupID, specID, fileName)
-) 
-
+)GO
 
 
 -------------------------------------------------------------------------------
@@ -442,20 +437,20 @@ CREATE TABLE GES.AstroAnalysis(
 --/T                       (targetID) references Target(targetID)
 -------------------------------------------------------------------------------
 specGroupID bigint not null default -99999999,   --/D Spectrum group identifier: unique identifier for each group of spectra that went into the analysis.
-nodeID      tinyint not null default 0,          --/D Node identifier: unique identifier, only within a given working group, for the node that contributed this analysis (nodeID = 1 for the recommended values from the combined analysis).
+nodeID      SMALLINT not null default 0,          --/D Node identifier: unique identifier, only within a given working group, for the node that contributed this analysis (nodeID = 1 for the recommended values from the combined analysis).
 nodeName    varchar(32) not null default 'NONE', --/D Name of working group node that contributed this analysis (nodeName = wg for the recommended values from the combined analysis).  --/K NODE1
 recWg varchar(8) not null default 'NONE', --/D Recommended Results taken from this GES Working Group  --/F NONAME1.REC_WG
 ravailWg varchar(23) not null default 'NONE', --/D All WGs that produced results for this target  --/F NONAME1.RAVAIL_WG
 wg          varchar(4) not null default 'NONE',  --/D GES working group performing the analysis (one of: WG10, WG11, WG12, etc).
 wgSource    varchar(23) not null default 'NONE',  --/D GES working group performing the analysis (one of: WG10, WG11, WG12, etc).  --/F NONAME1.WG
-isWgParams  tinyint not null default 0,          --/D Flag; 1 = working group recommend parameters, 0 = node analysis parameters
+isWgParams  SMALLINT not null default 0,          --/D Flag; 1 = working group recommend parameters, 0 = node analysis parameters
 GesType varchar(20) not null default 'NONE', --/D GES Target Classification --/F NONAME1.GES_TYPE
 specGroupStr varchar(600) not null default 'NONE', --/D string representation of the spectrum group
 primKeyStr varchar(600) not null default 'NONE', --/D string representation of the primary key.
 uniqueness smallint not null default 0, --/D Sequence number for occurrences of primKeyStr.
 aaID bigint not null default -99999999, --/D AstroAnalysis identifier: unique sequence no in the table.
 releaseName varchar(10) not null default 'NONE',  --/D Data release, e.g. iDR1  --/K RELEASE
-releaseDate datetime not null default '9999-12-31 23:59:59',  --/D The date that the results were tabulated.  --/K DATETAB
+releaseDate TIMESTAMP not null default '9999-12-31 23:59:59',  --/D The date that the results were tabulated.  --/K DATETAB
 instrument  varchar(8) not null default 'NONE',  --/D FLAMES instrument for these results ('UVES' or 'GIRAFFE')
 recGratings varchar(64) not null default 'NONE', --/D Recommended TEFF,LOGG,FEH,ALPHA_FE taken from this grating  --/F NONAME1.REC_SETUP
 ravailGratings varchar(80) not null default 'NONE', --/D All gratings for which results were produced for this target  --/F NONAME1.RAVAIL_SETUP
@@ -1026,10 +1021,9 @@ Zr2Prov varchar(4) not null default 'NONE',  --/D Zirconium II: provenance; WG f
 --
 -- End of abundance columns.
 --
-deprecated int not null default 0,         --/D Deprecated flag: coded as current=0 or deprecated !=0  --/C CODE_MISC  --/N 0  --/G allTables::deprecated
-cuEventID  int not null default -99999999, --/D Unique identifier of ingestion event 
+deprecated INTEGER not null default 0,         --/D Deprecated flag: coded as current=0 or deprecated !=0  --/C CODE_MISC  --/N 0  --/G allTables::deprecated
+cuEventID  INTEGER not null default -99999999, --/D Unique identifier of ingestion event 
 CONSTRAINT pk_AstroAnalysis PRIMARY KEY (specGroupID, wg, nodeID, isWgParams, uniqueness)
-) ON Spectrum_FG
-GO
+)GO
 
 -- ----------------------------------------------------------------------------
