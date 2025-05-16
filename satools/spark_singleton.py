@@ -1,17 +1,21 @@
 from pyspark.sql import SparkSession
 
+
 class SparkSingleton:
     _spark = None
 
     @classmethod
     def get_spark(cls):
         if cls._spark is None:
-            cls._spark = SparkSession.builder \
-                .appName("MySingletonSparkApp") \
-                .master("local[*]") \
-                .config("spark.driver.memory", "8g") \
-                .enableHiveSupport() \
+            cls._spark = (
+                SparkSession.builder.appName("MySingletonSparkApp")
+                .master("local[4]")
+                .config("spark.driver.memory", "30g")
+                .config("spark.sql.warehouse.dir", "spark-warehouse")
+                .config("spark.sql.catalogImplementation", "hive")
+                .enableHiveSupport()
                 .getOrCreate()
+            )
         return cls._spark
 
     @classmethod
