@@ -2,12 +2,9 @@ import shutil
 import os
 import pytest
 import random
-from bucketing import (
-    bucket_save,
-    is_correctly_bucketed,
-    count_parquet_files,
-)
+from bucketing import bucket_save
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import monotonically_increasing_id
 
 
 @pytest.fixture(scope="module")
@@ -64,22 +61,18 @@ def get_bucketing_data(table_name, spark):
 def test_bucket_save(spark, n_rows, buckets, key):
     table_name = "test_bucketed_table"
 
-    # Clean up any previous run
     try:
         spark.sql(f"DROP TABLE IF EXISTS {table_name}")
     except Exception:
         pass
     shutil.rmtree(f"spark-warehouse/{table_name}", ignore_errors=True)
 
-    # Create and save the table
     df = make_table(n_rows, spark)
     bucket_save(df, buckets=buckets, key=key, table_name=table_name, spark=spark)
 
-    # Load it again and check bucketing
     assert is_correctly_bucketed(
         table_name, spark, str(buckets), key
     ), "Table is not correctly bucketed"
 
-    # Check that number of parquet files equals number of buckets
     n_files = count_parquet_files(table_name)
     assert n_files == buckets, f"Expected {buckets} parquet files, got {n_files}"
