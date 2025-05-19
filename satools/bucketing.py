@@ -16,7 +16,7 @@ def bucket_save(
 
     key = _sanitize_identifier(key)
     table_name = _sanitize_identifier(table_name)
-    if not isinstance(int, buckets) and not buckets > 0:
+    if not isinstance(buckets, int) and not buckets > 0:
         raise ValueError("Buckets must be integer > 0")
 
     df = df.repartition(buckets, key)
