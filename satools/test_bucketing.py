@@ -36,7 +36,12 @@ def make_table(n_rows, spark):
 
 def is_correctly_bucketed(table_name, spark, buckets, key):
     buckets_df = get_bucketing_data(table_name, spark)
-    return buckets_df["n_buckets"] == buckets and buckets_df["bucket_col"] == key
+    res = int(buckets_df["n_buckets"]) == buckets and buckets_df["bucket_col"] == key
+    if not res:
+        print(
+            f"Found {buckets_df['n_buckets']} buckets instead of {buckets} and columns {buckets_df['bucket_col']} but expected {key}"
+        )
+    return res
 
 
 def count_parquet_files(table_name):
