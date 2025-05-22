@@ -107,10 +107,10 @@ def test_variability_bucketed_correctly(_spark_session):
 
 
 @pytest.fixture
-def join_result(source_data, detection_data, _spark_session):
+def join_result(_spark_session):
     query = """
-    SELECT * FROM source AS s
-    LEFT JOIN detection AS d
+    SELECT * FROM source_bucketed AS s
+    LEFT JOIN detection_bucketed AS d
     ON s.sourceID = d.sourceID
     """
     result_df = _spark_session.sql(query)
@@ -119,14 +119,12 @@ def join_result(source_data, detection_data, _spark_session):
 
 def test_left_join_result_correctness(join_result):
     assert join_result.count() > 0
-    no_match_count = join_result.filter(
-        join_result["detection.sourceID"].isNull()
-    ).count()
+    no_match_count = join_result.filter(join_result["s.sourceID"].isNull()).count()
     assert no_match_count == 0
 
 
 def test_physical_plan_for_no_shuffle(join_result):
-    physical_plan = join_result.explain(extended=True)
+    physical_plan = join_result._jdf.queryExecution().toString()
     shuffle_keywords = ["Exchange", "ShuffledHashJoin"]
     shuffle_detected = any(keyword in physical_plan for keyword in shuffle_keywords)
     assert not shuffle_detected, f"Shuffle detected in physical plan:\n{physical_plan}"
@@ -138,8 +136,9 @@ def n_elems(arr):
 
 
 def test_correct_number_of_obs(join_result):
+    # need to pull in variability to get observation stats
     res = (
-        join_result.select(col("sourceID"), col("ksnGoodObs"), col("ksnFlaggedObs"))
+        join_result.select(col("s.sourceID"), col("ksnGoodObs"), col("ksnFlaggedObs"))
         .withColumn("observed_n_obs", n_elems("ksEpochAperMag1"))
         .filter(col("ksBestAper") == 1)
     )
