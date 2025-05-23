@@ -1,41 +1,39 @@
 from pyspark.sql.functions import col, udf
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, FloatType, ArrayType
 import pytest
 from bucketing import bucket_save
 from test_bucketing import is_correctly_bucketed
 import pytest
 import shutil
 import os
+from array_columns import make_array_cols
+import math
+import time
 
 
 @pytest.fixture(scope="module", autouse=True)
 def cleanup_tables_and_directories(_spark_session):
-    # Define the locations of the tables
-    table_locations = {
-        "source_bucketed": "spark-warehouse/source_bucketed",
-        "detection_bucketed": "spark-warehouse/detection_bucketed",
-        "variability_bucketed": "spark-warehouse/variability_bucketed",
-    }
 
-    # Drop tables if they exist
-    _spark_session.sql("DROP TABLE IF EXISTS source_bucketed")
-    _spark_session.sql("DROP TABLE IF EXISTS detection_bucketed")
-    _spark_session.sql("DROP TABLE IF EXISTS variability_bucketed")
+    tables = [
+        "source_bucketed",
+        "detection_bucketed",
+        "variability_bucketed",
+    ]
 
-    # Optionally remove the directories manually if needed
+    table_locations = {table: f"spark-warehouse/{table}" for table in tables}
+
+    for table in tables:
+        _spark_session.sql(f"DROP TABLE IF EXISTS {table}")
+
     for table, location in table_locations.items():
         if os.path.exists(location):
             shutil.rmtree(location)
 
-    # Yield control to the test functions
-    yield
+    yield  # give control back to test session
 
-    # Cleanup after the last test (only once after all tests)
-    _spark_session.sql("DROP TABLE IF EXISTS source_bucketed")
-    _spark_session.sql("DROP TABLE IF EXISTS detection_bucketed")
-    _spark_session.sql("DROP TABLE IF EXISTS variability_bucketed")
+    for table in tables:
+        _spark_session.sql(f"DROP TABLE IF EXISTS {table}")
 
-    # Optionally remove the directories after the tests
     for table, location in table_locations.items():
         if os.path.exists(location):
             shutil.rmtree(location)
@@ -43,7 +41,7 @@ def cleanup_tables_and_directories(_spark_session):
 
 def make_bucketed_fixture(path, table_name):
     @pytest.fixture
-    def _fixture(_spark_session):  # Use _spark_session instead of spark
+    def _fixture(_spark_session):
         df = _spark_session.read.parquet(path)
         bucket_save(
             df, buckets=10, key="sourceID", table_name=table_name, spark=_spark_session
@@ -53,7 +51,6 @@ def make_bucketed_fixture(path, table_name):
     return _fixture
 
 
-# Create fixtures for each table
 source_data = make_bucketed_fixture("satools/example_data/source", "source_bucketed")
 detection_data = make_bucketed_fixture(
     "satools/example_data/detection", "detection_bucketed"
@@ -107,24 +104,86 @@ def test_variability_bucketed_correctly(_spark_session):
 
 
 @pytest.fixture
-def join_result(_spark_session):
+def array_transformed_detection(_spark_session):
+    _spark_session.sql("DROP TABLE IF EXISTS detection_arraycols")
+
+    # Let Spark release filesystem handles
+    _spark_session.catalog.clearCache()
+    time.sleep(1)
+
+    table_path = "spark-warehouse/detection_arraycols"
+    if os.path.exists(table_path):
+        shutil.rmtree(table_path)
+
+    detection_df = _spark_session.table("detection_bucketed")
+    array_transf_detection_df = make_array_cols(
+        detection_df, key="sourceID", filter_col="filterID", order_by="sourceID"
+    )
+
+    bucket_save(
+        array_transf_detection_df,
+        buckets=10,
+        key="sourceID",
+        table_name="detection_arraycols",
+        spark=_spark_session,
+    )
+    return _spark_session.table("detection_arraycols")
+
+
+@pytest.mark.dependency(depends=["detection_setup"])
+def test_correct_cols_in_array_transformed_detection(array_transformed_detection):
+    assert "ksEpochAperMag1" in array_transformed_detection.columns
+    assert isinstance(
+        array_transformed_detection.schema["ksEpochAperMag1"].dataType, ArrayType
+    ), f"{'ksEpochAperMag1'} is not an ArrayType"
+    assert isinstance(
+        array_transformed_detection.schema["ksEpochAperMag1"].dataType.elementType,
+        FloatType,
+    ), f"{'ksEpochAperMag1'} is not an array of Floats"
+
+
+@pytest.fixture
+def source_detection_joined(_spark_session, array_transformed_detection):
+    _spark_session.conf.set("spark.sql.autoBroadcastJoinThreshold", -1)
     query = """
     SELECT * FROM source_bucketed AS s
-    LEFT JOIN detection_bucketed AS d
+    INNER JOIN detection_arraycols AS d
     ON s.sourceID = d.sourceID
     """
     result_df = _spark_session.sql(query)
     return result_df
 
 
-def test_left_join_result_correctness(join_result):
-    assert join_result.count() > 0
-    no_match_count = join_result.filter(join_result["s.sourceID"].isNull()).count()
+def test_source_detection_bucketed(_spark_session):
+    source_desc = _spark_session.sql("DESCRIBE FORMATTED source_bucketed").collect()
+    detection_desc = _spark_session.sql(
+        "DESCRIBE FORMATTED detection_arraycols"
+    ).collect()
+
+    def extract_buckets(desc):
+        for row in desc:
+            if "Num Buckets" in row[0]:
+                return int(row[1].strip())
+        return None
+
+    assert (
+        extract_buckets(source_desc) == 10
+    ), "source_bucketed is not bucketed with 10 buckets"
+    assert (
+        extract_buckets(detection_desc) == 10
+    ), "detection_arraycols is not bucketed with 10 buckets"
+
+
+def test_left_source_detection_joined_correctness(source_detection_joined):
+    assert source_detection_joined.count() > 0
+    no_match_count = source_detection_joined.filter(
+        source_detection_joined["s.sourceID"].isNull()
+    ).count()
     assert no_match_count == 0
 
 
-def test_physical_plan_for_no_shuffle(join_result):
-    physical_plan = join_result._jdf.queryExecution().toString()
+def test_physical_plan_for_no_shuffle(source_detection_joined):
+    physical_plan = source_detection_joined._jdf.queryExecution().toString()
     shuffle_keywords = ["Exchange", "ShuffledHashJoin"]
     shuffle_detected = any(keyword in physical_plan for keyword in shuffle_keywords)
     assert not shuffle_detected, f"Shuffle detected in physical plan:\n{physical_plan}"
@@ -132,14 +191,23 @@ def test_physical_plan_for_no_shuffle(join_result):
 
 @udf(IntegerType())
 def n_elems(arr):
-    return len([elem for elem in arr if elem > 0])
+    if arr is None:
+        return 0
+    return len(
+        [elem for elem in arr if elem is not None and not math.isnan(elem) and elem > 0]
+    )
 
 
-def test_correct_number_of_obs(join_result):
-    # need to pull in variability to get observation stats
+def test_correct_number_of_obs(source_detection_joined, _spark_session):
+    true_obs = _spark_session.sql(
+        "SELECT sourceID, ksnGoodObs, ksnFlaggedObs, ksBestAper FROM variability_bucketed"
+    )
+
     res = (
-        join_result.select(col("s.sourceID"), col("ksnGoodObs"), col("ksnFlaggedObs"))
+        source_detection_joined.select(col("s.sourceID"), col("d.ksEpochAperMag1"))
+        .join(true_obs, how="inner", on="sourceID")
         .withColumn("observed_n_obs", n_elems("ksEpochAperMag1"))
-        .filter(col("ksBestAper") == 1)
+        .withColumn("expected_n_obs", col("ksnGoodObs") + col("ksnFlaggedObs"))
+        .filter(col("variability_bucketed.ksBestAper") == 1)
     )
     assert res.filter(col("expected_n_obs") != col("observed_n_obs")).count() == 0
