@@ -3,8 +3,7 @@ from functools import reduce
 import re
 from typing import Union
 
-    """Transform dataframe with passbands into array-valued columns.
-    """
+"""Transform dataframe with passbands into array-valued columns."""
 
 
 def _cast_by_regex(df: sql.DataFrame, pattern: str, cast_to: sql.types.DataType):

@@ -2,21 +2,28 @@ import shutil
 import os
 import pytest
 import random
+from collections import namedtuple
 from satools.bucketing import bucket_save
 from satools.utils import is_correctly_bucketed, count_parquet_files
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import monotonically_increasing_id
 
+SparkTestEnv = namedtuple("SparkTestEnv", ["spark", "warehouse_path"])
+
 
 @pytest.fixture(scope="module")
-def spark():
+def spark_env(tmp_path_factory):
+    warehouse_dir = tmp_path_factory.mktemp("spark_warehouse")
+    warehouse_path = str(warehouse_dir)
+
     spark = (
         SparkSession.builder.appName("BucketingTest")
         .master("local[2]")
         .enableHiveSupport()
+        .config("spark.sql.warehouse.dir", warehouse_path)
         .getOrCreate()
     )
-    yield spark
+    yield SparkTestEnv(spark=spark, warehouse_path=warehouse_path)
     spark.stop()
 
 
@@ -35,22 +42,26 @@ def make_table(n_rows, spark):
     return df
 
 
-@pytest.mark.parametrize("n_rows,buckets,key", [(1000, 2, "index")])
-def test_bucket_save(spark, n_rows, buckets, key):
-    table_name = "test_bucketed_table"
+def get_table_location(spark, table_name):
+    result = spark.sql(f"DESCRIBE FORMATTED {table_name}").collect()
+    for row in result:
+        if row.col_name.strip() == "Location":
+            return row.data_type.strip()
+    raise RuntimeError(f"Could not find location for table {table_name}")
 
-    try:
-        spark.sql(f"DROP TABLE IF EXISTS {table_name}")
-    except Exception:
-        pass
-    shutil.rmtree(f"spark-warehouse/{table_name}", ignore_errors=True)
+
+@pytest.mark.parametrize("n_rows,buckets,key", [(1000, 2, "index")])
+def test_bucket_save(spark_env, n_rows, buckets, key):
+    table_name = "test_bucketed_table"
+    spark = spark_env.spark
+
+    spark.sql(f"DROP TABLE IF EXISTS {table_name}")
 
     df = make_table(n_rows, spark)
     bucket_save(df, buckets=buckets, key=key, table_name=table_name, spark=spark)
 
-    assert is_correctly_bucketed(
-        table_name, spark, str(buckets), key
-    ), "Table is not correctly bucketed"
+    assert is_correctly_bucketed(table_name, spark, buckets, key)
 
-    n_files = count_parquet_files(table_name)
+    actual_path = get_table_location(spark, table_name)
+    n_files = count_parquet_files(spark, table_name)
     assert n_files == buckets, f"Expected {buckets} parquet files, got {n_files}"
