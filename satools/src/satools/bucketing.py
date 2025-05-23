@@ -1,8 +1,10 @@
 import re
 from pyspark.sql import DataFrame, SparkSession
 
+""" Save dataframe as bucketed Spark table"""
 
-def _sanitize_identifier(identifier: str):
+
+def _sanitize_identifier(identifier: str) -> str:
     """Prevent SQL injection by ensuring identifier does not contain dangerous chars"""
     if re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", identifier):
         return identifier
@@ -12,7 +14,19 @@ def _sanitize_identifier(identifier: str):
 
 def bucket_save(
     df: DataFrame, buckets: int, key: str, table_name: str, spark: SparkSession
-):
+) -> None:
+    """Save table to Spark warehouse, bucketed by column 'key' into 'buckets' buckets.
+
+    Args:
+        df (DataFrame): Source data.
+        buckets (int): Number of desired buckets.
+        key (str): Column to make buckets on.
+        table_name (str): Name of table in Spark warehouse.
+        spark (SparkSession): Spark instance.
+
+    Raises:
+        ValueError: if number of buckets is not a positive integer.
+    """ """"""
 
     key = _sanitize_identifier(key)
     table_name = _sanitize_identifier(table_name)

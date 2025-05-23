@@ -1,7 +1,14 @@
 import os
+from spark.sql import SparkSession
+
+    """General utility functions.
+    """
 
 
-def is_correctly_bucketed(table_name, spark, buckets, key):
+def is_correctly_bucketed(
+    table_name: str, spark: SparkSession, buckets: int, key: str
+) -> bool:
+    """Check whether table_name in the spark warehouse is bucketed as expected."""
     buckets_df = get_bucketing_data(table_name, spark)
 
     if not int(buckets_df["n_buckets"]) == int(buckets):
@@ -17,12 +24,14 @@ def is_correctly_bucketed(table_name, spark, buckets, key):
         return True
 
 
-def count_parquet_files(table_name):
+def count_parquet_files(table_name: str) -> int:
+    """Count number of parquet files table is partitioned into."""
     table_path = os.path.join("spark-warehouse", table_name)
     return sum(1 for f in os.listdir(table_path) if f.endswith(".parquet"))
 
 
-def get_bucketing_data(table_name, spark):
+def get_bucketing_data(table_name: str, spark: SparkSession) -> dict:
+    """Get bucketing"""
     bucketing_data = {}
     desc = spark.sql(f"DESCRIBE TABLE EXTENDED {table_name}").collect()
 

@@ -2,6 +2,8 @@ from pyspark.sql import SparkSession
 
 
 class SparkSingleton:
+    """Singleton class for a SparkSession. Can be used with a context manager or simply as SparkSingleton.get_spark()."""
+
     _spark = None
 
     @classmethod
