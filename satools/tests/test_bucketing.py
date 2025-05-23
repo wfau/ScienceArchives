@@ -2,7 +2,8 @@ import shutil
 import os
 import pytest
 import random
-from bucketing import bucket_save
+from satools.bucketing import bucket_save
+from satools.utils import is_correctly_bucketed, count_parquet_files
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import monotonically_increasing_id
 
@@ -32,34 +33,6 @@ def make_table(n_rows, spark):
     df = spark.createDataFrame(data, schema=columns[1:])
     df = df.withColumn("index", monotonically_increasing_id())
     return df
-
-
-def is_correctly_bucketed(table_name, spark, buckets, key):
-    buckets_df = get_bucketing_data(table_name, spark)
-    res = int(buckets_df["n_buckets"]) == buckets and buckets_df["bucket_col"] == key
-    if not res:
-        print(
-            f"Found {buckets_df['n_buckets']} buckets instead of {buckets} and columns {buckets_df['bucket_col']} but expected {key}"
-        )
-    return res
-
-
-def count_parquet_files(table_name):
-    table_path = os.path.join("spark-warehouse", table_name)
-    return sum(1 for f in os.listdir(table_path) if f.endswith(".parquet"))
-
-
-def get_bucketing_data(table_name, spark):
-    bucketing_data = {}
-    desc = spark.sql(f"DESCRIBE TABLE EXTENDED {table_name}").collect()
-
-    for row in desc:
-        if "Num Buckets" in row.col_name:
-            bucketing_data["n_buckets"] = row.data_type
-        elif "Bucket Columns" in row.col_name:
-            bucketing_data["bucket_col"] = row.data_type.strip("`[]")
-
-    return bucketing_data
 
 
 @pytest.mark.parametrize("n_rows,buckets,key", [(1000, 2, "index")])

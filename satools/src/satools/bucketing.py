@@ -23,7 +23,7 @@ def bucket_save(
     df.createOrReplaceTempView("tmp_view")
     spark.sql(
         f"""
-        CREATE TABLE {table_name}
+        CREATE TABLE IF NOT EXISTS {table_name}
         USING PARQUET
         CLUSTERED BY ({key}) INTO {buckets} BUCKETS
         AS SELECT * FROM tmp_view
