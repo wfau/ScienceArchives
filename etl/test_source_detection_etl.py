@@ -8,6 +8,7 @@ from spark_schema.schema import schema_joined_source_detection
 import toml
 import os
 import shutil
+import math
 
 DETECTION_ARRAY_COLS = toml.load("test_etl_config.toml")["transform"][
     "columns_to_array_value"

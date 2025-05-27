@@ -1,2 +1,0 @@
-class TableNotInCatalogError(Exception):
-    pass
