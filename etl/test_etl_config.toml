@@ -1,0 +1,24 @@
+title = "ScienceArchives tests config"
+
+[transform]
+columns_to_array_value = [
+        "mjd",
+        "aperMag1",
+        "aperMag1err",
+        "aperMag2",
+        "aperMag2err",
+        "aperMag3",
+        "aperMag3err",
+        "errBits",
+        "averageConf",
+        "class",
+        "classStat",
+        "deprecated",
+        "ppErrBits",
+        "objID",
+        "multiframeID",
+        "extNum",
+        "seqNum",
+        "flag",
+        "modelDistSecs",
+]
