@@ -1,4 +1,4 @@
-title = "ScienceArchives tests config"
+title = "ETL tests config"
 
 [transform]
 columns_to_array_value = [

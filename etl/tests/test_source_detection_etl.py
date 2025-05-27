@@ -2,15 +2,16 @@ import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import col, udf
-from satools.spark_singleton import SparkSingleton
-from source_detection_etl import extract, transform, load
-from spark_schema.schema import schema_joined_source_detection
+from etl.spark_singleton import SparkSingleton
+from etl.source_detection_etl import extract, transform, load
+from etl.schema import schema_joined_source_detection
 import toml
 import os
 import shutil
 import math
+from spark_fixture import spark_fixture
 
-DETECTION_ARRAY_COLS = toml.load("test_etl_config.toml")["transform"][
+DETECTION_ARRAY_COLS = toml.load("tests/test_etl_config.toml")["transform"][
     "columns_to_array_value"
 ]
 SOURCE_PATH = "example_data/source"
@@ -18,25 +19,13 @@ DETECTION_PATH = "example_data/detection"
 VARIABILITY_PATH = "example_data/variability"
 
 
-@pytest.fixture(scope="session")
-def spark_fixture(tmp_path_factory):
-    """Provide a Spark session with a temporary warehouse directory."""
-    warehouse_dir = tmp_path_factory.mktemp("spark_warehouse")
-    warehouse_path = str(warehouse_dir)
-
-    spark = SparkSingleton.get_spark(warehouse_dir=warehouse_path)
-    spark.conf.set("spark.sql.autoBroadcastJoinThreshold", -1)
-    yield spark
-    spark.stop()
-
-
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def etl_output_table():
     """Provide the name of the test output table (shared across tests)."""
     return "test_joined_table"
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def run_etl_once(spark_fixture, etl_output_table, request):
     """Run the ETL pipeline once per test session, and clean up after."""
     source_path = SOURCE_PATH

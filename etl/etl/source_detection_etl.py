@@ -1,9 +1,9 @@
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import *
-from satools import bucketing, array_columns
-from satools.spark_singleton import SparkSingleton
-from satools.bucketing import bucket_save
-from satools.utils import (
+from etl import bucketing, array_columns
+from etl.spark_singleton import SparkSingleton
+from etl.bucketing import bucket_save
+from etl.utils import (
     sanitise_identifier,
     check_table_is_in_catalog,
     cast_df_using_schema,
@@ -15,7 +15,7 @@ import toml
 import logging
 from datetime import datetime
 import os
-from spark_schema.schema import schema_joined_source_detection
+from etl.schema import schema_joined_source_detection
 
 logger = logging.getLogger(__name__)
 
