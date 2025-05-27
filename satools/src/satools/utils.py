@@ -1,5 +1,16 @@
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.functions import col
+from pyspark.sql.types import StructType
+from satools.errors import TableNotInCatalogError
 import os
+import re
+
+
+def check_table_is_in_catalog(table_name: str, spark: SparkSession) -> None:
+    if not table_name in [t.name for t in spark.catalog.listTables()]:
+        raise TableNotInCatalogError(
+            f"Table {table_name} not found in Spark catalog. Found tables: {spark.catalog.listTables()}. Database: {spark.catalog.currentDatabase()}"
+        )
 
 
 def get_table_location(spark: SparkSession, table_name: str) -> str:
@@ -56,3 +67,20 @@ def is_correctly_bucketed(
         )
 
     return True
+
+
+def sanitise_identifier(identifier: str) -> str:
+    """Prevent SQL injection by ensuring identifier does not contain dangerous chars"""
+    if re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", identifier):
+        return identifier
+    else:
+        raise ValueError(f"Invalid SQL identifier: {identifier}")
+
+
+def cast_df_using_schema(df: DataFrame, schema: StructType):
+    return df.select(
+        [
+            col(field.name).cast(field.dataType).alias(field.name)
+            for field in schema.fields
+        ]
+    )

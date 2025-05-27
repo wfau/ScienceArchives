@@ -208,7 +208,12 @@ def test_make_array_cols(spark_context, sample_data):
         ],
         schema=expected_schema,
     )
-    actual = make_array_cols(sample_data, key="sourceID", filter_col="filterID")
+    actual = make_array_cols(
+        sample_data,
+        key="sourceID",
+        filter_col="filterID",
+        cols_to_transform=["mjd", "aperMag1"],
+    )
     assertDataFrameEqual(actual, expected)
 
 
@@ -218,5 +223,6 @@ def test_make_array_cols_with_bad_colname(spark_context, sample_data):
             sample_data,
             key="this_key_should_throw_an_exception",
             filter_col="filterID",
+            cols_to_transform=["mjd", "aperMag1"],
             order_by="mjd",
         )

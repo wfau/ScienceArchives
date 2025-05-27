@@ -6,13 +6,30 @@ from typing import Union
 """Transform dataframe with passbands into array-valued columns."""
 
 
-def _cast_by_regex(df: sql.DataFrame, pattern: str, cast_to: sql.types.DataType):
+def _cast_by_regex(
+    df: sql.DataFrame, pattern: re.Pattern[str], cast_to: sql.types.DataType
+):
     """Cast columns that match pattern to desired type"""
     df = df.select(
         *(
             (
                 sql.functions.col(c).cast(cast_to).alias(c)
                 if re.match(pattern, c)
+                else sql.functions.col(c)
+            )
+            for c in df.columns
+        )
+    )
+    return df
+
+
+def _cast_columns(df: sql.DataFrame, columns: list[str], cast_to: sql.types.DataType):
+    """Cast columns that match pattern to desired type"""
+    df = df.select(
+        *(
+            (
+                sql.functions.col(c).cast(cast_to).alias(c)
+                if c in columns
                 else sql.functions.col(c)
             )
             for c in df.columns
@@ -66,7 +83,11 @@ def _merge_all(aggregated_dfs: list[sql.DataFrame], join_key: str) -> sql.DataFr
 
 
 def make_array_cols(
-    df: sql.DataFrame, key: str, filter_col: str, order_by: Union[str, None] = None
+    df: sql.DataFrame,
+    key: str,
+    filter_col: str,
+    cols_to_transform: list[str],
+    order_by: Union[str, None] = None,
 ) -> sql.DataFrame:
     """Transform df to array-valued columns.
 
@@ -74,19 +95,15 @@ def make_array_cols(
         df (sql.DataFrame): Dataframe in wide format.
         key (str): Unique key to group by.
         filter_col (str): Column (int) containing passbands to pivot on.
+        cols_to_transform: Columns to transform
         order_by (str): Column to sort data by (thus sorting resulting arrays on this column).
 
     Returns:
         sql.DataFrame: Dataframe with array-valued columns.
     """
 
-    df = _cast_by_regex(
-        df,
-        pattern=r"aperMag|averageConf|modelDistSec|classStat",
-        cast_to=sql.types.FloatType(),
-    )
-    df = _cast_by_regex(df, pattern=r"objID", cast_to=sql.types.IntegerType())
-    df = _cast_by_regex(df, pattern=r"extNums", cast_to=sql.types.ByteType())
+    if df.count() < 1:
+        raise ValueError("Dataframe is empty")
 
     for col in [key, filter_col]:
         if col not in df.columns:
@@ -102,6 +119,7 @@ def make_array_cols(
         .drop(filter_col)
         .groupBy(key)
     )
+
     aggregated_dfs = [
         _pivot_aggregate_col(
             grouped_df=grouped,
@@ -109,7 +127,9 @@ def make_array_cols(
             col_name=col_name[0].upper() + col_name[1:],
             pivot_on="passband",
         )
-        for col_name in df.columns
+        for col_name in cols_to_transform
         if col_name not in [key, filter_col, "passband"]
     ]
-    return _merge_all(aggregated_dfs, key)
+
+    merged = _merge_all(aggregated_dfs, key)
+    return merged

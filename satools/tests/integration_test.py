@@ -6,37 +6,31 @@ from pyspark.sql.types import IntegerType, FloatType, ArrayType
 from satools.bucketing import bucket_save
 from satools.utils import is_correctly_bucketed
 from satools.array_columns import make_array_cols
-from pyspark.sql import SparkSession
+from satools.spark_singleton import SparkSingleton
+from spark_schema import schema
 from pathlib import Path
-import os, shutil
+import os, shutil, toml
 
 
 EXAMPLE_DATA_PATH = Path("tests/example_data").resolve()
+COLS_TO_TRANSFORM = toml.load("tests/test_etl_config.toml")["transform"][
+    "columns_to_array_value"
+]
 
 
 @pytest.fixture(scope="session")
 def spark_fixture(tmp_path_factory):
 
     warehouse_dir = tmp_path_factory.mktemp("spark_warehouse")
-    WAREHOUSE_PATH = str(warehouse_dir)
+    warehouse_path = str(warehouse_dir)
 
-    spark = (
-        SparkSession.builder.appName("PySpark integration test")
-        .master("local[2]")
-        .config("spark.sql.warehouse.dir", WAREHOUSE_PATH)
-        .config("spark.sql.warehouse.dir", str(warehouse_dir))
-        .config("spark.driver.memory", "1g")
-        .config("spark.executor.memory", "1g")
-        .config("spark.ui.enabled", "false")
-        .config("spark.sql.shuffle.partitions", "4")
-        .getOrCreate()
-    )
+    spark = SparkSingleton.get_spark(warehouse_dir=warehouse_path)
     yield spark
     spark.stop()
 
 
 def make_bucketed_fixture(path, table_name):
-    @pytest.fixture
+    @pytest.fixture(scope="session")
     def _fixture(spark_fixture):
         df = spark_fixture.read.parquet(str(path))
         bucket_save(
@@ -56,6 +50,18 @@ detection_data = make_bucketed_fixture(
 variability_data = make_bucketed_fixture(
     EXAMPLE_DATA_PATH.joinpath("variability"), "variability_bucketed"
 )
+
+
+def test_source_not_empty(source_data):
+    assert source_data.count() > 0
+
+
+def test_detection_not_empty(detection_data):
+    assert detection_data.count() > 0
+
+
+def test_variability_not_empty(variability_data):
+    assert variability_data.count() > 0
 
 
 def test_source_table_created(source_data):
@@ -94,15 +100,20 @@ def test_variability_bucketed_correctly(spark_fixture):
     )
 
 
-@pytest.fixture
-def array_transformed_detection(spark_fixture):
+@pytest.fixture(scope="session")
+def array_transformed_detection(spark_fixture, detection_data):
     spark_fixture.sql("DROP TABLE IF EXISTS detection_arraycols")
     spark_fixture.catalog.clearCache()
     time.sleep(0.5)
 
-    df = spark_fixture.table("detection_bucketed")
+    df = detection_data
+
     transformed = make_array_cols(
-        df, key="sourceID", filter_col="filterID", order_by="sourceID"
+        df,
+        key="sourceID",
+        filter_col="filterID",
+        order_by="sourceID",
+        cols_to_transform=COLS_TO_TRANSFORM,
     )
 
     bucket_save(
@@ -115,20 +126,28 @@ def array_transformed_detection(spark_fixture):
     return spark_fixture.table("detection_arraycols")
 
 
+def test_array_transformed_not_empty(array_transformed_detection):
+    assert array_transformed_detection.count() > 0
+
+
 def test_correct_cols_in_array_transformed_detection(array_transformed_detection):
-    assert "ksEpochAperMag1" in array_transformed_detection.columns
+    assert "ksEpochAperMag1" in list(array_transformed_detection.columns)
     field = array_transformed_detection.schema["ksEpochAperMag1"]
     assert isinstance(field.dataType, ArrayType)
-    assert isinstance(field.dataType.elementType, FloatType)
 
 
-@pytest.fixture
-def source_detection_joined(spark_fixture, array_transformed_detection):
+@pytest.fixture(scope="session")
+def source_detection_joined(spark_fixture, source_data, array_transformed_detection):
     spark_fixture.conf.set("spark.sql.autoBroadcastJoinThreshold", -1)
-    source_df = spark_fixture.table("source_bucketed")
-    detection_df = spark_fixture.table("detection_arraycols")
 
-    source_detection_df = source_df.join(detection_df, on="sourceID", how="inner")
+    assert source_data.count() > 0, "Source is empty"
+    assert (
+        array_transformed_detection.count() > 0
+    ), "array_transformed_detection is empty"
+
+    source_detection_df = source_data.join(
+        array_transformed_detection, on="sourceID", how="inner"
+    )
     bucket_save(
         source_detection_df,
         buckets=10,
@@ -187,3 +206,7 @@ def test_correct_number_of_obs(source_detection_joined, spark_fixture):
     )
 
     assert res.filter(col("expected_n_obs") != col("observed_n_obs")).count() == 0
+
+
+def test_schema_compliance(source_detection_joined):
+    assert source_detection_joined.schema == schema

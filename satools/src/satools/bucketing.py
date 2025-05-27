@@ -1,15 +1,8 @@
-import re
+from satools.utils import sanitise_identifier, check_table_is_in_catalog
+from satools.errors import TableNotInCatalogError
 from pyspark.sql import DataFrame, SparkSession
 
 """ Save dataframe as bucketed Spark table"""
-
-
-def _sanitize_identifier(identifier: str) -> str:
-    """Prevent SQL injection by ensuring identifier does not contain dangerous chars"""
-    if re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", identifier):
-        return identifier
-    else:
-        raise ValueError(f"Invalid SQL identifier: {identifier}")
 
 
 def bucket_save(
@@ -26,10 +19,13 @@ def bucket_save(
 
     Raises:
         ValueError: if number of buckets is not a positive integer.
-    """ """"""
+    """
 
-    key = _sanitize_identifier(key)
-    table_name = _sanitize_identifier(table_name)
+    if spark.conf.get("spark.sql.catalogImplementation") != "hive":
+        raise ValueError("Spark catalog implementation must be 'hive'")
+
+    key = sanitise_identifier(key)
+    table_name = sanitise_identifier(table_name)
     if not isinstance(buckets, int) and not buckets > 0:
         raise ValueError("Buckets must be integer > 0")
 
@@ -43,3 +39,13 @@ def bucket_save(
         AS SELECT * FROM tmp_view
     """
     )
+
+    # (
+    #     df.write.format("parquet")
+    #     .bucketBy(buckets, key)
+    #     .sortBy(key)
+    #     .mode("overwrite")
+    #     .saveAsTable(table_name)
+    # )
+
+    check_table_is_in_catalog(table_name=table_name, spark=spark)
