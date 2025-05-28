@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col
 from pyspark.sql.types import StructType
-from etl.errors import TableNotInCatalogError
+from etl.errors import TableNotInCatalogError, BucketingError
 import os
 import re
 
@@ -35,7 +35,7 @@ def count_parquet_files(spark: SparkSession, table_name: str) -> int:
         )
 
 
-def get_bucketing_data(table_name: str, spark: SparkSession) -> dict:
+def get_bucketing_data(spark: SparkSession, table_name: str) -> dict:
     """Get bucketing information from Spark SQL table metadata."""
     bucketing_data = {}
     desc = spark.sql(f"DESCRIBE TABLE EXTENDED {table_name}").collect()
@@ -44,25 +44,24 @@ def get_bucketing_data(table_name: str, spark: SparkSession) -> dict:
         if "Num Buckets" in row.col_name:
             bucketing_data["n_buckets"] = int(row.data_type.strip())
         elif "Bucket Columns" in row.col_name:
-            # data_type might look like: `[sourceID]`
             bucketing_data["bucket_col"] = row.data_type.strip("`[]").split(", ")
 
     return bucketing_data
 
 
 def is_correctly_bucketed(
-    table_name: str, spark: SparkSession, buckets: int, key: str
-) -> bool:
+    spark: SparkSession, table_name: str, buckets: int, key: str
+) -> True:
     """Check whether a table is bucketed correctly by bucket count and column."""
     info = get_bucketing_data(table_name, spark)
 
     if info.get("n_buckets") != buckets:
-        raise ValueError(
+        raise BucketingError(
             f"Expected {buckets} buckets, but found {info.get('n_buckets')}"
         )
 
     if [key] != info.get("bucket_col", []):
-        raise ValueError(
+        raise BucketingError(
             f"Expected bucket column {key}, but found {info.get('bucket_col')}"
         )
 

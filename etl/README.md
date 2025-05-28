@@ -1,35 +1,35 @@
-# satools: Common Database & Archive Curation tools Python modules
+# ETL pipeline for new ScienceArchives
 
-### Installation
-`pip install -e .`
+ETL pipeline for transforming old ScienceArchives data to new data model. 
 
-### Current modules in `src/satools`
-* `array_columns.py`: Transform passband data from float to array-valued columns.
-* `bucketing.py`: Save tables in Spark, bucketed by some key.
-* `spark_singleton.py`: Default singleton for Spark
-* `utils.py`: Currently, helper functions for tests. (Could perhaps move into test dir?)
+## Contributors
+* Simon Harnqvist (sharnqvi@roe.ac.uk)
 
-### Tests
+## Organisation
+Code lives in `etl`. Key modules are:
+* `source_detection_etl.py` - transforms table `vvvDetection` to have array-valued columns, and then joins with `vvvSource` to make a single wide table for easier querying.
+* `array_columns.py` - code for array-valued column transformation
+* `bucketing.py` - saves tables in bucketed format, allowing faster joins in Spark
+* `spark_singleton.py` - singleton class for SparkSession with suitable Hive settings etc
 
-🔧 **Integration Tests** (`integration_test.py`)
+Other modules provide the expected schema, various utils, errors, etc.
 
-This project includes a PySpark-based integration test suite using pytest to verify core data processing logic.
+If/when additional ETL pipelines are added, dividing these into suitable subdirectories would be helpful.
 
-What’s tested:
+### Tests and validation
 
-* Bucketed table creation (bucket_save)
-* Array column transformation (make_array_cols)
-* Join correctness and efficiency (ensuring no shuffle)
-* Data integrity checks (e.g., number of observations match expected)
-* Schema validation (e.g., array of floats)
+There are current two sets of tests:
+* Unit tests for `array_columns.py` and `bucketing.py` in `tests/`
+* Integration and a full end-to-end test for `source_detection_etl.py` is in `tests/test_source_detection_etl.py`
 
-How it's run:
-* Uses temporary Spark warehouse paths via pytest fixtures
-* Runs on small test datasets stored in tests/example_data/
-* Avoids broadcast joins to validate sort-merge joins
+Perhaps more importantly, automatic validation runs throughout `etl/source_detection_etl.py`, with a final set of validation on the loaded output dataset
 
-<br>
+## Usage information
 
+Install with `pip install -e .` from this directory (`etl`)
 
-🔧 **Unit Tests** (`test_bucketing.py` and `test_array_columns.py`) <br>
-* Standard unit tests on self-contained dummy data.
+### Dependencies
+
+The local conda environment used is available in `spark355.yaml` for reference.
+
+The only key external dependencies are `PySpark = 3.5.5`, `toml`, and `pytest`. See the YAML if specific versions are required.

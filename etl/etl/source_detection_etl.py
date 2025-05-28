@@ -2,10 +2,10 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import *
 from etl import bucketing, array_columns
 from etl.spark_singleton import SparkSingleton
+from etl.errors import *
+from etl.validate_source_detection_etl import *
 from etl.bucketing import bucket_save
 from etl.utils import (
-    sanitise_identifier,
-    check_table_is_in_catalog,
     cast_df_using_schema,
     get_bucketing_data,
 )
@@ -68,19 +68,19 @@ def transform(
         spark=spark,
     )
 
-    detection_bucketing = get_bucketing_data("detection_arrays_bucketed", spark)
-    source_bucketing = get_bucketing_data("source_bucketed", spark)
+    detection_bucketing = get_bucketing_data(
+        spark=spark, table_name="detection_arrays_bucketed"
+    )
+    source_bucketing = get_bucketing_data(spark=spark, table_name="source_bucketed")
 
     if detection_bucketing != source_bucketing:
-        raise ValueError(
-            f"Dataframes are not bucketed the same way - found: \n *Source* \n {source_bucketing} \n Detection: \n {detection_bucketing}"
+        raise BucketingError(
+            f"❌ Dataframes are not bucketed the same way - found: \n *Source* \n {source_bucketing} \n Detection: \n {detection_bucketing}"
         )
     elif not detection_bucketing or len(detection_bucketing) == 0:
-        raise ValueError("No bucketing found for detection")
+        raise BucketingError("❌ No bucketing found for detection")
     elif not source_bucketing or len(source_bucketing) == 0:
-        raise ValueError("No bucketing found for source")
-
-    print(f"bucketing: {detection_bucketing}")
+        raise BucketingError("❌ No bucketing found for source")
 
     joined = spark.table("source_bucketed").join(
         spark.table("detection_arrays_bucketed"), on="sourceID"
@@ -130,6 +130,7 @@ def pipeline():
         shutil.rmtree(warehouse_dir.parent / "metastore_db", ignore_errors=True)
 
     columns_to_array_value = configs["transform"]["columns_to_array_value"]
+    joined_table_name = configs["table_names"]["source_detection"]
 
     with SparkSingleton(warehouse_dir=warehouse_dir) as spark:
         logger.info("Extracting data")
@@ -147,6 +148,7 @@ def pipeline():
             detection_df=detection,
             cols_to_transform=columns_to_array_value,
             schema=schema_joined_source_detection,
+            spark=spark,
         )
         logger.info("Transformation complete")
 
@@ -154,11 +156,41 @@ def pipeline():
         load(
             joined_df=joined,
             buckets=configs["partitioning"]["n_buckets"],
-            joined_table_name=configs["table_names"]["source_detection"],
+            joined_table_name=joined_table_name,
             spark=spark,
         )
+        logger.info("Data loaded")
 
-        logger.info("Data loaded - ETL complete")
+        logger.info("Validating final data")
+        joined_read_from_table = spark.table(joined_table_name)
+
+        try:
+            validate_consistent_nrows(original=source, final=joined_read_from_table)
+            logger.info(
+                "✅ Number of rows in the transformed and loaded data matches the extracted original data"
+            )
+        except InconsistentRowCountError as e:
+            logger.error(f"❌ Validation failed: {e}")
+
+        try:
+            validate_schema(
+                expected=schema_joined_source_detection,
+                observed=joined_read_from_table.schema,
+            )
+            logger.info("✅ Schema matches expectation")
+        except InconsistentSchemaError as e:
+            logger.error(f"❌ Validation failed: {e}")
+
+        try:
+            validate_bucketing(
+                table_name=joined_table_name,
+                buckets=configs["partitioning"]["n_buckets"],
+                key="sourceID",
+                spark=spark,
+            )
+            logger.info("✅ Bucketing matches expectations")
+        except BucketingError as e:
+            logger.error(f"❌ Validation failed: {e}")
 
 
 if __name__ == "__main__":
