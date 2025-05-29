@@ -5,6 +5,7 @@ from pyspark.sql.functions import col, udf
 from etl.spark_singleton import SparkSingleton
 from etl.source_detection_etl import extract, transform, load
 from etl.schema import schema_joined_source_detection
+from etl.utils import check_schema_alignment
 import toml
 import os
 import shutil
@@ -83,9 +84,7 @@ def test_schema_matches_expected(spark_fixture, etl_output_table):
     df = spark_fixture.table(etl_output_table)
     actual_schema = df.schema
     expected_schema = schema_joined_source_detection
-    assert (
-        actual_schema == expected_schema
-    ), f"Schema mismatch:\nExpected: {expected_schema}\nGot: {actual_schema}"
+    check_schema_alignment(expected=expected_schema, observed=actual_schema)
 
 
 def test_joined_table_is_bucketed(spark_fixture, etl_output_table):

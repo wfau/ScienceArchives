@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import col
-from pyspark.sql.types import StructType
+from pyspark.sql.functions import col, expr
+from pyspark.sql.types import *
 from etl.errors import TableNotInCatalogError, BucketingError
 import os
 import re
@@ -76,11 +76,104 @@ def sanitise_identifier(identifier: str) -> str:
         raise ValueError(f"Invalid SQL identifier: {identifier}")
 
 
-def cast_df_using_schema(df: DataFrame, schema: StructType):
-    return df.select(
-        [
-            col(field.name).cast(field.dataType).alias(field.name)
-            for field in schema.fields
-            if col(field.name).dataType != field.dataType
-        ]
-    )
+def cast_df_using_schema(df: DataFrame, schema: StructType) -> DataFrame:
+    """
+    Casts the columns of a Spark DataFrame to match the provided schema,
+    including correct handling of array element casting and nullability.
+
+    This function:
+    - Casts columns to the target data type if they differ.
+    - Handles casting of array element types using `transform()`.
+    - Preserves or updates column nullability to match the provided schema.
+
+    Parameters:
+    ----------
+    df : pyspark.sql.DataFrame
+        The input DataFrame whose columns need to be cast.
+    schema : pyspark.sql.types.StructType
+        The desired schema, including field names, data types, and nullability.
+
+    Returns:
+    -------
+    pyspark.sql.DataFrame
+        A DataFrame with columns cast to match the provided schema.
+    """
+    current_schema = dict(df.dtypes)
+
+    new_cols = []
+    for field in schema.fields:
+        field_name = field.name
+        target_dtype = field.dataType
+        target_nullable = field.nullable
+        current_dtype = current_schema.get(field_name)
+
+        if isinstance(target_dtype, ArrayType):
+            # Handle array casting using transform()
+            target_elem_type_str = target_dtype.elementType.simpleString()
+            expr_str = (
+                f"transform({field_name}, x -> cast(x as {target_elem_type_str}))"
+            )
+            new_col = expr(expr_str).alias(field_name)
+
+        elif current_dtype != target_dtype.simpleString():
+            # Cast primitive types directly
+            new_col = col(field_name).cast(target_dtype).alias(field_name)
+
+        else:
+            new_col = col(field_name)
+
+        new_cols.append(new_col)
+
+    return df.select(new_cols)
+
+
+def strip_nullability(data_type: DataType) -> DataType:
+    """
+    Recursively returns a version of the data type with all nullability removed,
+    including nested types like ArrayType, MapType, StructType.
+    """
+    if isinstance(data_type, ArrayType):
+        return ArrayType(strip_nullability(data_type.elementType), containsNull=False)
+    elif isinstance(data_type, MapType):
+        return MapType(
+            strip_nullability(data_type.keyType),
+            strip_nullability(data_type.valueType),
+            valueContainsNull=False,
+        )
+    elif isinstance(data_type, StructType):
+        return StructType(
+            [
+                StructField(f.name, strip_nullability(f.dataType), nullable=False)
+                for f in data_type.fields
+            ]
+        )
+    else:
+        return data_type
+
+
+def check_schema_alignment(expected: StructType, observed: StructType) -> None:
+    """Check that schema matches provided, ignoring nullability since Spark will not enforce that"""
+
+    failing_cols = []
+
+    observed_fields = {field.name: field.dataType for field in observed.fields}
+
+    for field in expected.fields:
+        expected_vals = (field.name, strip_nullability(field.dataType))
+        observed_raw_type = observed_fields.get(field.name)
+
+        if observed_raw_type is None:
+            observed_vals = ("<missing>", None)
+        else:
+            observed_vals = (field.name, strip_nullability(observed_raw_type))
+
+        if expected_vals != observed_vals:
+            failing_cols.append((expected_vals, observed_vals))
+
+    if failing_cols:
+        mismatch_details = "\n".join(
+            f"Expected: {e}, Observed: {o}" for e, o in failing_cols
+        )
+        raise InconsistentSchemaError(
+            f"Schema not matching expected.\n\nMismatched columns:\n{mismatch_details}"
+        )

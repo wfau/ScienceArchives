@@ -11,8 +11,8 @@ def spark_fixture(tmp_path_factory):
 
     spark = (
         SparkSession.builder.appName("TestSparkSession")
-        .master("local[2]")
-        .config("spark.driver.memory", "4g")
+        .master("local[4]")
+        .config("spark.driver.memory", "30g")
         .config("spark.sql.warehouse.dir", warehouse_path)
         .config("spark.sql.catalogImplementation", "hive")
         .config(
