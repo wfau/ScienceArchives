@@ -4,10 +4,18 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType, ArrayType, MapType, StructField, DataType
 
 
-def validate_consistent_nrows(original: DataFrame, final: DataFrame) -> None:
-    if original.count() != final.count():
+def validate_consistent_nrows(detection: DataFrame, final: DataFrame) -> None:
+
+    detection_source_ids = set(
+        detection.select("sourceID").distinct().rdd.flatMap(lambda x: x).collect()
+    )
+    final_source_ids = set(
+        final.select("sourceID").distinct().rdd.flatMap(lambda x: x).collect()
+    )
+
+    if len(list(detection_source_ids - final_source_ids)) != 0:
         raise InconsistentRowCountError(
-            f"Transformed dataframe does not have the same number of rows ({final.count()}) as the original {original.count()}"
+            f"Transformed dataframe does not have the same number of source IDs ({len(list(final_source_ids))}) as the original detection table ({len(list(detection_source_ids))})"
         )
 
 

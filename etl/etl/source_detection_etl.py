@@ -165,9 +165,9 @@ def pipeline():
         joined_read_from_table = spark.table(joined_table_name)
 
         try:
-            validate_consistent_nrows(original=source, final=joined_read_from_table)
+            validate_consistent_nrows(detection=detection, final=joined_read_from_table)
             logger.info(
-                "✅ Number of rows in the transformed and loaded data matches the extracted original data"
+                "✅ Number of unique key entries match between Detection and the joined table"
             )
         except InconsistentRowCountError as e:
             logger.error(f"❌ Validation failed: {e}")
