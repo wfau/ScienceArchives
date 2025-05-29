@@ -28,6 +28,53 @@ Perhaps more importantly, automatic validation runs throughout `etl/source_detec
 
 Install with `pip install -e .` from this directory (`etl`)
 
+Settings are configured with a file `etl_config.toml` that must live in the relevant working directory. A CLI option to set to path might be useful in future.
+
+Example `etl_config.toml`:
+```toml
+
+title = "ScienceArchives pipeline config"
+
+[spark_warehouse]
+path = "spark-warehouse"
+overwrite = true
+
+[parquet_paths]
+source = "ScienceArchives/etl/example_data/source"
+detection = "ScienceArchives/etl/example_data/detection"
+
+[table_names]
+source = "source"
+detection = "detection"
+source_detection = "source_detection"
+
+[partitioning]
+n_buckets = 8
+
+[transform]
+columns_to_array_value = [
+        "mjd",
+        "aperMag1",
+        "aperMag1err",
+        "aperMag2",
+        "aperMag2err",
+        "aperMag3",
+        "aperMag3err",
+        "errBits",
+        "averageConf",
+        "class",
+        "classStat",
+        "deprecated",
+        "ppErrBits",
+        "objID",
+        "multiframeID",
+        "extNum",
+        "seqNum",
+        "flag",
+        "modelDistSecs",
+]
+```
+
 ### Dependencies
 
 The local conda environment used is available in `spark355.yaml` for reference.

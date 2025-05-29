@@ -4,4 +4,4 @@ etl/__pycache__
 .ipynb_checkpoints
 *.pytest*
 logs/*
-derby.log
+*.log

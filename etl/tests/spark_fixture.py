@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 from pathlib import Path
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def spark_fixture(tmp_path_factory):
     """Provide a Spark session with a unique temp warehouse per session."""
     warehouse_dir = tmp_path_factory.mktemp("spark_warehouse")
@@ -11,7 +11,8 @@ def spark_fixture(tmp_path_factory):
 
     spark = (
         SparkSession.builder.appName("TestSparkSession")
-        .master("local[*]")
+        .master("local[2]")
+        .config("spark.driver.memory", "4g")
         .config("spark.sql.warehouse.dir", warehouse_path)
         .config("spark.sql.catalogImplementation", "hive")
         .config(

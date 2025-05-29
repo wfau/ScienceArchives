@@ -81,5 +81,6 @@ def cast_df_using_schema(df: DataFrame, schema: StructType):
         [
             col(field.name).cast(field.dataType).alias(field.name)
             for field in schema.fields
+            if col(field.name).dataType != field.dataType
         ]
     )
