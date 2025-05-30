@@ -34,8 +34,6 @@ services:
     image: postgres:17-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USER}

@@ -1,0 +1,33 @@
+
+Tag	Description
+--==	Schema description start/end
+----	Table/Function description start/end
+--/H	Header (only 1 line as a table header)
+--/T	Text
+--/U	Units
+--/D	Description
+--/N	Default Value
+--/C	Unified Content Descriptor
+--/L	HTM Level to compute
+--/Q	derived from attributes (comma seperated list of tablename.attribute) or procedure
+--/F	FITS table TTYPE
+--/A	FITS table column array index
+--/K	CASU FITS file Keyword
+--/E	ESO FITS file Keyword - required for ESO-SAF releases
+--/W	ESO short description - required for ESO-SAF releases
+--/B	ESO tag to indicate TINDXi should be set to True
+--/R	Range of value
+--/V	specific Values
+--/I	Tooltip text
+--/G	Glossary
+--/S	(Reserved to tell CU19 whether or not this column should have statistics created for it)
+--/O	Omit the given FITS Keyword (--/K) in the description; no parameter given
+--	Comment or /* */ on different lines
+CREATE	Table/Function to be included in documentation
+create	Table/Function NOT to be included in documentation
+)	End of Table
+AS	Start of not processed function/procedure block; should end with END followed by GO on the next line.
+END/GO	End of function/procedure block; both at the beginning of a new line
+RETURNS	returned variables of a function
+CONSTRAINT pk_<tablename> PRIMARY KEY (key)	This line defines the primary key
+Required constraints:	If you have foreign keys, list them in the header under "Required constraints:" as shown in the example below. Then parse your schema with the constraint_parse.py script. If you don't want to create the foreign key, you write the key name without brackets.

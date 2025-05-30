@@ -23,8 +23,8 @@ class SQLQueryForm(forms.ModelForm):
         self.fields['query'] = forms.Field(widget=HiddenInput())
         choices=(
             ('html', 'HTML table summary (results are not saved to a file)'),
-            ('fits', 'FITS FILE (downloadable with HTML table summary on-screen)'),
-            ('votable', 'VOTable FILE (downloadable with HTML table summary on-screen)'),
+            # ('fits', 'FITS FILE (downloadable with HTML table summary on-screen)'),
+            # ('votable', 'VOTable FILE (downloadable with HTML table summary on-screen)'),
         )
 
         self.fields['timeout'].initial = 3600

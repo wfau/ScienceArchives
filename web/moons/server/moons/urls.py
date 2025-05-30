@@ -22,4 +22,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path("", include("core.urls")),
     path('queries/', include("queries.urls")),
+    path('oidc/', include('mozilla_django_oidc.urls')),
 ]
