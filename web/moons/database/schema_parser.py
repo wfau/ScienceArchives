@@ -3,7 +3,8 @@ import argparse
 import json
 import re
 
-
+# column definition
+# type + optional not null, optional default value (scientific notation decimal or a string)
 columndef = r'(\w+)\s+(TIMESTAMP|real|float|INTEGER|int|tinyint|SMALLINT|smallint|bigint|varchar)(\(\d+\))?\s+(not\s+null)?(\s+default\s(-?\d+(\.\d+)?(e[+-]?\d+)?|[\"\'][\w\s\-\:]+[\'\"]))?\,?'
 pattern = re.compile(columndef, re.IGNORECASE)
 
