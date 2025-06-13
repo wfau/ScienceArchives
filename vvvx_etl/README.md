@@ -1,6 +1,6 @@
-# ETL pipeline for new ScienceArchives
+# ETL pipeline for VVVZ
 
-ETL pipeline for transforming old ScienceArchives data to new data model. 
+ETL pipeline for transforming VVVX data to new data model. 
 
 ## Contributors
 * Simon Harnqvist (sharnqvi@roe.ac.uk)

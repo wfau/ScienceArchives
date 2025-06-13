@@ -4,4 +4,6 @@ etl/__pycache__
 .ipynb_checkpoints
 *.pytest*
 logs/*
-*.log
+*.log*.pyc
+satools/__pycache__
+.ipynb_checkpoints
