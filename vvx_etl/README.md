@@ -1,6 +1,6 @@
-# ETL pipeline for VVVZ
+# ETL pipeline for VVX
 
-ETL pipeline for transforming VVVX data to new data model. 
+ETL pipeline for transforming VVX data to new data model. 
 
 ## Contributors
 * Simon Harnqvist (sharnqvi@roe.ac.uk)
