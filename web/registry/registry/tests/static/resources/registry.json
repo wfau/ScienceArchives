@@ -1,0 +1,62 @@
+{
+  "ri:Resource": {
+    "@xmlns:ri": "http://www.ivoa.net/xml/RegistryInterface/v1.0",
+    "@xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "@xmlns:vg": "http://www.ivoa.net/xml/VORegistry/v1.0",
+    "@xmlns:vr": "http://www.ivoa.net/xml/VOResource/v1.0",
+    "@xmlns:vs": "http://www.ivoa.net/xml/VODataService/v1.1",
+    "@xmlns:xs": "http://www.ivoa.net/xml/SIA/v1.1",
+    "@xmlns:cs": "http://www.ivoa.net/xml/ConeSearch/v1.0",
+    "@created": "2024-01-01T12:12:12Z",
+    "@status": "active",
+    "@updated": "2024-01-01T00:00:00Z",
+    "@xsi:type": "vg:Registry",
+    "title": {
+      "@xmlns": "",
+      "#text": "Test Registry"
+    },
+    "shortName": {
+      "@xmlns": "",
+      "#text": "Test Registry"
+    },
+    "identifier": {
+      "@xmlns": "",
+      "#text": "ivo://example.edu/registry"
+    },
+    "curation": {
+      "@xmlns": "",
+      "publisher": "TestOrg",
+      "contact": {
+        "name": "Test VO Registry Admins",
+        "address": "950 N. Cherry Ave. Tucson, AZ 85719, USA",
+        "email": "vo.registry@example.edu"
+      }
+    },
+    "content": {
+      "@xmlns": "",
+      "subject": "registry",
+      "description": "Test Registry",
+      "referenceURL": "https://vo.example.edu/registry",
+      "type": "Registry"
+    },
+    "capability": {
+      "@xmlns": "",
+      "@standardID": "ivo://ivoa.net/std/Registry",
+      "@xsi:type": "vg:Harvest",
+      "interface": {
+        "@role": "std",
+        "@xsi:type": "vg:OAIHTTP",
+        "accessURL": "https://vo.example.edu/registry"
+      },
+      "maxRecords": "0"
+    },
+    "full": {
+      "@xmlns": "",
+      "#text": "false"
+    },
+    "managedAuthority": {
+      "@xmlns": "",
+      "#text": "example.edu"
+    }
+  }
+}

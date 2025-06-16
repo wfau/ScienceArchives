@@ -1,0 +1,10 @@
+<Identify xmlns="http://www.openarchives.org/OAI/2.0/">
+  <repositoryName>Inserted by identify.py</repositoryName>
+  <baseURL>Inserted by identify.py</baseURL>
+  <protocolVersion>2.0</protocolVersion>
+  <adminEmail>Inserted by identify.py</adminEmail>
+  <earliestDatestamp>Inserted by identify.py</earliestDatestamp>
+  <deletedRecord>persistent</deletedRecord>
+  <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+  <description></description>
+</Identify>

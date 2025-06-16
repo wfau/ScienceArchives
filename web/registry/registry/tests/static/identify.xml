@@ -1,0 +1,38 @@
+<Identify xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <repositoryName>Test repository</repositoryName>
+  <baseURL>https://vo.example.edu/registry</baseURL>
+  <protocolVersion>2.0</protocolVersion>
+  <adminEmail>test.adminy@example.edu</adminEmail>
+  <earliestDatestamp>2000-01-01T00:00:00Z</earliestDatestamp>
+  <deletedRecord>persistent</deletedRecord>
+  <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+  <description>
+    <ri:Resource xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.1" created="2024-02-01T12:12:12Z" status="active" updated="2024-02-01T12:12:12Z" xsi:type="vg:Registry">
+      <title xmlns="">Test Registry</title>
+      <shortName xmlns="">Test Registry</shortName>
+      <identifier xmlns="">ivo://example.edu/registry</identifier>
+      <curation xmlns="">
+	<publisher>TestOrg</publisher>
+	<contact>
+	  <name>VO Registry Admins</name>
+	  <address>950 N. Cherry Ave. Tucson, AZ 85719, USA</address>
+	  <email>vo.registry@example.edu</email>
+	</contact>
+      </curation>
+      <content xmlns="">
+	<subject>registry</subject>
+	<description>Test Registry</description>
+	<referenceURL>https://vo.example.edu/registry</referenceURL>
+	<type>Registry</type>
+      </content>
+      <capability xmlns="" standardID="ivo://ivoa.net/std/Registry" xsi:type="vg:Harvest">
+	<interface role="std" xsi:type="vg:OAIHTTP">
+	  <accessURL>https://vo.example.edu/registry</accessURL>
+	</interface>
+	<maxRecords>0</maxRecords>
+      </capability>
+      <full xmlns="">false</full>
+      <managedAuthority xmlns="">example.edu</managedAuthority>
+    </ri:Resource>
+  </description>
+</Identify>

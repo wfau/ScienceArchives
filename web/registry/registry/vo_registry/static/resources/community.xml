@@ -1,0 +1,51 @@
+
+<ri:Resource created="2008-04-24T13:31:24Z" status="active" updated="2008-04-24T13:31:24Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:va="http://www.ivoa.net/xml/VOApplication/v1.0rc1" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vr:Service">
+        <title xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">WFAU Community</title>
+        <identifier xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">ivo://wfau.roe.ac.uk/community</identifier>
+        <curation xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU</publisher>
+            <creator>
+                <name>WFAU</name>
+            </creator>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">
+            <subject>Community WFAU</subject>
+            <description>This AstroGrid community is for users from the Univeristy of Edinburgh, as well as users from continental Europe who have requested AstroGrid access to UKIDSS data.  It is also for those users who will be using UKIDSS heavily and would like to have their online data storage close to the actual database server.</description>
+            <referenceURL>http://www.astrogrid.org/</referenceURL>
+            <type>Other</type>
+            <contentLevel>Research</contentLevel>
+        </content>
+        <capability standardID="ivo://org.astrogrid/std/Community/accounts" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="base">https://ag-community.roe.ac.uk:443/wfau-community/accounts</accessURL>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/Community/v1.0#PolicyManager" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vr:WebService">
+                <accessURL use="full">http://ag-community.roe.ac.uk/wfau-community/services/PolicyManager</accessURL>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/Community/v1.0#SecurityService" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vr:WebService">
+                <accessURL use="full">http://ag-community.roe.ac.uk/wfau-community/services/SecurityService</accessURL>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://ag-community.roe.ac.uk/wfau-community/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://ag-community.roe.ac.uk/wfau-community/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+    </ri:Resource>

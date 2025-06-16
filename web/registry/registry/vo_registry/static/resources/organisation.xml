@@ -1,0 +1,19 @@
+
+<ri:Resource created="2008-02-14T12:12:06Z" status="active" updated="2008-02-14T12:12:06Z" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vr:Organisation">
+        <title>WFAU Publishing Registry</title>
+        <identifier>ivo://wfau.roe.ac.uk/organisation</identifier>
+        <curation>
+            <publisher>Wide Field Astronomy Unit (WFAU)</publisher>
+            <contact>
+                <name>Mark</name>
+                <email>Holliman</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>Organisation</subject>
+            <description>Wide Field Astronomy Unit (WFAU)</description>
+            <referenceURL>www.roe.ac.uk/ifa</referenceURL>
+            <type>Organisation</type>
+        </content>
+        <facility>Institute for Astronomy, University of Edinburgh</facility>
+    </ri:Resource>

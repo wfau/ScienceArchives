@@ -1,0 +1,20 @@
+
+<ri:Resource created="2008-04-18T15:35:56Z" status="active" updated="2008-04-18T15:35:56Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:va="http://www.ivoa.net/xml/VOApplication/v1.0rc1" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vr:Service">
+        <title/>
+        <identifier>ivo://wfau.roe.ac.uk/myspace</identifier>
+        <curation>
+            <publisher/>
+            <creator>
+                <name/>
+            </creator>
+            <contact>
+                <name/>
+            </contact>
+        </curation>
+        <content>
+            <subject/>
+            <description/>
+            <referenceURL>http://www.astrogrid.org/</referenceURL>
+            <type>Other</type>
+        </content>
+    </ri:Resource>

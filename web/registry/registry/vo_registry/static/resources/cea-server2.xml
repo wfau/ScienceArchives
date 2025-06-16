@@ -1,0 +1,35 @@
+
+<ri:Resource created="2008-05-01T13:55:15Z" status="active" updated="2008-05-01T13:55:15Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ceab="http://www.ivoa.net/xml/CEA/base/v1.0" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vr:Service">
+        <title>WFAU CEA Commandline 2</title>
+        <shortName>cea-server2</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/cea-server2</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU</publisher>
+            <creator>
+                <name>AstroGrid</name>
+            </creator>
+            <date role="representative">2006-01-01</date>
+            <version>2006.0</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>service, CEA, virtual observatory</subject>
+            <description>A service in the Common Execution Architecture. This service
+			 provides one or more science applications which are separately registered.
+			 See the ManagedApplications element of this document for a list of 
+				applications</description>
+            <referenceURL>http://www.astrogrid.org/maven/docs/head/applications/</referenceURL>
+            <type>Other</type>
+        </content>
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <interface role="std" version="1.0" xsi:type="cea:CECInterface">
+                <accessURL>http://cea-apps.roe.ac.uk/cea-server2/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/FastKDA</ApplicationReference>
+            </managedApplications>
+        </capability>
+    </ri:Resource>

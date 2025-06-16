@@ -1,0 +1,203 @@
+
+<ri:Resource created="2008-05-01T13:55:15Z" status="active" updated="2010-02-15T14:29:30Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:va="http://www.ivoa.net/xml/VOApplication/v1.0rc1" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cea:CeaApplication">
+        <title>Fast Kernel Density Analysis Classifier</title>
+        <identifier xmlns:ceab="http://www.ivoa.net/xml/CEA/base/v1.0">ivo://wfau.roe.ac.uk/FastKDA</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>WFAU, Institute for Astronomy, University of Edinburgh</name>
+                <logo>http://watten.roe.ac.uk/wfau.gif</logo>
+            </creator>
+            <date>2004-03-26</date>
+            <version>1.0</version>
+            <contact>
+                <name>Brian Walshe</name>
+                <email>bcw@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>classifier</subject>
+            <description>Classify objects using kernel density estimation. Cached sufficient
+statistics are used to speed up the process.</description>
+            <referenceURL>http://www.astrogrid.org/</referenceURL>
+            <type>Other</type>
+            <contentLevel>Research</contentLevel>
+        </content>
+        <applicationDefinition xmlns:ceab="http://www.ivoa.net/xml/CEA/base/v1.0">
+            <parameters>
+                <parameterDefinition id="priors" type="text">
+                    <name>Class Priors</name>
+                    <description>A list of prior probabilites for each class</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="train_fmt" type="text">
+                    <name>Training File Format</name>
+                    <description>Training FileFormat</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue>(auto)</defaultValue>
+                    <optionList>
+                        <optionVal>(auto)</optionVal>
+                        <optionVal>FITS-plus</optionVal>
+                        <optionVal>colfits-plus</optionVal>
+                        <optionVal>colfits-basic</optionVal>
+                        <optionVal>FITS</optionVal>
+                        <optionVal>VOTable</optionVal>
+                        <optionVal>ASCII</optionVal>
+                        <optionVal>CSV</optionVal>
+                        <optionVal>TST</optionVal>
+                        <optionVal>IPAC</optionVal>
+                        <optionVal>WDC</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="test_fmt" type="text">
+                    <name>Test File Format</name>
+                    <description>Test FileFormat</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue>(auto)</defaultValue>
+                    <optionList>
+                        <optionVal>(auto)</optionVal>
+                        <optionVal>FITS-plus</optionVal>
+                        <optionVal>colfits-plus</optionVal>
+                        <optionVal>colfits-basic</optionVal>
+                        <optionVal>FITS</optionVal>
+                        <optionVal>VOTable</optionVal>
+                        <optionVal>ASCII</optionVal>
+                        <optionVal>CSV</optionVal>
+                        <optionVal>TST</optionVal>
+                        <optionVal>IPAC</optionVal>
+                        <optionVal>WDC</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="labels" type="text">
+                    <name>Class Labels</name>
+                    <description>The lables of the classes to use</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="crossval" type="text">
+                    <name>Cross Validation</name>
+                    <description>Use leave-one-out corss validation to evaluate the classifiers performance.</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue>true</defaultValue>
+                    <optionList>
+                        <optionVal>true</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="out_fmt" type="text">
+                    <name>Output File Format</name>
+                    <description>Output FileFormat</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue>VOTable</defaultValue>
+                    <optionList>
+                        <optionVal>FITS-plus</optionVal>
+                        <optionVal>colfits-plus</optionVal>
+                        <optionVal>colfits-basic</optionVal>
+                        <optionVal>FITS</optionVal>
+                        <optionVal>VOTable</optionVal>
+                        <optionVal>ASCII</optionVal>
+                        <optionVal>CSV</optionVal>
+                        <optionVal>TST</optionVal>
+                        <optionVal>IPAC</optionVal>
+                        <optionVal>WDC</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="out" type="VOTable">
+                    <name>Output File</name>
+                    <description>Classified data will be stored in this file</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="class_col" type="text">
+                    <name>Class attribute name</name>
+                    <description>the name of attribute (column) listing the class of each datapoint</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="used_cols" type="text">
+                    <name>Used Attributes</name>
+                    <description>The names of the attributes (columns) to use for classification</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="train_data" type="VOTable">
+                    <name>Training Data</name>
+                    <description>A VOTable containing the data with which to train the classifier</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="widths" type="text">
+                    <name>Kernel Widths</name>
+                    <description>A list of widths for the kernel function of each class</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="test_data" type="VOTable">
+                    <name>Test Data</name>
+                    <description>A VOTable containing the data to be classified</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue/>
+                </parameterDefinition>
+                <parameterDefinition id="kernel" type="text">
+                    <name>Kernel Type</name>
+                    <description>Select the kernel function to use</description>
+                    <unit/>
+                    <ucd/>
+                    <defaultValue>epanechnikov</defaultValue>
+                    <optionList>
+                        <optionVal>gaussian</optionVal>
+                        <optionVal>epanechnikov</optionVal>
+                    </optionList>
+                </parameterDefinition>
+            </parameters>
+            <interfaces>
+                <interfaceDefinition id="classify">
+                    <input>
+                        <pref maxOccurs="1" minOccurs="1" ref="train_data"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="train_fmt"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="test_data"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="test_fmt"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="class_col"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="labels"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="used_cols"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="widths"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="priors"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="kernel"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="out_fmt"/>
+                    </input>
+                    <output>
+                        <pref maxOccurs="1" minOccurs="1" ref="out"/>
+                    </output>
+                </interfaceDefinition>
+                <interfaceDefinition id="crossvalidate">
+                    <input>
+                        <pref maxOccurs="1" minOccurs="1" ref="train_data"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="train_fmt"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="class_col"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="labels"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="used_cols"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="widths"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="priors"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="kernel"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="crossval"/>
+                        <pref maxOccurs="1" minOccurs="1" ref="out_fmt"/>
+                    </input>
+                    <output>
+                        <pref maxOccurs="1" minOccurs="1" ref="out"/>
+                    </output>
+                </interfaceDefinition>
+            </interfaces>
+        </applicationDefinition>
+    </ri:Resource>

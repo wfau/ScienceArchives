@@ -1,0 +1,48 @@
+
+<ri:Resource created="2008-08-20T15:04:43Z" status="active" updated="2025-05-19T13:47:14Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:va="http://www.ivoa.net/xml/VOApplication/v1.0rc1" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vs:CatalogService">
+        <title>SuperCOSMOS Sky Surveys SSS SIAP Cutout Service</title>
+        <shortName>SuperCOSMOS SIAP</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/sss-siap</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>WFAU, Institute for Astronomy, University of Edinburgh</name>
+                <logo>http://wfaudata.roe.ac.uk/wfau.gif</logo>
+            </creator>
+            <version>1.0</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>SuperCOSMOS Sky Surveys SSS, SIAP, scans of UKST Bj, R, I, H-alpha, short-red, field 287, POSSI-e, POSSII Bj, R and I</subject>
+            <description>Simple image access to SuperCOSMOS Sky Surveys (SSS) images (scans of photographic survey plates)</description>
+            <referenceURL>http://www-wfau.roe.ac.uk/sss/siap</referenceURL>
+            <type>Survey</type>
+            <contentLevel>Research</contentLevel>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/SIA" xmlns:sia="http://www.ivoa.net/xml/SIA/v1.0" xsi:type="sia:SimpleImageAccess">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://niuserre.roe.ac.uk:8080/ssa/SSS_SIAP?</accessURL>
+            </interface>
+            <imageServiceType>Cutout</imageServiceType>
+            <maxQueryRegionSize>
+                <long>360</long>
+                <lat>180</lat>
+            </maxQueryRegionSize>
+            <maxImageExtent>
+                <long>0.5</long>
+                <lat>0.5</lat>
+            </maxImageExtent>
+            <maxImageSize>
+                <long>2700</long>
+                <lat>2700</lat>
+            </maxImageSize>
+            <maxFileSize>20000000</maxFileSize>
+            <maxRecords>300</maxRecords>
+        </capability>
+        <coverage>
+            <waveband>Optical</waveband>
+        </coverage>
+    </ri:Resource>

@@ -1,0 +1,30 @@
+
+<ri:Resource created="2008-02-14T12:12:06Z" status="active" updated="2024-11-04T11:01:54Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:va="http://www.ivoa.net/xml/VOApplication/v1.0rc1" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vg:Registry">
+        <title>WFAU Publishing Registry</title>
+        <identifier>ivo://wfau.roe.ac.uk/org.astrogrid.registry.RegistryService</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">Wide Field Astronomy Unit (WFAU)</publisher>
+            <creator>
+                <name>AstroGrid</name>
+            </creator>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>registry</subject>
+            <description>WFAU Publishing registry</description>
+            <referenceURL>http://publishing-registry.roe.ac.uk/registry</referenceURL>
+            <type>Registry</type>
+            <contentLevel>Research</contentLevel>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/Registry" xsi:type="vg:Harvest">
+            <interface role="std" xsi:type="vg:OAIHTTP">
+            <accessURL>http://publishing-registry.roe.ac.uk/registry</accessURL>
+            </interface>
+            <maxRecords>200</maxRecords>
+        </capability>
+        <full>false</full>
+        <managedAuthority>wfau.roe.ac.uk</managedAuthority>
+    </ri:Resource>

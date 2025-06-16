@@ -1,0 +1,38 @@
+
+<ri:Resource created="2008-04-18T12:35:55Z" status="active" updated="2008-04-18T15:42:07Z" xmlns:cea="http://www.ivoa.net/xml/CEA/v1.0rc1" xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:va="http://www.ivoa.net/xml/VOApplication/v1.0rc1" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" xmlns:vs="http://www.ivoa.net/xml/VODataService/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="vr:Service">
+        <title xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">ROE VOSpace</title>
+        <identifier xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">ivo://wfau.roe.ac.uk/vospace</identifier>
+        <curation xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU</publisher>
+            <creator>
+                <name>AstroGrid</name>
+            </creator>
+            <version>alpha</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0">
+            <subject>VOSpace</subject>
+            <description>This is the ROE VOSpace service for the WFAU community.</description>
+            <referenceURL>http://www.astrogrid.org/</referenceURL>
+            <type>Other</type>
+            <contentLevel>Research</contentLevel>
+        </content>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://odin.roe.ac.uk/astrogrid-vospace/vosi-availability/40ecf852195d195001196162bc570003</accessURL>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/myspace/v1.0#myspace" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vr:WebService">
+                <accessURL use="full">http://odin.roe.ac.uk/astrogrid-vospace/myspace-1.0/40ecf852195d195001196162bc570003</accessURL>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities" xmlns:cap="urn:astrogrid:schema:Capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://odin.roe.ac.uk/astrogrid-vospace/vosi-capabilities/40ecf852195d195001196162bc570003</accessURL>
+            </interface>
+        </capability>
+    </ri:Resource>

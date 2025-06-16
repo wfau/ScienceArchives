@@ -1,0 +1,21 @@
+<ri:Resource xmlns:ri="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vg="http://www.ivoa.net/xml/VORegistry/v1.0" xmlns:vr="http://www.ivoa.net/xml/VOResource/v1.0" created="2005-01-27T21:58:27Z" status="active" updated="2024-02-02T00:00:00Z" xsi:type="vg:Authority" xsi:schemaLocation="http://www.ivoa.net/xml/VOResource/v1.0 http://www.ivoa.net/xml/VOResource/v1.0 http://www.ivoa.net/xml/VORegistry/v1.0 http://www.ivoa.net/xml/VORegistry/v1.0">
+  <title xmlns="">TestOrg</title>
+  <shortName xmlns="">TestOrg</shortName>
+  <identifier xmlns="">ivo://example.edu</identifier>
+  <curation xmlns="">
+    <publisher>TestOrg</publisher>
+    <contact>
+      <name>Test VO Registry Admins</name>
+      <address>950 N. Cherry Ave. Tucson, AZ 85719, USA</address>
+      <email>vo.registry@example.edu</email>
+    </contact>
+  </curation>
+  <content xmlns="">
+    <subject>virtual observatory</subject>
+    <description>authority for TestOrg</description>
+    <referenceURL>https://www.example.edu</referenceURL>
+    <type>Other</type>
+    <contentLevel>General</contentLevel>
+  </content>
+  <managingOrg xmlns="">TestOrg</managingOrg>
+</ri:Resource>
