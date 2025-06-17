@@ -1,0 +1,3597 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2009-11-17T13:49:33Z" status="active" updated="2019-12-04T13:36:55Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>Two Micron All Sky Survey (2MASS)</title>
+        <shortName>2MASS</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/twomass-dsa</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>UMASS/IPAC</name>
+            </creator>
+            <date>2009-11-17</date>
+            <version>Version 1</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>Infrared all-sky survey</subject>
+            <description>The Two Micron All Sky Survey (2MASS) will provide a uniform survey of the entire sky at three near-infrared wavebands: J(lambdaeff = 1.25 micrometers), H(lambdaeff = 1.65 micrometers), and Ks(lambdaeff = 2.16 micrometers). A major goal of the survey is to probe large scale structures in the Milky Way and in the Local Universe, exploiting the relatively high transparency of the interstellar medium in the near-infrared, and the high near-infrared luminosities of evolved low- and intermediate-mass stars.Home page at http://pegasus.phast.umass.edu/</description>
+            <referenceURL>http://www.ipac.caltech.edu/2mass/</referenceURL>
+            <type>Catalog</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>service-for</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/twomass-dsa/ceaApplication</relatedResource>
+            </relationship>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>twomass_psc table: cone search of Point Source Catalog</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/twomass-dsa/DirectCone?DSACAT=TWOMASS&amp;DSATAB=twomass_psc&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>218.8</ra>
+                <dec>-29.9</dec>
+                <sr>0.1</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>twomass_xsc table: cone search of Extended Source Catalog</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/twomass-dsa/DirectCone?DSACAT=TWOMASS&amp;DSATAB=twomass_xsc&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>218.8</ra>
+                <dec>-29.9</dec>
+                <sr>0.1</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <description>Access to two applications: general ADQL query, and asynchronous cone-search where relevant/enabled.</description>
+            <interface xsi:type="cea:CECInterface">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/twomass-dsa/ceaApplication</ApplicationReference>
+            </managedApplications>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#tables">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/VOSI/tables</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#ceaApplication">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/VOSI/applications</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/Delegation">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twomass-dsa/delegations</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <coverage>
+            <waveband>Infrared</waveband>
+        </coverage>
+        <table>
+            <name>twomass_psc</name>
+            <description />
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinate</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinate</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinate</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>HTM index, 20 digits, for co-ordinate</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>J2000 right ascension with respect to the ICRS</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>J2000 declination with respect to the ICRS</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>err_maj</name>
+                <description>Semi-major axis length of the one sigma position uncertainty ellipse</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>err_min</name>
+                <description>Semi-minor axis length of the one sigma position uncertainty ellipse</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>err_ang</name>
+                <description>Position angle on the sky of the semi-major axis of the position uncertainty ellipse (East of North)</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>designation</name>
+                <description>Sexagesimal, equatorial position-based source name in the form: hhmmssss+ddmmsss[ABC...].</description>
+                <ucd>NAME</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>j_m</name>
+                <description>Default J-band magnitude</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_cmsig</name>
+                <description>Corrected photometric uncertainty for the default J-band magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msigcom</name>
+                <description>Combined, or total photometric uncertainty for the default J-band magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_snr</name>
+                <description>J-band "scan" signal-to-noise ratio.</description>
+                <unit>mag</unit>
+                <ucd>INST_NOISE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m</name>
+                <description>Default H-band magnitude</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_cmsig</name>
+                <description>Corrected photometric uncertainty for the default H-band magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msigcom</name>
+                <description>Combined, or total photometric uncertainty for the default H-band magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_snr</name>
+                <description>H-band "scan" signal-to-noise ratio.</description>
+                <unit>mag</unit>
+                <ucd>INST_NOISE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m</name>
+                <description>Default Ks-band magnitude</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_cmsig</name>
+                <description>Corrected photometric uncertainty for the default Ks-band magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msigcom</name>
+                <description>Combined, or total photometric uncertainty for the default Ks-band magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_snr</name>
+                <description>Ks-band "scan" signal-to-noise ratio.</description>
+                <unit>mag</unit>
+                <ucd>INST_NOISE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ph_qual</name>
+                <description>Photometric quality flag.</description>
+                <ucd>CODE_QUALITY</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>rd_flg</name>
+                <description>Read flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>bl_flg</name>
+                <description>Blend flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>cc_flg</name>
+                <description>Contamination and confusion flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>ndet</name>
+                <description>Frame detection statistics.</description>
+                <ucd>NUMBER</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>prox</name>
+                <description>Proximity.</description>
+                <unit>arcsec</unit>
+                <ucd>POS_ANG_DIST_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>pxpa</name>
+                <description>The position angle on the sky of the vector from the source to the nearest neighbor in the PSC, in degrees East of North.</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>pxcntr</name>
+                <description>The pts_key value of the nearest source in the PSC.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>gal_contam</name>
+                <description>Extended source "contamination" flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>mp_flg</name>
+                <description>Minor Planet Flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>pts_key</name>
+                <description>A unique identification number for the PSC source.</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>hemis</name>
+                <description>Hemisphere code for the TWOMASS Observatory from which this source was observed.</description>
+                <ucd>OBS_CODE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>date</name>
+                <description>The observation reference date for this source expressed in ISO standard format. (YYYY-MM-DD)</description>
+                <unit>yyyy-mm-dd</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>scan</name>
+                <description>The nightly scan number in which the source was detected.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>glon</name>
+                <description>Galactic longitude rounded to 0.001 deg.</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LON</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>glat</name>
+                <description>Galactic latitude rounded to 0.001 deg.</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LAT</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>x_scan</name>
+                <description>Mean cross-scan focal plane position of the source in the Universal scan (U-scan) coordinate system.</description>
+                <unit>arcsec</unit>
+                <ucd>INST_POS</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>jdate</name>
+                <description>The Julian Date of the source measurement accurate to +-30 seconds.</description>
+                <unit>Julian days</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_psfchi</name>
+                <description>Reduced chi-squared goodness-of-fit value for the J-band profile-fit photometry made on the 1.3 s "Read_2" exposures.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_psfchi</name>
+                <description>Reduced chi-squared goodness-of-fit value for the H-band profile-fit photometry made on the 1.3 s "Read_2" exposures.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_psfchi</name>
+                <description>Reduced chi-squared goodness-of-fit value for the Ks-band profile-fit photometry made on the 1.3 s "Read_2" exposures.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_stdap</name>
+                <description>J-band "standard" aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_stdap</name>
+                <description>Uncertainty in the J-band standard aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_stdap</name>
+                <description>H-band "standard" aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_stdap</name>
+                <description>Uncertainty in the H-band standard aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_stdap</name>
+                <description>Ks-band "standard" aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_stdap</name>
+                <description>Uncertainty in the Ks-band standard aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>dist_edge_ns</name>
+                <description>The distance from the source to the nearest North or South scan edge.</description>
+                <unit>arcsec</unit>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>dist_edge_ew</name>
+                <description>The distance from the source to the nearest East or West scan edge.</description>
+                <unit>arcsec</unit>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>dist_edge_flg</name>
+                <description>Two character flag that specifies to which scan edges a source lies closest, and to which edges the dist_edge_ns and dist_edge_ew values refer.</description>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>dup_src</name>
+                <description>Duplicate source flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>use_src</name>
+                <description>Use source flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>a</name>
+                <description>Catalog identifier of an optical source from either the Tycho 2 or USNO-A2.0 catalog that falls within ~5" of the TWOMASS source position.</description>
+                <ucd>ID_ALTERNATIVE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>dist_opt</name>
+                <description>Distance separating TWOMASS source position and associated optical source within 5".</description>
+                <unit>arcsec</unit>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>phi_opt</name>
+                <description>Position angle on the sky of the vector from the the associated optical source to the TWOMASS source position, in degrees East of North.</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>b_m_opt</name>
+                <description>Blue magnitude of associated optical source.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>vr_m_opt</name>
+                <description>Visual or red magnitude of the associated optical source.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>nopt_mchs</name>
+                <description>The number of USNO-A2.0 or Tycho 2 optical sources found within a 5" radius of the TWOMASS position.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>ext_key</name>
+                <description>Unique identification number of the record in the XSC that corresponds to this point source.</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>scan_key</name>
+                <description>Unique identification number of the record in the Scan Information Table that corresponds to the survey scan in which this source was detected.</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>coadd_key</name>
+                <description>Unique identification number of the record in the Atlas Image Data Table (NOT YET AVAILABLE) that corresponds to Image in which the position of this source falls.</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>coadd</name>
+                <description>Sequence number of the Atlas Image in which the position of this source falls.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+        </table>
+        <table>
+            <name>twomass_scn</name>
+            <description />
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinate POS_EQ_X</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinate POS_EQ_Y</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinate POS_EQ_Z</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>HTM index, 20 digits, for co-ordinate POS_GENERAL</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>scan_key</name>
+                <description>the unique identification number for this scan.</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>hemis</name>
+                <description>Observatory from which data were obtained: "n" = north = Mt. Hopkins, "s" = south = Cerro Tololo.</description>
+                <ucd>OBS_CODE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>date</name>
+                <description>The observation reference date for this scan expressed in ISO standard format. (YYYY-MM-DD)</description>
+                <unit>yyyy-mm-dd</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>scan</name>
+                <description>Scan number (unique within date).</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>tile</name>
+                <description>Tile identification number.</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>Right ascension of scan center for equinox J2000.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>Declination of scan center for equinox J2000.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>glon</name>
+                <description>Galactic longitude of scan center, as computed from ra and dec above.</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LON</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>glat</name>
+                <description>Galactic latitude of scan center, as computed from ra and dec above.</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LAT</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ra_1</name>
+                <description>J2000 right ascension of the eastern corner at start of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>dec_1</name>
+                <description>J2000 declination of the eastern corner at start of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ra_2</name>
+                <description>J2000 right ascension of the western corner at start of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>dec_2</name>
+                <description>J2000 declination of the western corner at start of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ra_3</name>
+                <description>J2000 right ascension of the eastern corner at end of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>dec_3</name>
+                <description>J2000 declination of the eastern corner at end of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ra_4</name>
+                <description>J2000 right ascension of the western corner at end of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>dec_4</name>
+                <description>J2000 declination of the western corner at end of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>sd</name>
+                <description>Scanning direction: "n" = north-going, "s" = south-going.</description>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>qual</name>
+                <description>Quality score for scan.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>hgl</name>
+                <description>Special flag indicating whether or not this scan has a single-frame H-band electronic glitch.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cld</name>
+                <description>Special flag indicating whether or not a cloud was found in the scan after comparison of its photometry to that of overlapping scans in the database.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>xph</name>
+                <description>Special flag indicating whether or not another photometric problem, not obviously cloud related, was found in the scan after comparing its photometry to that of overlapping scans.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>anom</name>
+                <description>Special flag indicating whether or not an unusual problem was found in the Atlas Images for this scan.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>ut</name>
+                <description>Universal Time (UT) at beginning of scan.</description>
+                <unit>hr</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>jdate</name>
+                <description>Julian Date at beginning of scan.</description>
+                <unit>Julian days</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>airm</name>
+                <description>Airmass at beginning of scan.</description>
+                <ucd>PHOT_ATM_AIRMASS</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>zd</name>
+                <description>Scan's distance from the zenith at beginning of scan.</description>
+                <unit>deg</unit>
+                <ucd>POS_ZD_RES</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ha</name>
+                <description>Hour angle at beginning of scan.</description>
+                <unit>hr</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>rh</name>
+                <description>Relative humidity of telescope enclosure at beginning of scan.</description>
+                <unit>%</unit>
+                <ucd>OBS_CONDITIONS</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>air_temp</name>
+                <description>Air temperature at beginning of scan.</description>
+                <unit>degC</unit>
+                <ucd>PHYS_TEMP_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>tel_temp</name>
+                <description>Telescope girdle temperature at beginning of scan.</description>
+                <unit>degC</unit>
+                <ucd>PHYS_TEMP_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>focus</name>
+                <description>Focus setting of telescope at beginning of scan.</description>
+                <ucd>TEL_FOCAL-LENGTH</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>hry</name>
+                <description>Flag indicating the H-band array configuration for the camera.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>c_strat</name>
+                <description>Flag indicating the calibration strategy for this night's data.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_zp_ap</name>
+                <description>Photometric zero-point for J-band aperture photometry.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_ZP</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_zp_ap</name>
+                <description>Photometric zero-point for H-band aperture photometry.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_ZP</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_zp_ap</name>
+                <description>Photometric zero-point for Ks-band aperture photometry.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_ZP</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_zperr_ap</name>
+                <description>RMS-error of zero-point for H-band aperture photometry</description>
+                <unit>mag</unit>
+                <ucd>FIT_ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_zperr_ap</name>
+                <description>RMS-error of zero-point for Ks-band aperture photometry</description>
+                <unit>mag</unit>
+                <ucd>FIT_ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_n_snr10</name>
+                <description>Number of point sources at J-band with SNR&gt;10 (instrumental mag &lt;=15.8)</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_n_snr10</name>
+                <description>Number of point sources at H-band with SNR&gt;10 (instrumental mag &lt;=15.1)</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_n_snr10</name>
+                <description>Number of point sources at Ks-band with SNR&gt;10 (instrumental mag &lt;=14.3)</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>n_ext</name>
+                <description>Number of regular extended sources detected in scan.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_shape_avg</name>
+                <description>J-band average seeing shape for scan.</description>
+                <ucd>INST_SEEING</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_shape_avg</name>
+                <description>H-band average seeing shape for scan.</description>
+                <ucd>INST_SEEING</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_shape_avg</name>
+                <description>Ks-band average seeing shape for scan.</description>
+                <ucd>INST_SEEING</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_shape_rms</name>
+                <description>RMS-error of J-band average seeing shape.</description>
+                <ucd>INST_SEEING</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_shape_rms</name>
+                <description>RMS-error of H-band average seeing shape.</description>
+                <ucd>INST_SEEING</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_shape_rms</name>
+                <description>RMS-error of Ks-band average seeing shape.</description>
+                <ucd>INST_SEEING</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_2mrat</name>
+                <description>J-band average 2nd image moment ratio.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_2mrat</name>
+                <description>H-band average 2nd image moment ratio.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_2mrat</name>
+                <description>Ks-band average 2nd image moment ratio.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_psp</name>
+                <description>J-band photometric sensitivity paramater (PSP).</description>
+                <ucd>INST_SENSITIVITY</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_psp</name>
+                <description>H-band photometric sensitivity paramater (PSP).</description>
+                <ucd>INST_SENSITIVITY</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_psp</name>
+                <description>Ks-band photometric sensitivity paramater (PSP).</description>
+                <ucd>INST_SENSITIVITY</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_pts_noise</name>
+                <description>Base-10 logarithm of the mode of the noise distribution for all point source detections in the scan, where the noise is estimated from the measured J-band photometric errors and is expressed in units of mJy.</description>
+                <ucd>INST_NOISE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_pts_noise</name>
+                <description>Base-10 logarithm of the mode of the noise distribution for all point source detections in the scan, where the noise is estimated from the measured H-band photometric errors and is expressed in units of mJy.</description>
+                <ucd>INST_NOISE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_pts_noise</name>
+                <description>Base-10 logarithm of the mode of the noise distribution for all point source detections in the scan, where the noise is estimated from the measured Ks-band photometric errors and is expressed in units of mJy.</description>
+                <ucd>INST_NOISE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msnr10</name>
+                <description>The estimated J-band magnitude at which SNR=10 is achieved for this scan.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msnr10</name>
+                <description>The estimated H-band magnitude at which SNR=10 is achieved for this scan.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msnr10</name>
+                <description>The estimated Ks-band magnitude at which SNR=10 is achieved for this scan.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>rel0</name>
+                <description>Flag indicating whether the scan is contained in the TWOMASS Sampler Release.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>rel1</name>
+                <description>Flag indicating whether the scan is contained in the TWOMASS First Incremental Data Release (IDR1).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>rel2</name>
+                <description>Flag indicating whether the scan is contained in the TWOMASS Second Incremental Data Release (IDR2).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+        </table>
+        <table>
+            <name>twomass_xsc</name>
+            <description />
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinate POS_EQ_X</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinate POS_EQ_Y</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinate POS_EQ_Z</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>HTM index, 20 digits, for co-ordinate POS_GENERAL</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>jdate</name>
+                <description>Julian date of the source measurement accurate to +-3 minutes.</description>
+                <unit>Julian days</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>designation</name>
+                <description>Source designation formed from sexigesimal coordinates.</description>
+                <ucd>NAME</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>Right ascension (J2000 decimal deg) based on peak pixel.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>Declination (J2000 decimal deg) based on peak pixel.</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sup_ra</name>
+                <description>Super-coadd centroid RA (J2000 decimal deg).</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>sup_dec</name>
+                <description>Super-coadd centroid Dec (J2000 decimal deg).</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>glon</name>
+                <description>Galactic longitude (decimal deg) based on peak pixel.</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LON</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>glat</name>
+                <description>Galactic latitude (decimal deg) based on peak pixel.</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LAT</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>density</name>
+                <description>Coadd log(density) of stars with k&amp;lt;14 mag.</description>
+                <ucd>PHYS_DENSITY_NUMBER</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>r_k20fe</name>
+                <description>20mag/sq." isophotal K fiducial ell. ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_k20fe</name>
+                <description>J 20mag/sq." isophotal fiducial ell. ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_k20fe</name>
+                <description>J 1-sigma uncertainty in 20mag/sq." iso.fid.ell.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_k20fe</name>
+                <description>J confusion flag for 20mag/sq." iso. fid. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_k20fe</name>
+                <description>H 20mag/sq." isophotal fiducial ell. ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_k20fe</name>
+                <description>H 1-sigma uncertainty in 20mag/sq." iso.fid.ell.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_k20fe</name>
+                <description>H confusion flag for 20mag/sq." iso. fid. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_k20fe</name>
+                <description>K 20mag/sq." isophotal fiducial ell. ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_k20fe</name>
+                <description>K 1-sigma uncertainty in 20mag/sq." iso.fid.ell.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_k20fe</name>
+                <description>K confusion flag for 20mag/sq." iso. fid. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_3sig</name>
+                <description>3-sigma K isophotal semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_ba</name>
+                <description>J minor/major axis ratio fit to the 3-sigma isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_phi</name>
+                <description>J angle to 3-sigma major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_ba</name>
+                <description>H minor/major axis ratio fit to the 3-sigma isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_phi</name>
+                <description>H angle to 3-sigma major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_ba</name>
+                <description>K minor/major axis ratio fit to the 3-sigma isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_phi</name>
+                <description>K angle to 3-sigma major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>sup_r_3sig</name>
+                <description>Super-coadd 3-sigma isophotal semi-major axis radius.</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>sup_ba</name>
+                <description>Minor/major axis ratio fit to 3-sig. super-coadd isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>sup_phi</name>
+                <description>Super-coadd angle to major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_fe</name>
+                <description>K fiducial Kron elliptical aperture semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_fe</name>
+                <description>J fiducial Kron ell. mag aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_fe</name>
+                <description>J 1-sigma uncertainty in fiducial Kron ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_fe</name>
+                <description>J confusion flag for fiducial Kron ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_fe</name>
+                <description>H fiducial Kron ell. mag aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_fe</name>
+                <description>H 1-sigma uncertainty in fiducial Kron ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_fe</name>
+                <description>H confusion flag for fiducial Kron ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_fe</name>
+                <description>K fiducial Kron ell. mag aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_fe</name>
+                <description>K 1-sigma uncertainty in fiducial Kron ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_fe</name>
+                <description>K confusion flag for fiducial Kron ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_ext</name>
+                <description>extrapolation/total radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_ext</name>
+                <description>J mag from fit extrapolation.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_ext</name>
+                <description>J 1-sigma uncertainty in mag from fit extrapolation.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_pchi</name>
+                <description>J chi^2 of fit to rad. profile (LCSB: alpha scale len).</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_ext</name>
+                <description>H mag from fit extrapolation.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_ext</name>
+                <description>H 1-sigma uncertainty in mag from fit extrapolation.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_pchi</name>
+                <description>H chi^2 of fit to rad. profile (LCSB: alpha scale len).</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_ext</name>
+                <description>K mag from fit extrapolation.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_ext</name>
+                <description>K 1-sigma uncertainty in mag from fit extrapolation.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_pchi</name>
+                <description>K chi^2 of fit to rad. profile (LCSB: alpha scale len).</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_r_eff</name>
+                <description>J half-light (integrated half-flux point) radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_mnsurfb_eff</name>
+                <description>J mean surface brightness at the half-light radius.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_r_eff</name>
+                <description>H half-light (integrated half-flux point) radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_mnsurfb_eff</name>
+                <description>H mean surface brightness at the half-light radius.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_r_eff</name>
+                <description>K half-light (integrated half-flux point) radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_mnsurfb_eff</name>
+                <description>K mean surface brightness at the half-light radius.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_con_indx</name>
+                <description>J concentration index r_75%/r_25%.</description>
+                <ucd>PHYS_CONCENT_INDEX</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_con_indx</name>
+                <description>H concentration index r_75%/r_25%.</description>
+                <ucd>PHYS_CONCENT_INDEX</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_con_indx</name>
+                <description>K concentration index r_75%/r_25%.</description>
+                <ucd>PHYS_CONCENT_INDEX</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_peak</name>
+                <description>J peak pixel brightness.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_peak</name>
+                <description>H peak pixel brightness.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_peak</name>
+                <description>K peak pixel brightness.</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_5surf</name>
+                <description>J central surface brightness (r&amp;lt;=5).</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_5surf</name>
+                <description>H central surface brightness (r&amp;lt;=5).</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_5surf</name>
+                <description>K central surface brightness (r&amp;lt;=5).</description>
+                <unit>mag</unit>
+                <ucd>PHOT_SB_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>e_score</name>
+                <description>extended score: 1(extended) &amp;lt; e_score &amp;lt; 2(point-like).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>g_score</name>
+                <description>galaxy score: 1(extended) &amp;lt; g_score &amp;lt; 2(point-like).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>vc</name>
+                <description>visual verification score for source.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cc_flg</name>
+                <description>indicates artifact contamination and/or confusion.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>im_nx</name>
+                <description>size of postage stamp image in pixels.</description>
+                <ucd>INST_DET_SIZE</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_k20fc</name>
+                <description>20mag/sq." isophotal K fiducial circular ap. radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_k20fc</name>
+                <description>J 20mag/sq." isophotal fiducial circ. ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_k20fc</name>
+                <description>J 1-sigma uncertainty in 20mag/sq." iso.fid.circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_k20fc</name>
+                <description>J confusion flag for 20mag/sq." iso. fid. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_k20fc</name>
+                <description>H 20mag/sq." isophotal fiducial circ. ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_k20fc</name>
+                <description>H 1-sigma uncertainty in 20mag/sq." iso.fid.circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_k20fc</name>
+                <description>H confusion flag for 20mag/sq." iso. fid. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_k20fc</name>
+                <description>K 20mag/sq." isophotal fiducial circ. ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_k20fc</name>
+                <description>K 1-sigma uncertainty in 20mag/sq." iso.fid.circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_k20fc</name>
+                <description>K confusion flag for 20mag/sq." iso. fid. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_r_e</name>
+                <description>J Kron elliptical aperture semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_e</name>
+                <description>J Kron elliptical aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_e</name>
+                <description>J 1-sigma uncertainty in Kron elliptical mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_e</name>
+                <description>J confusion flag for Kron elliptical mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_r_e</name>
+                <description>H Kron elliptical aperture semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_e</name>
+                <description>H Kron elliptical aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_e</name>
+                <description>H 1-sigma uncertainty in Kron elliptical mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_e</name>
+                <description>H confusion flag for Kron elliptical mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_r_e</name>
+                <description>K Kron elliptical aperture semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_e</name>
+                <description>K Kron elliptical aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_e</name>
+                <description>K 1-sigma uncertainty in Kron elliptical mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_e</name>
+                <description>K confusion flag for Kron elliptical mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_r_c</name>
+                <description>J Kron circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_c</name>
+                <description>J Kron circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_c</name>
+                <description>J 1-sigma uncertainty in Kron circular mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_c</name>
+                <description>J confusion flag for Kron circular mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_r_c</name>
+                <description>H Kron circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_c</name>
+                <description>H Kron circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_c</name>
+                <description>H 1-sigma uncertainty in Kron circular mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_c</name>
+                <description>H confusion flag for Kron circular mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_r_c</name>
+                <description>K Kron circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_c</name>
+                <description>K Kron circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_c</name>
+                <description>K 1-sigma uncertainty in Kron circular mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_c</name>
+                <description>K confusion flag for Kron circular mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_fc</name>
+                <description>K fiducial Kron circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_fc</name>
+                <description>J fiducial Kron circular magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_fc</name>
+                <description>J 1-sigma uncertainty in fiducial Kron circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_fc</name>
+                <description>J confusion flag for fiducial Kron circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_fc</name>
+                <description>H fiducial Kron circular magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_fc</name>
+                <description>H 1-sigma uncertainty in fiducial Kron circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_fc</name>
+                <description>H confusion flag for fiducial Kron circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_fc</name>
+                <description>K fiducial Kron circular magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_fc</name>
+                <description>K 1-sigma uncertainty in fiducial Kron circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_fc</name>
+                <description>K confusion flag for fiducial Kron circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_r_i20e</name>
+                <description>J 20mag/sq." isophotal elliptical ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_i20e</name>
+                <description>J 20mag/sq." isophotal elliptical ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_i20e</name>
+                <description>J 1-sigma uncertainty in 20mag/sq." iso. ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_i20e</name>
+                <description>J confusion flag for 20mag/sq." iso. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_r_i20e</name>
+                <description>H 20mag/sq." isophotal elliptical ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_i20e</name>
+                <description>H 20mag/sq." isophotal elliptical ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_i20e</name>
+                <description>H 1-sigma uncertainty in 20mag/sq." iso. ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_i20e</name>
+                <description>H confusion flag for 20mag/sq." iso. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_r_i20e</name>
+                <description>K 20mag/sq." isophotal elliptical ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_i20e</name>
+                <description>K 20mag/sq." isophotal elliptical ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_i20e</name>
+                <description>K 1-sigma uncertainty in 20mag/sq." iso. ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_i20e</name>
+                <description>K confusion flag for 20mag/sq." iso. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_r_i20c</name>
+                <description>J 20mag/sq." isophotal circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_i20c</name>
+                <description>J 20mag/sq." isophotal circular ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_i20c</name>
+                <description>J 1-sigma uncertainty in 20mag/sq." iso. circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_i20c</name>
+                <description>J confusion flag for 20mag/sq." iso. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_r_i20c</name>
+                <description>H 20mag/sq." isophotal circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_i20c</name>
+                <description>H 20mag/sq." isophotal circular ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_i20c</name>
+                <description>H 1-sigma uncertainty in 20mag/sq." iso. circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_i20c</name>
+                <description>H confusion flag for 20mag/sq." iso. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_r_i20c</name>
+                <description>K 20mag/sq." isophotal circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_i20c</name>
+                <description>K 20mag/sq." isophotal circular ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_i20c</name>
+                <description>K 1-sigma uncertainty in 20mag/sq." iso. circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_i20c</name>
+                <description>K confusion flag for 20mag/sq." iso. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_r_i21e</name>
+                <description>J 21mag/sq." isophotal elliptical ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_i21e</name>
+                <description>J 21mag/sq." isophotal elliptical ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_i21e</name>
+                <description>J 1-sigma uncertainty in 21mag/sq." iso. ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_i21e</name>
+                <description>J confusion flag for 21mag/sq." iso. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_r_i21e</name>
+                <description>H 21mag/sq." isophotal elliptical ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_i21e</name>
+                <description>H 21mag/sq." isophotal elliptical ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_i21e</name>
+                <description>H 1-sigma uncertainty in 21mag/sq." iso. ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_i21e</name>
+                <description>H confusion flag for 21mag/sq." iso. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_r_i21e</name>
+                <description>K 21mag/sq." isophotal elliptical ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_i21e</name>
+                <description>K 21mag/sq." isophotal elliptical ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_i21e</name>
+                <description>K 1-sigma uncertainty in 21mag/sq." iso. ell. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_i21e</name>
+                <description>K confusion flag for 21mag/sq." iso. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_j21fe</name>
+                <description>21mag/sq." isophotal J fiducial ell. ap. semi-major axis.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_j21fe</name>
+                <description>J 21mag/sq." isophotal fiducial ell. ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_j21fe</name>
+                <description>J 1-sigma uncertainty in 21mag/sq." iso.fid.ell.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_j21fe</name>
+                <description>J confusion flag for 21mag/sq." iso. fid. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_j21fe</name>
+                <description>H 21mag/sq." isophotal fiducial ell. ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_j21fe</name>
+                <description>H 1-sigma uncertainty in 21mag/sq." iso.fid.ell.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_j21fe</name>
+                <description>H confusion flag for 21mag/sq." iso. fid. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_j21fe</name>
+                <description>K 21mag/sq." isophotal fiducial ell. ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_j21fe</name>
+                <description>K 1-sigma uncertainty in 21mag/sq." iso.fid.ell.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_j21fe</name>
+                <description>K confusion flag for 21mag/sq." iso. fid. ell. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_r_i21c</name>
+                <description>J 21mag/sq." isophotal circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_i21c</name>
+                <description>J 21mag/sq." isophotal circular ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_i21c</name>
+                <description>J 1-sigma uncertainty in 21mag/sq." iso. circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_i21c</name>
+                <description>J confusion flag for 21mag/sq." iso. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_r_i21c</name>
+                <description>H 21mag/sq." isophotal circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_i21c</name>
+                <description>H 21mag/sq." isophotal circular ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_i21c</name>
+                <description>H 1-sigma uncertainty in 21mag/sq." iso. circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_i21c</name>
+                <description>H confusion flag for 21mag/sq." iso. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_r_i21c</name>
+                <description>K 21mag/sq." isophotal circular aperture radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_i21c</name>
+                <description>K 21mag/sq." isophotal circular ap. magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_i21c</name>
+                <description>K 1-sigma uncertainty in 21mag/sq." iso. circ. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_i21c</name>
+                <description>K confusion flag for 21mag/sq." iso. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>r_j21fc</name>
+                <description>21mag/sq." isophotal J fiducial circular ap. radius.</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_m_j21fc</name>
+                <description>J 21mag/sq." isophotal fiducial circ. ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_j21fc</name>
+                <description>J 1-sigma uncertainty in 21mag/sq." iso.fid.circ.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_j21fc</name>
+                <description>J confusion flag for 21mag/sq." iso. fid. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_j21fc</name>
+                <description>H 21mag/sq." isophotal fiducial circ. ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_j21fc</name>
+                <description>H 1-sigma uncertainty in 21mag/sq." iso.fid.circ.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_j21fc</name>
+                <description>H confusion flag for 21mag/sq." iso. fid. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_j21fc</name>
+                <description>K 21mag/sq." isophotal fiducial circ. ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_j21fc</name>
+                <description>K 1-sigma uncertainty in 21mag/sq." iso.fid.circ.mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_j21fc</name>
+                <description>K confusion flag for 21mag/sq." iso. fid. circ. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_5</name>
+                <description>J 5 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_5</name>
+                <description>J 1-sigma uncertainty in 5 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_5</name>
+                <description>J confusion flag for 5 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_5</name>
+                <description>H 5 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_5</name>
+                <description>H 1-sigma uncertainty in 5 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_5</name>
+                <description>H confusion flag for 5 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_5</name>
+                <description>K 5 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_5</name>
+                <description>K 1-sigma uncertainty in 5 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_5</name>
+                <description>K confusion flag for 5 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_7</name>
+                <description>J 7 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_7</name>
+                <description>J 1-sigma uncertainty in 7 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_7</name>
+                <description>J confusion flag for 7 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_7</name>
+                <description>H 7 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_7</name>
+                <description>H 1-sigma uncertainty in 7 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_7</name>
+                <description>H confusion flag for 7 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_7</name>
+                <description>K 7 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_7</name>
+                <description>K 1-sigma uncertainty in 7 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_7</name>
+                <description>K confusion flag for 7 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_10</name>
+                <description>J 10 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_10</name>
+                <description>J 1-sigma uncertainty in 10 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_10</name>
+                <description>J confusion flag for 10 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_10</name>
+                <description>H 10 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_10</name>
+                <description>H 1-sigma uncertainty in 10 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_10</name>
+                <description>H confusion flag for 10 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_10</name>
+                <description>K 10 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_10</name>
+                <description>K 1-sigma uncertainty in 10 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_10</name>
+                <description>K confusion flag for 10 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_15</name>
+                <description>J 15 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_15</name>
+                <description>J 1-sigma uncertainty in 15 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_15</name>
+                <description>J confusion flag for 15 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_15</name>
+                <description>H 15 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_15</name>
+                <description>H 1-sigma uncertainty in 15 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_15</name>
+                <description>H confusion flag for 15 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_15</name>
+                <description>K 15 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_15</name>
+                <description>K 1-sigma uncertainty in 15 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_15</name>
+                <description>K confusion flag for 15 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_20</name>
+                <description>J 20 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_20</name>
+                <description>J 1-sigma uncertainty in 20 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_20</name>
+                <description>J confusion flag for 20 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_20</name>
+                <description>H 20 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_20</name>
+                <description>H 1-sigma uncertainty in 20 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_20</name>
+                <description>H confusion flag for 20 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_20</name>
+                <description>K 20 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_20</name>
+                <description>K 1-sigma uncertainty in 20 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_20</name>
+                <description>K confusion flag for 20 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_25</name>
+                <description>J 25 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_25</name>
+                <description>J 1-sigma uncertainty in 25 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_25</name>
+                <description>J confusion flag for 25 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_25</name>
+                <description>H 25 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_25</name>
+                <description>H 1-sigma uncertainty in 25 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_25</name>
+                <description>H confusion flag for 25 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_25</name>
+                <description>K 25 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_25</name>
+                <description>K 1-sigma uncertainty in 25 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_25</name>
+                <description>K confusion flag for 25 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_30</name>
+                <description>J 30 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_30</name>
+                <description>J 1-sigma uncertainty in 30 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_30</name>
+                <description>J confusion flag for 30 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_30</name>
+                <description>H 30 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_30</name>
+                <description>H 1-sigma uncertainty in 30 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_30</name>
+                <description>H confusion flag for 30 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_30</name>
+                <description>K 30 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_30</name>
+                <description>K 1-sigma uncertainty in 30 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_30</name>
+                <description>K confusion flag for 30 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_40</name>
+                <description>J 40 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_40</name>
+                <description>J 1-sigma uncertainty in 40 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_40</name>
+                <description>J confusion flag for 40 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_40</name>
+                <description>H 40 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_40</name>
+                <description>H 1-sigma uncertainty in 40 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_40</name>
+                <description>H confusion flag for 40 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_40</name>
+                <description>K 40 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_40</name>
+                <description>K 1-sigma uncertainty in 40 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_40</name>
+                <description>K confusion flag for 40 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_50</name>
+                <description>J 50 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_50</name>
+                <description>J 1-sigma uncertainty in 50 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_50</name>
+                <description>J confusion flag for 50 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_50</name>
+                <description>H 50 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_50</name>
+                <description>H 1-sigma uncertainty in 50 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_50</name>
+                <description>H confusion flag for 50 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_50</name>
+                <description>K 50 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_50</name>
+                <description>K 1-sigma uncertainty in 50 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_50</name>
+                <description>K confusion flag for 50 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_60</name>
+                <description>J 60 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_60</name>
+                <description>J 1-sigma uncertainty in 60 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_60</name>
+                <description>J confusion flag for 60 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_60</name>
+                <description>H 60 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_60</name>
+                <description>H 1-sigma uncertainty in 60 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_60</name>
+                <description>H confusion flag for 60 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_60</name>
+                <description>K 60 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_60</name>
+                <description>K 1-sigma uncertainty in 60 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_60</name>
+                <description>K confusion flag for 60 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_70</name>
+                <description>J 70 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_70</name>
+                <description>J 1-sigma uncertainty in 70 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_flg_70</name>
+                <description>J confusion flag for 70 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_m_70</name>
+                <description>H 70 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_70</name>
+                <description>H 1-sigma uncertainty in 70 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_flg_70</name>
+                <description>H confusion flag for 70 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_m_70</name>
+                <description>K 70 arcsec radius circular aperture magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_70</name>
+                <description>K 1-sigma uncertainty in 70 arcsec circular ap. mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_flg_70</name>
+                <description>K confusion flag for 70 arcsec circular ap. mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_m_sys</name>
+                <description>J system photometry magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_msig_sys</name>
+                <description>J 1-sigma uncertainty in system photometry mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_m_sys</name>
+                <description>H system photometry magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_msig_sys</name>
+                <description>H 1-sigma uncertainty in system photometry mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_m_sys</name>
+                <description>K system photometry magnitude.</description>
+                <unit>mag</unit>
+                <ucd>SPECT_FLUX_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_msig_sys</name>
+                <description>K 1-sigma uncertainty in system photometry mag.</description>
+                <unit>mag</unit>
+                <ucd>ERROR</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>sys_flg</name>
+                <description>system flag: 0=no system, 1=nearby galaxy flux incl. in mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>contam_flg</name>
+                <description>contamination flag: 0=no stars, 1=stellar flux incl. in mag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_5sig_ba</name>
+                <description>J minor/major axis ratio fit to the 5-sigma isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_5sig_phi</name>
+                <description>J angle to 5-sigma major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_5sig_ba</name>
+                <description>H minor/major axis ratio fit to the 5-sigma isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_5sig_phi</name>
+                <description>H angle to 5-sigma major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_5sig_ba</name>
+                <description>K minor/major axis ratio fit to the 5-sigma isophote.</description>
+                <ucd>PHYS_AXIS-RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_5sig_phi</name>
+                <description>K angle to 5-sigma major axis (E of N).</description>
+                <unit>deg</unit>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_d_area</name>
+                <description>J 5-sigma to 3-sigma differential area.</description>
+                <ucd>FIT_RESIDUAL</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_perc_darea</name>
+                <description>J 5-sigma to 3-sigma percent area change.</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_d_area</name>
+                <description>H 5-sigma to 3-sigma differential area.</description>
+                <ucd>FIT_RESIDUAL</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_perc_darea</name>
+                <description>H 5-sigma to 3-sigma percent area change.</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_d_area</name>
+                <description>K 5-sigma to 3-sigma differential area.</description>
+                <ucd>FIT_RESIDUAL</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_perc_darea</name>
+                <description>K 5-sigma to 3-sigma percent area change.</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_bisym_rat</name>
+                <description>J bi-symmetric flux ratio.</description>
+                <ucd>PHOT_FLUX_RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_bisym_chi</name>
+                <description>J bi-symmetric cross-correlation chi.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_bisym_rat</name>
+                <description>H bi-symmetric flux ratio.</description>
+                <ucd>PHOT_FLUX_RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_bisym_chi</name>
+                <description>H bi-symmetric cross-correlation chi.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_bisym_rat</name>
+                <description>K bi-symmetric flux ratio.</description>
+                <ucd>PHOT_FLUX_RATIO</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_bisym_chi</name>
+                <description>K bi-symmetric cross-correlation chi.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sh0</name>
+                <description>J ridge shape (LCSB: BSNR limit).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sig_sh0</name>
+                <description>J ridge shape sigma (LCSB: B2SNR limit).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sh0</name>
+                <description>H ridge shape (LCSB: BSNR limit).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sig_sh0</name>
+                <description>H ridge shape sigma (LCSB: B2SNR limit).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sh0</name>
+                <description>K ridge shape (LCSB: BSNR limit).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sig_sh0</name>
+                <description>K ridge shape sigma (LCSB: B2SNR limit).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_mxdn</name>
+                <description>J mxdn (score) (LCSB: BSNR - block/smoothed SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_sh</name>
+                <description>J shape (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_wsh</name>
+                <description>J wsh (score) (LCSB: PSNR - peak raw SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_r23</name>
+                <description>J r23 (score) (LCSB: TSNR - integrated SNR for r=15).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_1mm</name>
+                <description>J 1st moment (score) (LCSB: super blk 2,4,8 SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_2mm</name>
+                <description>J 2nd moment (score) (LCSB: SNRMAX - super SNR max).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_vint</name>
+                <description>J vint (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_r1</name>
+                <description>J r1 (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_sc_msh</name>
+                <description>J median shape score.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_mxdn</name>
+                <description>H mxdn (score) (LCSB: BSNR - block/smoothed SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_sh</name>
+                <description>H shape (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_wsh</name>
+                <description>H wsh (score) (LCSB: PSNR - peak raw SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_r23</name>
+                <description>H r23 (score) (LCSB: TSNR - integrated SNR for r=15).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_1mm</name>
+                <description>H 1st moment (score) (LCSB: super blk 2,4,8 SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_2mm</name>
+                <description>H 2nd moment (score) (LCSB: SNRMAX - super SNR max).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_vint</name>
+                <description>H vint (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_r1</name>
+                <description>H r1 (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_sc_msh</name>
+                <description>H median shape score.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_mxdn</name>
+                <description>K mxdn (score) (LCSB: BSNR - block/smoothed SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_sh</name>
+                <description>K shape (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_wsh</name>
+                <description>K wsh (score) (LCSB: PSNR - peak raw SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_r23</name>
+                <description>K r23 (score) (LCSB: TSNR - integrated SNR for r=15).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_1mm</name>
+                <description>K 1st moment (score) (LCSB: super blk 2,4,8 SNR).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_2mm</name>
+                <description>K 2nd moment (score) (LCSB: SNRMAX - super SNR max).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_vint</name>
+                <description>K vint (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_r1</name>
+                <description>K r1 (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_sc_msh</name>
+                <description>K median shape score.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_chif_ellf</name>
+                <description>J % chi-fraction for elliptical fit to 3-sig isophote.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_chif_ellf</name>
+                <description>K % chi-fraction for elliptical fit to 3-sig isophote.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ellfit_flg</name>
+                <description>ellipse fitting contamination flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>sup_chif_ellf</name>
+                <description>super-coadd % chi-fraction for ellip. fit to 3-sig isophote.</description>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>n_blank</name>
+                <description>number of blanked source records.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>n_sub</name>
+                <description>number of subtracted source records.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>bl_sub_flg</name>
+                <description>blanked/subtracted src description flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>id_flg</name>
+                <description>type/galaxy ID flag (0=non-catalog, 1=catalog, 2=LCSB).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>id_cat</name>
+                <description>matched galaxy's catalog name.</description>
+                <ucd>NAME</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>fg_flg</name>
+                <description>flux-growth convergence flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>blk_fac</name>
+                <description>LCSB blocking factor (1, 2, 4, 8).</description>
+                <ucd>FIT_PARAM</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>dup_src</name>
+                <description>Duplicate source flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>use_src</name>
+                <description>Use source flag.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>prox</name>
+                <description>Proximity.</description>
+                <unit>arcsec</unit>
+                <ucd>POS_ANG_DIST_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>pxpa</name>
+                <description>The position angle on the sky of the vector from the source to the nearest neighbor in the PSC, in degrees East of North.</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>pxcntr</name>
+                <description>ext_key value of nearest XSC source.</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>dist_edge_ns</name>
+                <description>The distance from the source to the nearest North or South scan edge.</description>
+                <unit>arcsec</unit>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>dist_edge_ew</name>
+                <description>The distance from the source to the nearest East or West scan edge.</description>
+                <unit>arcsec</unit>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>dist_edge_flg</name>
+                <description>flag indicating which edges ([n|s][e|w]) are nearest to src.</description>
+                <ucd>INST_PLATE_DIST</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>pts_key</name>
+                <description>key to point source data DB record.</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>mp_key</name>
+                <description>key to minor planet prediction DB record.</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>night_key</name>
+                <description>key to night data record in "scan DB".</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>scan_key</name>
+                <description>key to scan data record in "scan DB".</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>coadd_key</name>
+                <description>key to coadd data record in "scan DB".</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>hemis</name>
+                <description>hemisphere (N/S) of observation. "n" = North/Mt. Hopkins; "s" = South/CTIO.</description>
+                <ucd>OBS_CODE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>date</name>
+                <description>The observation reference date for this source expressed in ISO standard format. (YYYY-MM-DD)</description>
+                <unit>yyyy-mm-dd</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>scan</name>
+                <description>scan number (unique within date).</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>coadd</name>
+                <description>3-digit coadd number (unique within scan).</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>id</name>
+                <description>source ID number (unique within scan, coadd).</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>x_coadd</name>
+                <description>x (cross-scan) position (coadd coord.).</description>
+                <unit>arcsec</unit>
+                <ucd>INST_POS</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>y_coadd</name>
+                <description>y (in-scan) position (coadd coord.).</description>
+                <unit>arcsec</unit>
+                <ucd>INST_POS</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_subst2</name>
+                <description>J residual background #2 (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_subst2</name>
+                <description>H residual background #2 (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_subst2</name>
+                <description>K residual background #2 (score).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_back</name>
+                <description>J coadd median background.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_back</name>
+                <description>H coadd median background.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_back</name>
+                <description>K coadd median background.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_resid_ann</name>
+                <description>J residual annulus background median.</description>
+                <unit>DN</unit>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_resid_ann</name>
+                <description>H residual annulus background median.</description>
+                <unit>DN</unit>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_resid_ann</name>
+                <description>K residual annulus background median.</description>
+                <unit>DN</unit>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_bndg_per</name>
+                <description>J banding Fourier Transf. period on this side of coadd.</description>
+                <unit>arcsec</unit>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>j_bndg_amp</name>
+                <description>J banding maximum FT amplitude on this side of coadd.</description>
+                <unit>DN</unit>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_bndg_per</name>
+                <description>H banding Fourier Transf. period on this side of coadd.</description>
+                <unit>arcsec</unit>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>h_bndg_amp</name>
+                <description>H banding maximum FT amplitude on this side of coadd.</description>
+                <unit>DN</unit>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_bndg_per</name>
+                <description>K banding Fourier Transf. period on this side of coadd.</description>
+                <unit>arcsec</unit>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>k_bndg_amp</name>
+                <description>K banding maximum FT amplitude on this side of coadd.</description>
+                <unit>DN</unit>
+                <ucd>FIT_PARAM_VALUE</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>j_seetrack</name>
+                <description>J band seetracking score.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>h_seetrack</name>
+                <description>H band seetracking score.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>k_seetrack</name>
+                <description>K band seetracking score.</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>ext_key</name>
+                <description>entry counter (key) number (unique within table).</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+        </table>
+        <table>
+            <name>twomass_pscXBestDR7PhotoObjAll</name>
+            <description>Cross-neighbours between 2MASS Point Source catalog and SDSS DR7 sources</description>
+            <column>
+                <name>masterObjID</name>
+                <description>The unique ID in twomass_psc (=pts_key)</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>slaveObjID</name>
+                <description>The unique ID of the neighbour in BestDR7..PhotoObj (=objID)</description>
+                <ucd>ID_CATALOG</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>distanceMins</name>
+                <description>Angular separation between neighbours</description>
+                <unit>arcminutes</unit>
+                <ucd>POS_ANG_DIST_GENERAL</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>sdssType</name>
+                <description>SDSS type of neighbour: 3=galaxy; 6=star</description>
+                <ucd>CLASS_OBJECT</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>sdssPrimary</name>
+                <description>SDSS flag for neighbour being primary (1) or secondary (0)</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+        </table>
+    </ns0:Resource>

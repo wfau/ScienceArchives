@@ -1,0 +1,597 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2010-02-15T12:14:49Z" status="active" updated="2019-12-04T13:35:12Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>Infrared Astronomical Satellite Archive (IRAS)</title>
+        <shortName>IRAS</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/iras-dsa</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>IPAC</name>
+            </creator>
+            <date>2010-02-15</date>
+            <version>Version 2.0 (IPAC 1986)</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>Infrared point-source survey</subject>
+            <description>The Infrared Astronomical Satellite Archive is an implementation of the IRAS catalogue of Point Sources, Version 2.0 (IPAC 1986). This is a catalogue of some 250,000 well-confirmed infrared point sources observed by the Infrared Astronomical Satellite, i.e., sources with angular extents less than approximately 0.5, 0.5, 1.0, and 2.0 arcmin in the in-scan direction at 12, 25, 60, and 100 microns, respectively.</description>
+            <referenceURL>http://irsa.ipac.caltech.edu/Missions/iras.html</referenceURL>
+            <type>Catalog</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>service-for</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/iras-dsa/ceaApplication</relatedResource>
+            </relationship>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>iras_psc table: cone search of Point Source Catalog</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/iras-dsa/DirectCone?DSACAT=IRAS&amp;DSATAB=iras_psc&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>32.5</ra>
+                <dec>60.0</dec>
+                <sr>0.5</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <description>Access to two applications: general ADQL query, and asynchronous cone-search where relevant/enabled.</description>
+            <interface xsi:type="cea:CECInterface">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/iras-dsa/ceaApplication</ApplicationReference>
+            </managedApplications>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#tables">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/VOSI/tables</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#ceaApplication">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/VOSI/applications</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/Delegation">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/iras-dsa/delegations</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <coverage>
+            <waveband>Infrared</waveband>
+        </coverage>
+        <table>
+            <name>iras_psc</name>
+            <description>Contains the parameters provided for each source in the IRAS PSC</description>
+            <column>
+                <name>name</name>
+                <description>Source Name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>seqNo</name>
+                <description>sequential object number</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>J2000 Celestial Right Ascension</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>J2000 Celestial Declination</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>major</name>
+                <description>Uncertainty ellipse major axis</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>minor</name>
+                <description>Uncertainty ellipse minor axis</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>posAng</name>
+                <description>Uncertainty ellipse position angle (East of North)</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>nhcon</name>
+                <description>Number of times observed (&amp;lt;25)</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>flux_12</name>
+                <description>Averaged non-color corrected 12 micron flux density</description>
+                <unit>Jansky (1.0E-26 W/m**2/Hz)</unit>
+                <ucd>PHOT_FLUX_IR_12</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>flux_25</name>
+                <description>Averaged non-color corrected 25 micron flux density</description>
+                <unit>Jansky (1.0E-26 W/m**2/Hz)</unit>
+                <ucd>PHOT_FLUX_IR_25</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>flux_60</name>
+                <description>Averaged non-color corrected 60 micron flux density</description>
+                <unit>Jansky (1.0E-26 W/m**2/Hz)</unit>
+                <ucd>PHOT_FLUX_IR_60</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>flux_100</name>
+                <description>Averaged non-color corrected 100 micron flux density</description>
+                <unit>Jansky (1.0E-26 W/m**2/Hz)</unit>
+                <ucd>PHOT_FLUX_IR_100</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>fQual_12</name>
+                <description>12 micron flux density quality.</description>
+                <ucd>CODE_QUALITY</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fQual_25</name>
+                <description>25 micron flux density quality.</description>
+                <ucd>CODE_QUALITY</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fQual_60</name>
+                <description>60 micron flux density quality.</description>
+                <ucd>CODE_QUALITY</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fQual_100</name>
+                <description>100 micron flux density quality.</description>
+                <ucd>CODE_QUALITY</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>nLrs</name>
+                <description>Number of significant LRS spectra</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>lrsChar</name>
+                <description>Characterization of averaged LRS spectrum.</description>
+                <ucd>SPECT_TYPE_GENERAL</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>relUnc_12</name>
+                <description>percent relative 12 micron flux density uncertainties.</description>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>relUnc_25</name>
+                <description>percent relative 25 micron flux density uncertainties.</description>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>relUnc_60</name>
+                <description>percent relative 60 micron flux density uncertainties.</description>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>relUnc_100</name>
+                <description>percent relative 100 micron flux density uncertainties.</description>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>tSnr_12</name>
+                <description>ten times the minimum signal-to-noise ratio (12 micron)</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>tSnr_25</name>
+                <description>ten times the minimum signal-to-noise ratio (25 micron)</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>tSnr_60</name>
+                <description>ten times the minimum signal-to-noise ratio (60 micron)</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>tSnr_100</name>
+                <description>ten times the minimum signal-to-noise ratio (100 micron)</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cc_12</name>
+                <description>point source correlation coefficient (12 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>cc_25</name>
+                <description>point source correlation coefficient (25 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>cc_60</name>
+                <description>point source correlation coefficient (60 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>cc_100</name>
+                <description>point source correlation coefficient (100 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>var</name>
+                <description>percent Likelihood of Variability</description>
+                <ucd>CODE_VARIAB</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>disc_12</name>
+                <description>Discrepant Fluxes flag (12 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>disc_25</name>
+                <description>Discrepant Fluxes flag (25 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>disc_60</name>
+                <description>Discrepant Fluxes flag (60 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>disc_100</name>
+                <description>Discrepant Fluxes flag (100 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>confuse_12</name>
+                <description>Confusion flag (12 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>confuse_25</name>
+                <description>Confusion flag (25 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>confuse_60</name>
+                <description>Confusion flag (60 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>confuse_100</name>
+                <description>Confusion flag (100 micron)</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>pNearH</name>
+                <description>Number of nearby hours-confirmed point sources</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>pNearW</name>
+                <description>Number of nearby weeks-confirmed point sources</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses1_12</name>
+                <description>Number of seconds-confirmed nearby small extended sources (12 micron).</description>
+                <ucd>INST_PARAM</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses1_25</name>
+                <description>Number of seconds-confirmed nearby small extended sources (25 micron).</description>
+                <ucd>INST_PARAM</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses1_60</name>
+                <description>Number of seconds-confirmed nearby small extended sources (60 micron).</description>
+                <ucd>INST_PARAM</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses1_100</name>
+                <description>Number of seconds-confirmed nearby small extended sources (100 micron).</description>
+                <ucd>INST_PARAM</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses2_12</name>
+                <description>Number of nearby weeks-confirmed small extended sources (12 micron).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses2_25</name>
+                <description>Number of nearby weeks-confirmed small extended sources (25 micron).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses2_60</name>
+                <description>Number of nearby weeks-confirmed small extended sources (60 micron).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>ses2_100</name>
+                <description>Number of nearby weeks-confirmed small extended sources (100 micron).</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>hsdFlag_12</name>
+                <description>Source is located in high source density bin (12 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>hsdFlag_25</name>
+                <description>Source is located in high source density bin (25 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>hsdFlag_60</name>
+                <description>Source is located in high source density bin (60 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>hsdFlag_100</name>
+                <description>Source is located in high source density bin (100 micron).</description>
+                <ucd>REMARKS</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>cirr1</name>
+                <description>Number of nearby 100 micron only WSDB sources</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>cirr2</name>
+                <description>Spatially filtered 100 micron sky brightness ratio to flux density of point source</description>
+                <ucd>PHOT_FLUX_RATIO</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>cirr3</name>
+                <description>Total 100 micron sky surface brightness</description>
+                <unit>MJy/sr</unit>
+                <ucd>PHOT_SB_IR-100</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>nId</name>
+                <description>Number of positional associations (&amp;lt;25).</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>idType</name>
+                <description>Type of Object</description>
+                <ucd>CLASS_OBJECT</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>mHcon</name>
+                <description>Possible number of HCONs</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>fCor_12</name>
+                <description>Flux correction factor applied (times 1000, 12 micron)</description>
+                <ucd>INST_CORR-FACTOR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fCor_25</name>
+                <description>Flux correction factor applied (times 1000, 25 micron)</description>
+                <ucd>INST_CORR-FACTOR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fCor_60</name>
+                <description>Flux correction factor applied (times 1000, 60 micron)</description>
+                <ucd>INST_CORR-FACTOR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fCor_100</name>
+                <description>Flux correction factor applied (times 1000, 100 micron)</description>
+                <ucd>INST_CORR-FACTOR</ucd>
+                <dataType>int</dataType>
+            </column>
+        </table>
+        <table>
+            <name>iras_asc</name>
+            <description>Contains the parameters provided for each source in the IRAS associated PSCs</description>
+            <column>
+                <name>name</name>
+                <description>Source Name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>recNo</name>
+                <description>Record Number of source in data file</description>
+                <ucd>RECORD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>catNo</name>
+                <description>Catalog number</description>
+                <ucd>ID_CATALOG</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>sourceID</name>
+                <description>Source ID</description>
+                <ucd>ID_ALTERNATIVE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>type</name>
+                <description>Source Type/Spectral Class</description>
+                <ucd>SPECT_TYPE_GENERAL</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>radius1</name>
+                <description>Radius Vector from IRAS Source to Association</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_RAD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>pos</name>
+                <description>Position Angle from IRAS Source to Association (E of N)</description>
+                <unit>deg</unit>
+                <ucd>POS_POS-ANG</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>field1</name>
+                <description>object field #1 (magnitude/other)</description>
+                <ucd>ID_FIELD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>field2</name>
+                <description>object field #2 (magnitude/other)</description>
+                <ucd>ID_FIELD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>field3</name>
+                <description>object field #3 (size/other)</description>
+                <ucd>ID_FIELD</ucd>
+                <dataType>int</dataType>
+            </column>
+        </table>
+        <table>
+            <name>iras_assoc_cats</name>
+            <description>Contains the parameters provided for the IRAS associated catalogues</description>
+            <column>
+                <name>catNo</name>
+                <description>Catalog number</description>
+                <ucd>ID_CATALOG</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>catName</name>
+                <description>Source Name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+        </table>
+    </ns0:Resource>

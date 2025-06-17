@@ -1,0 +1,701 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2010-02-15T12:20:05Z" status="active" updated="2019-12-04T13:35:43Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>Rontgen Satellite Archive (ROSAT)</title>
+        <shortName>ROSAT</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/rosat-dsa</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>BMBF/DLR and MPG</name>
+            </creator>
+            <date>2010-02-15</date>
+            <version>revision 1RXS</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>ROSAT xray x-ray sources faint bright</subject>
+            <description>The Rontgen Satellite Archive is an implementation of the ROSAT All-Sky Survey Bright Source Catalogue (RASS-BSC, revision 1RXS) and the ROSAT All-Sky Survey Faint Source Catalogue (RASS-FSC, revision 1RXS). The RASS-BSC is derived from the all-sky survey performed during the first half year of the ROSAT mission in 1990/91. 18,811 sources are catalogued, with a limiting ROSAT PSPC countrate of 0.05 cts/s in the 0.1-2.4 keV energy band. The sources have a detection likelihood of at least 15 and contain at least 15 source photons. At a brightness limit of 0.1 cts/s (8,547 sources) the catalogue represents a sky coverage of 92%. The typical positional accuracy is 30 arcsec. The RASS-FSC is derived from the all-sky survey performed during the ROSAT mission in the energy band 0.1- 2.4 keV. 105,924 sources are catalogued and represent the faint extension to the RASS bright source catalogue. The sources have a detection likelihood of at least 7 and contain at least 6 source photons. (The likelihood of source detection is defined as L =-ln (1-P) , with P = probability of source detection).</description>
+            <referenceURL>http://www.mpe.mpg.de/xray/wave/rosat/index.php?lang=en</referenceURL>
+            <type>Catalog</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>service-for</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/rosat-dsa/ceaApplication</relatedResource>
+            </relationship>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>rosat_bsc table: cone search of Bright Source Catalog</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/rosat-dsa/DirectCone?DSACAT=ROSAT&amp;DSATAB=rosat_bsc&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>96.0</ra>
+                <dec>5.0</dec>
+                <sr>1.0</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>rosat_fsc table: cone search of Faint Source Catalog</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/rosat-dsa/DirectCone?DSACAT=ROSAT&amp;DSATAB=rosat_fsc&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>96.0</ra>
+                <dec>5.0</dec>
+                <sr>1.0</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <description>Access to two applications: general ADQL query, and asynchronous cone-search where relevant/enabled.</description>
+            <interface xsi:type="cea:CECInterface">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/rosat-dsa/ceaApplication</ApplicationReference>
+            </managedApplications>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#tables">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/VOSI/tables</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#ceaApplication">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/VOSI/applications</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/Delegation">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/rosat-dsa/delegations</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <coverage>
+            <waveband>X-ray</waveband>
+        </coverage>
+        <table>
+            <name>rosat_bsc</name>
+            <description>Contains the parameters provided for each source in the ROSAT Bright Source Catalogue</description>
+            <column>
+                <name>srcName</name>
+                <description>ROSAT All-Sky Survey Catalogue source name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>seqNo</name>
+                <description>sequential object number in the BSC</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>Right Ascension (decimal degrees; J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>Declination (decimal degrees; J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errP</name>
+                <description>total positional error (1-sigma-radius; including 6&amp;quot; systematic error)</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>nFlag</name>
+                <description>nearby sources affecting SASS flux determination</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>pFlag</name>
+                <description>possible problem with position determination</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>eFlag</name>
+                <description>source extended beyond SASS extraction radius</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>dFlag</name>
+                <description>complex diffuse emission pattern</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>mFlag</name>
+                <description>source missed by SASS</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>rFlag</name>
+                <description>source counts and extraction radius recalculated</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>iFlag</name>
+                <description>broad band image available</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>vFlag</name>
+                <description>variability flag</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>dum</name>
+                <description>dummy flag</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>srcCps</name>
+                <description>source countrate in the broad energy band, vignetting corrected</description>
+                <unit>counts/sec</unit>
+                <ucd>PHOT_COUNT-RATE_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errSrcCps</name>
+                <description>error of source countrate, vignetting corrected</description>
+                <unit>counts/s</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>bgrCpsa</name>
+                <description>background countrate, vignetting corrected</description>
+                <unit>counts/sec/arcmin**2</unit>
+                <ucd>INST_BACKGROUND</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>expTime</name>
+                <description>exposure time</description>
+                <unit>sec</unit>
+                <ucd>TIME_EXPTIME</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>hr1</name>
+                <description>hardness ratio 1</description>
+                <ucd>SPECT_HARDNESS-RATIO</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errHr1</name>
+                <description>error of hardness ratio 1</description>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>hr2</name>
+                <description>hardness ratio 2</description>
+                <ucd>SPECT_HARDNESS-RATIO</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errHr2</name>
+                <description>error of hardness ratio 2</description>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ext</name>
+                <description>source extent</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_DIAM</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>extl</name>
+                <description>likelihood of source extent</description>
+                <ucd>STAT_LIKELIHOOD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>srcl</name>
+                <description>likelihood of source detection</description>
+                <ucd>STAT_LIKELIHOOD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>extr</name>
+                <description>extraction radius</description>
+                <unit>arcsec</unit>
+                <ucd>REDUCT_EXTR-RAD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>priFlgMb</name>
+                <description>priority flag M-broad</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgLb</name>
+                <description>priority flag L-broad</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgMh</name>
+                <description>priority flag M-hard</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgLh</name>
+                <description>priority flag L-hard</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgMs</name>
+                <description>priority flag M-soft</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgLs</name>
+                <description>priority flag L-soft</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>phaRange</name>
+                <description>PHA range with highest detection likelihood</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>vigf</name>
+                <description>vignetting factor</description>
+                <ucd>INST_CORR-FACTOR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>orgDate</name>
+                <description>date when source was included (MM-DD-YYYY)</description>
+                <unit>mm-dd-yyyy</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>modDate</name>
+                <description>date when source properties were changed (MM-DD-YYYY)</description>
+                <unit>mm-dd-yyyy</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>idCand</name>
+                <description>number of identification candidates in the correlation catalogue</description>
+                <ucd>NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>fieldID</name>
+                <description>identification number of SASS field</description>
+                <ucd>ID_FIELD</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>srcID</name>
+                <description>SASS source number (MASOL number) in SASS field</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+        </table>
+        <table>
+            <name>rosat_fsc</name>
+            <description>Contains the parameters provided for each source in the ROSAT Faint Source Catalogue</description>
+            <column>
+                <name>srcName</name>
+                <description>ROSAT All-Sky Survey Catalogue source name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>seqNo</name>
+                <description>sequential object number in the FSC</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>Right Ascension (decimal degrees; J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>Declination (decimal degrees; J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errP</name>
+                <description>total positional error (1-sigma-radius; including 6&amp;quot; systematic error)</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>nFlag</name>
+                <description>nearby sources affecting SASS flux determination</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>pFlag</name>
+                <description>possible problem with position determination</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>eFlag</name>
+                <description>source extended beyond SASS extraction radius</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>dFlag</name>
+                <description>complex diffuse emission pattern</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>mFlag</name>
+                <description>source missed by SASS</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>rFlag</name>
+                <description>source counts and extraction radius recalculated</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>iFlag</name>
+                <description>broad band image available</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>vFlag</name>
+                <description>variability flag</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>dum</name>
+                <description>dummy flag</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>srcCps</name>
+                <description>source countrate in the broad energy band, vignetting corrected</description>
+                <unit>counts/sec</unit>
+                <ucd>PHOT_COUNT-RATE_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errSrcCps</name>
+                <description>error of source countrate, vignetting corrected</description>
+                <unit>counts/s</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>bgrCpsa</name>
+                <description>background countrate, vignetting corrected</description>
+                <unit>counts/sec/arcmin**2</unit>
+                <ucd>INST_BACKGROUND</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>expTime</name>
+                <description>exposure time</description>
+                <unit>sec</unit>
+                <ucd>TIME_EXPTIME</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>hr1</name>
+                <description>hardness ratio 1</description>
+                <ucd>SPECT_HARDNESS-RATIO</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errHr1</name>
+                <description>error of hardness ratio 1</description>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>hr2</name>
+                <description>hardness ratio 2</description>
+                <ucd>SPECT_HARDNESS-RATIO</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>errHr2</name>
+                <description>error of hardness ratio 2</description>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ext</name>
+                <description>source extent</description>
+                <unit>arcsec</unit>
+                <ucd>EXTENSION_DIAM</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>extl</name>
+                <description>likelihood of source extent</description>
+                <ucd>STAT_LIKELIHOOD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>srcl</name>
+                <description>likelihood of source detection</description>
+                <ucd>STAT_LIKELIHOOD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>extr</name>
+                <description>extraction radius</description>
+                <unit>arcsec</unit>
+                <ucd>REDUCT_EXTR-RAD</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>priFlgMb</name>
+                <description>priority flag M-broad</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgLb</name>
+                <description>priority flag L-broad</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgMh</name>
+                <description>priority flag M-hard</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgLh</name>
+                <description>priority flag L-hard</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgMs</name>
+                <description>priority flag M-soft</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>priFlgLs</name>
+                <description>priority flag L-soft</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>phaRange</name>
+                <description>PHA range with highest detection likelihood</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>vigF</name>
+                <description>vignetting factor</description>
+                <ucd>INST_CORR-FACTOR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>orgDate</name>
+                <description>date when source was included (MM-DD-YYYY)</description>
+                <unit>mm-dd-yyyy</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>modDate</name>
+                <description>date when source properties were changed (MM-DD-YYYY)</description>
+                <unit>mm-dd-yyyy</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>idCand</name>
+                <description>number of identification candidates in the correlation catalogue</description>
+                <ucd>NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>fieldID</name>
+                <description>identification number of SASS field</description>
+                <ucd>ID_FIELD</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>srcID</name>
+                <description>SASS source number (MASOL number) in SASS field</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>rct1</name>
+                <description>number of nearby RASS detections with distances in range 0'-5'</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>rct2</name>
+                <description>number of nearby RASS detections with distances in range 5'-10'</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>rct3</name>
+                <description>number of nearby RASS detections with distances in range 10'-15'</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>short</dataType>
+            </column>
+            <column>
+                <name>itb</name>
+                <description>start time of observation (MM-DD-YYYY HH:MM:SS)</description>
+                <unit>mm-dd-yyyy hh:mm:ss</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>ite</name>
+                <description>end time of observation (MM-DD-YYYY HH:MM:SS)</description>
+                <unit>mm-dd-yyyy hh:mm:ss</unit>
+                <ucd>TIME_DATE</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>rl</name>
+                <description>reliability of source detection (0...99)</description>
+                <ucd>STAT_SIGNIFICANCE</ucd>
+                <dataType>short</dataType>
+            </column>
+        </table>
+    </ns0:Resource>

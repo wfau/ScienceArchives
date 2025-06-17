@@ -1,0 +1,560 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2013-05-30T15:17:38Z" status="active" updated="2019-12-04T13:34:37Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>Deep Near Infrared Survey of the Southern Sky (DENIS)</title>
+        <identifier>ivo://wfau.roe.ac.uk/denis-dsa</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>NASA IPAC</name>
+            </creator>
+            <date>2013-05-30</date>
+            <version>1.0</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>IR</subject>
+            <description>Catalog of astrometry and photometry of detected point sources in the Far red optical (0.82-micron I-band) and near-infrared (1.25-micron J- and 2.15-micron Ks bands).   ~16,700 square degrees of the southern sky</description>
+            <referenceURL>http://irsa.ipac.caltech.edu/Missions/denis.html</referenceURL>
+            <type>Survey</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>service-for</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/denis-dsa/ceaApplication</relatedResource>
+            </relationship>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>DENIS, denisDR3Source: cone search</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/denis-dsa/DirectCone?DSACAT=DENIS&amp;DSATAB=denisDR3Source&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>294.9</ra>
+                <dec>-15.1</dec>
+                <sr>0.1</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <description>Access to two applications: general ADQL query, and asynchronous cone-search where relevant/enabled.</description>
+            <interface xsi:type="cea:CECInterface">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/denis-dsa/ceaApplication</ApplicationReference>
+            </managedApplications>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#tables">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/VOSI/tables</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#ceaApplication">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/VOSI/applications</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/Delegation">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/denis-dsa/delegations</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <coverage>
+            <waveband>Infrared</waveband>
+        </coverage>
+        <table>
+            <name>denisDR3Source</name>
+            <description>Contains the parameters provided in the third incremental release of the DENIS project</description>
+            <column>
+                <name>seqNum</name>
+                <description>Sequential number (unique object ID)</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Designation</name>
+                <description>DENIS name, identifier</description>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>Image</name>
+                <description>DENIS image number; the image number is incremented at each image taken during the survey. In case a source results from the merging of two consecutive overlapping images (N and N+1) in the same strip (Flag_mult set to 1), the image number corresponds to the first image N.</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Strip</name>
+                <description>DENIS strip number</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>RAdeg</name>
+                <description>Right ascension (J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>DEdeg</name>
+                <description>Declination (J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>Fitmag_I</name>
+                <description>Magnitude in I band from PSF fit</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Fitmag_I</name>
+                <description>Magnitude error in I band from PSF fit</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Fitmag_J</name>
+                <description>Magnitude in J band from PSF fit</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Fitmag_J</name>
+                <description>Magnitude error in J band from PSF fit</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Fitmag_K</name>
+                <description>Magnitude in K band from PSF fit</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Fitmag_K</name>
+                <description>Magnitude error in K band from PSF fit</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap55mag_I</name>
+                <description>Magnitude in I band from 5.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap55mag_I</name>
+                <description>Error in I band mag from 5.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap55mag_J</name>
+                <description>Magnitude in J band from 5.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap55mag_J</name>
+                <description>Error in J band mag from 5.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap55mag_K</name>
+                <description>Magnitude in K band from 5.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap55mag_K</name>
+                <description>Error in K band mag from 5.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap45mag_I</name>
+                <description>Magnitude in I band from 4.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap45mag_I</name>
+                <description>Error in I band mag from 4.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap45mag_J</name>
+                <description>Magnitude in J band from 4.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap45mag_J</name>
+                <description>Error in J band mag from 4.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap45mag_K</name>
+                <description>Magnitude in K band from 4.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap45mag_K</name>
+                <description>Error in K band mag from 4.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap35mag_I</name>
+                <description>Magnitude in I band from 3.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap35mag_I</name>
+                <description>Error in I band mag from 3.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap35mag_J</name>
+                <description>Magnitude in J band from 3.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap35mag_J</name>
+                <description>Error in J band mag from 3.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Ap35mag_K</name>
+                <description>Magnitude in K band from 3.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Ap35mag_K</name>
+                <description>Error in K band mag from 3.5&amp;quot; aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc35mag_I</name>
+                <description>I band Magnitude in 3.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc35mag_I</name>
+                <description>I band mag error in 3.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc35mag_J</name>
+                <description>J band Magnitude in 3.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc35mag_J</name>
+                <description>J band mag error in 3.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc35mag_K</name>
+                <description>K band Magnitude in 3.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc35mag_K</name>
+                <description>K band mag error in 3.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc25mag_I</name>
+                <description>I band Magnitude in 2.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc25mag_I</name>
+                <description>I band mag error in 2.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc25mag_J</name>
+                <description>J band Magnitude in 2.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc25mag_J</name>
+                <description>J band mag error in 2.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc25mag_K</name>
+                <description>K band Magnitude in 2.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc25mag_K</name>
+                <description>K band mag error in 2.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc15mag_I</name>
+                <description>I band Magnitude in 1.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc15mag_I</name>
+                <description>I band mag error in 1.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc15mag_J</name>
+                <description>J band Magnitude in 1.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc15mag_J</name>
+                <description>J band mag error in 1.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Apc15mag_K</name>
+                <description>K band Magnitude in 1.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>e_Apc15mag_K</name>
+                <description>K band mag error in 1.5&amp;quot; corr. aperture</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Rmag</name>
+                <description>R magnitude of USNOA2.0 nearest match</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Bmag</name>
+                <description>B magnitude of USNOA2.0 nearest match</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Qual_I</name>
+                <description>Quality flag for I band [0,100]</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Qual_J</name>
+                <description>Quality flag for J band [0,100]</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Qual_K</name>
+                <description>Quality flag for K band [0,100]</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Correl_I</name>
+                <description>Correlation to PSF for I band [0,100]</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Correl_J</name>
+                <description>Correlation to PSF for J band [0,100]</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Correl_K</name>
+                <description>Correlation to PSF for K band [0,100]</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>Mcor_I</name>
+                <description>Mean correlation to PSF in I band [0,1]</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Mcor_J</name>
+                <description>Mean correlation to PSF in J band [0,1]</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Mcor_K</name>
+                <description>Mean correlation to PSF in K band [0,1]</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Pix_x_I</name>
+                <description>Pixel x position in I band</description>
+                <unit>pix</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Pix_y_I</name>
+                <description>Pixel y position in I band</description>
+                <unit>pix</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Pix_x_J</name>
+                <description>Pixel x position in J band</description>
+                <unit>pix</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Pix_y_J</name>
+                <description>Pixel y position in J band</description>
+                <unit>pix</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Pix_x_K</name>
+                <description>Pixel x position in K band</description>
+                <unit>pix</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Pix_y_K</name>
+                <description>Pixel y position in K band</description>
+                <unit>pix</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>RAusno</name>
+                <description>Right Ascension of USNOA2.0 nearest match</description>
+                <unit>deg</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>DEusno</name>
+                <description>Declination of USNOA2.0 nearest match</description>
+                <unit>deg</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>Epoch</name>
+                <description>Epoch of USNOA2.0 nearest match</description>
+                <unit>yr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Dist</name>
+                <description>Distance to USNOA2.0 nearest match</description>
+                <unit>mas</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>Julian</name>
+                <description>Julian day for DENIS observation</description>
+                <unit>JD</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>Flag_I</name>
+                <description>Image and source flag in I band This flag is the concatenation of image and source flags, in hexadecimal format. For the image flag, the first two digits contain: Bit 0 - clouds during observation; Bit 1 - electronic Read-Out problem; Bit 2 - internal temperature problem; Bit 3 - very bright star; Bit 4 - bright star; Bit 5 - stray light; Bit 6 - unknown problem. For the source flag, the last two digits contain: Bit 0 - source might be a dust on mirror; Bit 1 - source is a ghost detection of a bright star; Bit 2 - source is saturated; Bit 3 - source is multiple detect.</description>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>Flag_J</name>
+                <description>Image and source flag in J band This flag is the concatenation of image and source flags, in hexadecimal format. For the image flag, the first two digits contain: Bit 0 - clouds during observation; Bit 1 - electronic Read-Out problem; Bit 2 - internal temperature problem; Bit 3 - very bright star; Bit 4 - bright star; Bit 5 - stray light; Bit 6 - unknown problem. For the source flag, the last two digits contain: Bit 0 - source might be a dust on mirror; Bit 1 - source is a ghost detection of a bright star; Bit 2 - source is saturated; Bit 3 - source is multiple detect.</description>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>Flag_K</name>
+                <description>Image and source flag in K band This flag is the concatenation of image and source flags, in hexadecimal format. For the image flag, the first two digits contain: Bit 0 - clouds during observation; Bit 1 - electronic Read-Out problem; Bit 2 - internal temperature problem; Bit 3 - very bright star; Bit 4 - bright star; Bit 5 - stray light; Bit 6 - unknown problem. For the source flag, the last two digits contain: Bit 0 - source might be a dust on mirror; Bit 1 - source is a ghost detection of a bright star; Bit 2 - source is saturated; Bit 3 - source is multiple detect.</description>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>Flag_mult</name>
+                <description>Multiplicity flag; if set to 1, this flag indicates that the source was detected in two consecutive images, and that the 2 measurements have been combined.</description>
+                <dataType>int</dataType>
+            </column>
+        </table>
+    </ns0:Resource>

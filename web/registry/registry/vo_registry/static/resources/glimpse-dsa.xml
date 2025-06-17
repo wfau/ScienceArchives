@@ -1,0 +1,857 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2010-02-15T12:12:04Z" status="active" updated="2019-12-04T13:35:03Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>GLIMPSE (Galactic Legacy Infrared Mid-Plane Survey Extraordinaire)</title>
+        <shortName>GLIMPSE</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/glimpse-dsa</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>NASA/SSC/IRAC/Univeristy of Wisconsin-Madison</name>
+            </creator>
+            <date>2010-02-15</date>
+            <version>Intermediate revision; dated 9th April 2005</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>Galactic Legacy Infrared Mid-Plane Survey GLIMPSE</subject>
+            <description>The GLIMPSE (Galactic Legacy Infrared Mid-Plane Survey Extraordinaire) Archive is an implementation of the GLIMPSE Highly Reliable Catalogue (GLMC, Intermediate revision; dated 9th April 2005) and the GLIMPSE More Complete Archive (GLMA, Intermediate revision; dated 9th April 2005). This implementation uses the same default values as specified by GLIMPSE.</description>
+            <referenceURL>http://www.astro.wisc.edu/sirtf/</referenceURL>
+            <type>Catalog</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>service-for</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/glimpse-dsa/ceaApplication</relatedResource>
+            </relationship>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>hrc_inter table: cone search of Highly Reliable Catalog</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/glimpse-dsa/DirectCone?DSACAT=GLIMPSE&amp;DSATAB=glimpse_hrc_inter&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>272.0</ra>
+                <dec>-20.0</dec>
+                <sr>0.01</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>mca_inter table: cone search of More Complete Archive</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/glimpse-dsa/DirectCone?DSACAT=GLIMPSE&amp;DSATAB=glimpse_mca_inter&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>272.0</ra>
+                <dec>-20.0</dec>
+                <sr>0.01</sr>
+            </testQuery>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <description>Access to two applications: general ADQL query, and asynchronous cone-search where relevant/enabled.</description>
+            <interface xsi:type="cea:CECInterface">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/glimpse-dsa/ceaApplication</ApplicationReference>
+            </managedApplications>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#tables">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/VOSI/tables</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#ceaApplication">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/VOSI/applications</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/Delegation">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/glimpse-dsa/delegations</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <coverage>
+            <waveband>Infrared</waveband>
+        </coverage>
+        <table>
+            <name>glimpse_hrc_inter</name>
+            <description>Contains the parameters provided for each source in the GLIMPSE Highly Reliable Catalog (intermediate)</description>
+            <column>
+                <name>srcName</name>
+                <description>GLIMPSE Highly Reliable Catalogue source name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>seqNo</name>
+                <description>sequential object number in the HRC</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>l</name>
+                <description>Galactic longitude</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LON</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>b</name>
+                <description>Galactic latitude</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LAT</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>l_err</name>
+                <description>Error in Galactic longitude</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>b_err</name>
+                <description>Error in Galactic latitude</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>Right Ascension (J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>Declination (J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ra_err</name>
+                <description>Error in Right Ascension</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec_err</name>
+                <description>Error in Declination</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>conf</name>
+                <description>Confusion flag</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>mag1</name>
+                <description>Magnitude in IRAC band 1</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag1_err</name>
+                <description>1sigma mag error (IRAC band 1)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag2</name>
+                <description>Magnitude in IRAC band 2</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag2_err</name>
+                <description>1sigma mag error (IRAC band 2)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag3</name>
+                <description>Magnitude in IRAC band 3</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag3_err</name>
+                <description>1sigma mag error (IRAC band 3)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag4</name>
+                <description>Magnitude in IRAC band 4</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag4_err</name>
+                <description>1sigma mag error (IRAC band 4)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F1</name>
+                <description>Flux in IRAC band 1</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F1_err</name>
+                <description>1sigma flux error (IRAC band 1)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F2</name>
+                <description>Flux in IRAC band 2</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F2_err</name>
+                <description>1sigma flux error (IRAC band 2)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F3</name>
+                <description>Flux in IRAC band 3</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F3_err</name>
+                <description>1sigma flux error (IRAC band 3)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F4</name>
+                <description>Flux in IRAC band 4</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F4_err</name>
+                <description>1sigma flux error (IRAC band 4)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F1_rms</name>
+                <description>RMS dev. of detection from F1</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F2_rms</name>
+                <description>RMS dev. of detection from F2</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F3_rms</name>
+                <description>RMS dev. of detection from F3</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F4_rms</name>
+                <description>RMS dev. of detection from F4</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky1</name>
+                <description>Local sky bkg. for band 1 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky2</name>
+                <description>Local sky bkg. for band 2 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky3</name>
+                <description>Local sky bkg. for band 3 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky4</name>
+                <description>Local sky bkg. for band 4 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN1</name>
+                <description>Signal/Noise for band 1 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN2</name>
+                <description>Signal/Noise for band 2 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN3</name>
+                <description>Signal/Noise for band 3 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN4</name>
+                <description>Signal/Noise for band 4 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens1</name>
+                <description>Local source density for band 1</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens2</name>
+                <description>Local source density for band 2</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens3</name>
+                <description>Local source density for band 3</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens4</name>
+                <description>Local source density for band 4</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>M1</name>
+                <description>Number of detections for band 1</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>M2</name>
+                <description>Number of detections for band 2</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>M3</name>
+                <description>Number of detections for band 3</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>M4</name>
+                <description>Number of detections for band 4</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N1</name>
+                <description>Possible number of detections for band 1</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N2</name>
+                <description>Possible number of detections for band 2</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N3</name>
+                <description>Possible number of detections for band 3</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N4</name>
+                <description>Possible number of detections for band 4</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL1</name>
+                <description>Source Quality Flag for band 1 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL2</name>
+                <description>Source Quality Flag for band 2 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL3</name>
+                <description>Source Quality Flag for band 3 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL4</name>
+                <description>Source Quality Flag for band 4 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF1</name>
+                <description>Flux calc mathod flag for band 1 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF2</name>
+                <description>Flux calc mathod flag for band 2 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF3</name>
+                <description>Flux calc mathod flag for band 3 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF4</name>
+                <description>Flux calc mathod flag for band 4 flux</description>
+                <dataType>int</dataType>
+            </column>
+        </table>
+        <table>
+            <name>glimpse_mca_inter</name>
+            <description>Contains the parameters provided for each source in the GLIMPSE More Complete Archive (intermediate)</description>
+            <column>
+                <name>srcName</name>
+                <description>GLIMPSE More Complete Archive source name</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>seqNo</name>
+                <description>sequential object number in the MCA</description>
+                <ucd>ID_NUMBER</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_X</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Y</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>POS_EQ_Z</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>POS_GENERAL</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>l</name>
+                <description>Galactic longitude</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LON</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>b</name>
+                <description>Galactic latitude</description>
+                <unit>deg</unit>
+                <ucd>POS_GAL_LAT</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>l_err</name>
+                <description>Error in Galactic longitude</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>b_err</name>
+                <description>Error in Galactic latitude</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description>Right Ascension (J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description>Declination (J2000)</description>
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ra_err</name>
+                <description>Error in Right Ascension</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec_err</name>
+                <description>Error in Declination</description>
+                <unit>arcsec</unit>
+                <ucd>ERROR</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>conf</name>
+                <description>Confusion flag</description>
+                <ucd>CODE_MISC</ucd>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>mag1</name>
+                <description>Magnitude in IRAC band 1</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag1_err</name>
+                <description>1sigma mag error (IRAC band 1)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag2</name>
+                <description>Magnitude in IRAC band 2</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag2_err</name>
+                <description>1sigma mag error (IRAC band 2)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag3</name>
+                <description>Magnitude in IRAC band 3</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag3_err</name>
+                <description>1sigma mag error (IRAC band 3)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag4</name>
+                <description>Magnitude in IRAC band 4</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>mag4_err</name>
+                <description>1sigma mag error (IRAC band 4)</description>
+                <unit>mag</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F1</name>
+                <description>Flux in IRAC band 1</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F1_err</name>
+                <description>1sigma flux error (IRAC band 1)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F2</name>
+                <description>Flux in IRAC band 2</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F2_err</name>
+                <description>1sigma flux error (IRAC band 2)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F3</name>
+                <description>Flux in IRAC band 3</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F3_err</name>
+                <description>1sigma flux error (IRAC band 3)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F4</name>
+                <description>Flux in IRAC band 4</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F4_err</name>
+                <description>1sigma flux error (IRAC band 4)</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F1_rms</name>
+                <description>RMS dev. of detection from F1</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F2_rms</name>
+                <description>RMS dev. of detection from F2</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F3_rms</name>
+                <description>RMS dev. of detection from F3</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>F4_rms</name>
+                <description>RMS dev. of detection from F4</description>
+                <unit>mJy</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky1</name>
+                <description>Local sky bkg. for band 1 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky2</name>
+                <description>Local sky bkg. for band 2 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky3</name>
+                <description>Local sky bkg. for band 3 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>sky4</name>
+                <description>Local sky bkg. for band 4 flux</description>
+                <unit>MJy/sr</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN1</name>
+                <description>Signal/Noise for band 1 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN2</name>
+                <description>Signal/Noise for band 2 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN3</name>
+                <description>Signal/Noise for band 3 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>SN4</name>
+                <description>Signal/Noise for band 4 flux</description>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens1</name>
+                <description>Local source density for band 1</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens2</name>
+                <description>Local source density for band 2</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens3</name>
+                <description>Local source density for band 3</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>srcdens4</name>
+                <description>Local source density for band 4</description>
+                <unit>#/sqamin</unit>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>M1</name>
+                <description>Number of detections for band 1</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>M2</name>
+                <description>Number of detections for band 2</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>M3</name>
+                <description>Number of detections for band 3</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>M4</name>
+                <description>Number of detections for band 4</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N1</name>
+                <description>Possible number of detections for band 1</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N2</name>
+                <description>Possible number of detections for band 2</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N3</name>
+                <description>Possible number of detections for band 3</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>N4</name>
+                <description>Possible number of detections for band 4</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL1</name>
+                <description>Source Quality Flag for band 1 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL2</name>
+                <description>Source Quality Flag for band 2 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL3</name>
+                <description>Source Quality Flag for band 3 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>SQL4</name>
+                <description>Source Quality Flag for band 4 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF1</name>
+                <description>Flux calc mathod flag for band 1 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF2</name>
+                <description>Flux calc mathod flag for band 2 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF3</name>
+                <description>Flux calc mathod flag for band 3 flux</description>
+                <dataType>int</dataType>
+            </column>
+            <column>
+                <name>MF4</name>
+                <description>Flux calc mathod flag for band 4 flux</description>
+                <dataType>int</dataType>
+            </column>
+        </table>
+    </ns0:Resource>

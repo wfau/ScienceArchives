@@ -3,6 +3,9 @@
 
 FROM python:3.12-slim AS base
 
+LABEL org.opencontainers.image.source=https://github.com/wfau/ScienceArchives
+
+
 # python
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \

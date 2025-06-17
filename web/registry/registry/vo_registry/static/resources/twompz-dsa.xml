@@ -1,0 +1,318 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2013-12-17T13:57:02Z" status="active" updated="2024-01-23T09:45:12Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>2MASS Photometric Redshift catalogue (2MPZ)</title>
+        <identifier>ivo://wfau.roe.ac.uk/twompz-dsa</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>WFAU, Institute for Astronomy, University of Edinburgh</name>
+                <logo>http://wfaudata.roe.ac.uk/wfau.gif</logo>
+            </creator>
+            <date>2013-12-17</date>
+            <version>Data Release 1</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>survey, Twomass, galaxy, redshift</subject>
+            <description>The 2MASS Photometric Redshift catalogue (2MPZ) is constructed by cross-matching 2MASS XSC, WISE and SuperCOSMOS all-sky samples and employing the artificial neural network approach (the ANNz algorithm, Collister &amp; Lahav 2004), trained on several redshift surveys (2MRS, SDSS, 6dFGS, 2dFGRS and ZCAT). The derived photometric redshifts have errors nearly independent of distance, with an all-sky accuracy of Ïz = 0.015, and a very small percentage of outliers. These redshift estimates have a typical precision of 12% for all the 2MASS XSC galaxies that lack spectroscopy. The resulting 2MPZ sample contains almost 1 million galaxies with a median redshift of z=0.07. This catalogue is described in Bilicki et al. 2014, ApJS, 210, 9.</description>
+            <referenceURL>http://surveys.roe.ac.uk/ssa/TWOMPZ</referenceURL>
+            <type>Catalog</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>service-for</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/twompz-dsa/ceaApplication</relatedResource>
+            </relationship>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/ConeSearch" xsi:type="cs:ConeSearch">
+            <description>twompzPhotoz table: cone search</description>
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/twompz-dsa/DirectCone?DSACAT=TwoMPZ&amp;DSATAB=twompzPhotoz&amp;</accessURL>
+            </interface>
+            <maxSR>1.500000</maxSR>
+            <maxRecords>2000000</maxRecords>
+            <verbosity>false</verbosity>
+            <testQuery>
+                <ra>218.8</ra>
+                <dec>-29.9</dec>
+                <sr>0.1</sr>
+            </testQuery>
+        </capability>
+        
+        <capability standardID="ivo://org.astrogrid/std/CEA/v1.0" xsi:type="cea:CeaCapability">
+            <description>Access to two applications: general ADQL query, and asynchronous cone-search where relevant/enabled.</description>
+            <interface xsi:type="cea:CECInterface">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/services/CommonExecutionConnectorService</accessURL>
+            </interface>
+            <managedApplications>
+                <ApplicationReference>ivo://wfau.roe.ac.uk/twompz-dsa/ceaApplication</ApplicationReference>
+            </managedApplications>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/VOSI/capabilities</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/VOSI/availability</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#tables">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/VOSI/tables</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://org.astrogrid/std/VOSI/v0.3#ceaApplication">
+            <interface xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/VOSI/applications</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <capability standardID="ivo://ivoa.net/std/Delegation">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="full">http://wfaudata.roe.ac.uk/twompz-dsa/delegations</accessURL>
+                <queryType>GET</queryType>
+                <resultType>application/xml</resultType>
+            </interface>
+        </capability>
+        <table>
+            <name>twompzPhotoz</name>
+            <description>Contains the parameters provided for each source in catalogu</description>
+            <column>
+                <name>twomassX</name>
+                <description />
+                <ucd>meta.id</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>twomassID</name>
+                <description>2MASS ID, equivalent to ext_key in twomass_xsc</description>
+                <ucd>ID_MAIN</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>wiseX</name>
+                <description />
+                <ucd>meta.id</ucd>
+                <dataType arraysize="*">char</dataType>
+            </column>
+            <column>
+                <name>wiseID</name>
+                <description>WISE ID for wise_allskysc (cntr)</description>
+                <ucd>meta.id</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>scosID</name>
+                <description />
+                <ucd>meta.id</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>cx</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>pos.cartesian.x;pos.eq</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cy</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>pos.cartesian.y;pos.eq</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>cz</name>
+                <description>unit vector of spherical co-ordinates</description>
+                <ucd>pos.cartesian.z;pos.eq</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>htmID</name>
+                <description>Hierarchical Triangular Mesh (HTM) index, 20 deep, for equatorial co-ordinates</description>
+                <ucd>pos</ucd>
+                <dataType>long</dataType>
+            </column>
+            <column>
+                <name>ra</name>
+                <description />
+                <unit>deg</unit>
+                <ucd>POS_EQ_RA_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>dec</name>
+                <description />
+                <unit>deg</unit>
+                <ucd>POS_EQ_DEC_MAIN</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>supRa</name>
+                <description />
+                <unit>Degrees</unit>
+                <ucd>pos.eq.ra</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>supDec</name>
+                <description />
+                <unit>Degrees</unit>
+                <ucd>pos.eq.dec</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>l</name>
+                <description />
+                <unit>Degrees</unit>
+                <ucd>pos.galactic.lon</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>b</name>
+                <description />
+                <unit>Degrees</unit>
+                <ucd>pos.galactic.lat</ucd>
+                <dataType>double</dataType>
+            </column>
+            <column>
+                <name>ebv</name>
+                <description />
+                <unit>mag</unit>
+                <ucd>phys.absorption.gal</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>starDensity</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>jCorr</name>
+                <description />
+                <unit>mag</unit>
+                <ucd>phot.mag;em.IR.J</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>jCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>hCorr</name>
+                <description />
+                <unit>mag</unit>
+                <ucd>phot.mag;em.IR.H</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>hCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>kCorr</name>
+                <description />
+                <unit>mag</unit>
+                <ucd>phot.mag;em.IR.K</ucd>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>kCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>w1mCorr</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>w1mCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>w2mCorr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>w2mCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>bCalCorr</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>bCalCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>rCalCorr</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>rCalCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>iCalCorr</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>iCalCorrErr</name>
+                <description />
+                <unit>mag</unit>
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>zSpec</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+            <column>
+                <name>zPhoto</name>
+                <description />
+                <dataType>float</dataType>
+            </column>
+        </table>
+    </ns0:Resource>

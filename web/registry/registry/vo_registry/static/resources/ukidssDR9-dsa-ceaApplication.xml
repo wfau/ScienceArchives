@@ -1,0 +1,140 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2013-12-17T11:47:17Z" status="active" updated="2013-12-17T11:47:17Z" xsi:type="cea:CeaApplication" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>UKIDSS DR9 - UKIRT Infrared Deep Sky Survey Data Release 9</title>
+        <identifier>ivo://wfau.roe.ac.uk/ukidssDR9-dsa/ceaApplication</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>WFAU, Institute for Astronomy, University of Edinburgh</name>
+                <logo>http://wfaudata.roe.ac.uk/wfau.gif</logo>
+            </creator>
+            <date>2013-12-17</date>
+            <version>Data Release 9</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>survey, galaxy, point source</subject>
+            <description>This DSA hosts data release 9 of the UKIRT Infrared Deep Sky Survey housed at the Wide Field Astronomy Unit at the Univeristy of Edinburgh. This catalog contains WFCAM data primarily originating from four of the five UKIDSS surveys: Large Area Survey, Galactic Clusters Survey, Deep Extragalactic Survey, and Ultra Deep Survey. (see www.ukidss.org for survey descriptions)</description>
+            <referenceURL>http://surveys.roe.ac.uk/wsa</referenceURL>
+            <type>Survey</type>
+            <contentLevel>Research</contentLevel>
+            <relationship>
+                <relationshipType>related-to</relationshipType>
+                <relatedResource>ivo://wfau.roe.ac.uk/ukidssDR9-dsa</relatedResource>
+            </relationship>
+        </content>
+        <applicationDefinition>
+            <parameters>
+                <parameterDefinition id="Query" type="ADQL">
+                    <name>Query</name>
+                    <description>Astronomy Data Query Language that defines the search criteria</description>
+                </parameterDefinition>
+                <parameterDefinition id="Result" type="text">
+                    <name>Result</name>
+                    <description>Query results</description>
+                </parameterDefinition>
+                <parameterDefinition id="Format" type="text">
+                    <name>Format</name>
+                    <description>Return format for the results.</description>
+                    <defaultValue>VOTABLE</defaultValue>
+                    <optionList>
+                        <optionVal>VOTABLE</optionVal>
+                        <optionVal>VOTABLE-BINARY</optionVal>
+                        <optionVal>COMMA-SEPARATED</optionVal>
+                        <optionVal>HTML</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="CatTable" type="text">
+                    <name>Table</name>
+                    <description>Which table should be conesearched</description>
+                    <optionList>
+                        <optionVal>lasSource</optionVal>
+                        <optionVal>gcsSource</optionVal>
+                        <optionVal>dxsSource</optionVal>
+                        <optionVal>udsSource</optionVal>
+                        <optionVal>lasDetection</optionVal>
+                        <optionVal>gcsDetection</optionVal>
+                        <optionVal>dxsDetection</optionVal>
+                        <optionVal>udsDetection</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="RA" type="RA">
+                    <name>RA</name>
+                    <description>Right-Ascension of cone search centre</description>
+                    <unit>deg</unit>
+                    <ucd>POS_RA_MAIN</ucd>
+                </parameterDefinition>
+                <parameterDefinition id="DEC" type="Dec">
+                    <name>DEC</name>
+                    <unit>deg</unit>
+                    <ucd>POS_DEC_MAIN</ucd>
+                </parameterDefinition>
+                <parameterDefinition id="Radius" type="real">
+                    <name>Radius</name>
+                    <description>Radius of cone search area</description>
+                    <unit>deg</unit>
+                    <ucd>PHYS_SIZE_RADIUS</ucd>
+                </parameterDefinition>
+                <parameterDefinition id="RA_Column_Name" type="text">
+                    <name>RA column name</name>
+                    <description>Name for input Right-Ascension column (or expression): column data in degrees</description>
+                    <unit>deg</unit>
+                </parameterDefinition>
+                <parameterDefinition id="Dec_Column_Name" type="text">
+                    <name>DEC column name</name>
+                    <description>Name for input Declination column (or expression): column data in degrees</description>
+                </parameterDefinition>
+                <parameterDefinition id="Find_Mode" type="text">
+                    <name>Find Mode</name>
+                    <description>Find mode for matches: BEST or ALL</description>
+                    <defaultValue>ALL</defaultValue>
+                    <optionList>
+                        <optionVal>BEST</optionVal>
+                        <optionVal>ALL</optionVal>
+                    </optionList>
+                </parameterDefinition>
+                <parameterDefinition id="Input_VOTable" type="text">
+                    <name>Input VOTable</name>
+                    <description>Input VOTable, containing Right Ascension and Declination columns, for matching against</description>
+                </parameterDefinition>
+            </parameters>
+            <interfaces>
+                <interfaceDefinition id="ADQL">
+                    <input>
+                        <pref ref="Query" />
+                        <pref ref="Format" />
+                    </input>
+                    <output>
+                        <pref ref="Result" />
+                    </output>
+                </interfaceDefinition>
+                <interfaceDefinition id="ConeSearch">
+                    <input>
+                        <pref ref="CatTable" />
+                        <pref ref="RA" />
+                        <pref ref="DEC" />
+                        <pref ref="Radius" />
+                        <pref ref="Format" />
+                    </input>
+                    <output>
+                        <pref ref="Result" />
+                    </output>
+                </interfaceDefinition>
+                <interfaceDefinition id="MultiCone">
+                    <input>
+                        <pref ref="CatTable" />
+                        <pref ref="Input_VOTable" />
+                        <pref ref="RA_Column_Name" />
+                        <pref ref="Dec_Column_Name" />
+                        <pref ref="Radius" />
+                        <pref ref="Find_Mode" />
+                    </input>
+                    <output>
+                        <pref ref="Result" />
+                    </output>
+                </interfaceDefinition>
+            </interfaces>
+        </applicationDefinition>
+    </ns0:Resource>

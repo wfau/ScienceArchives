@@ -15,13 +15,13 @@
         <content>
             <subject>registry</subject>
             <description>WFAU Publishing registry</description>
-            <referenceURL>http://publishing-registry.roe.ac.uk/registry</referenceURL>
+            <referenceURL>http://wfaudata.roe.ac.uk/reg/registry</referenceURL>
             <type>Registry</type>
             <contentLevel>Research</contentLevel>
         </content>
         <capability standardID="ivo://ivoa.net/std/Registry" xsi:type="vg:Harvest">
             <interface role="std" xsi:type="vg:OAIHTTP">
-            <accessURL>http://publishing-registry.roe.ac.uk/registry</accessURL>
+            <accessURL>http://wfaudata.roe.ac.uk/reg/registry</accessURL>
             </interface>
             <maxRecords>200</maxRecords>
         </capability>

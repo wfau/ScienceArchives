@@ -1,0 +1,47 @@
+<ns0:Resource xmlns:ns0="http://www.ivoa.net/xml/RegistryInterface/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" created="2011-10-26T12:02:10Z" status="active" updated="2019-07-09T14:44:01Z" xsi:type="vs:CatalogService" xsi:schemaLocation="http://www.ivoa.net/xml/RegistryInterface/v1.0 http://software.astrogrid.org/schema/registry/RegistryInterface/v1.0/RegistryInterface.xsd http://www.ivoa.net/xml/VOResource/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VOResource/v1.0/VOResource.xsd  http://www.ivoa.net/xml/VODataService/v1.0 http://software.astrogrid.org/schema/vo-resource-types/VODataService/v1.0/VODataService.xsd http://www.ivoa.net/xml/VOTable/v1.0 http://software.astrogrid.org/schema/vo-formats/VOTable/v1.0/VOTable.xsd http://www.ivoa.net/xml/ConeSearch/v1.0 http://software.astrogrid.org/schema/vo-resource-types/ConeSearch/v1.0/ConeSearch.xsd http://www.ivoa.net/xml/SIA/v1.0 http://software.astrogrid.org/schema/vo-resource-types/SIA/v1.0/SIA.xsd http://www.ivoa.net/xml/SSA/v0.4 http://software.astrogrid.org/schema/vo-resource-types/SSA/v0.4/SSA.xsd urn:astrogrid:schema:vo-resource-types:STAP:v1.0 http://software.astrogrid.org/schema/vo-resource-types/STAP/v1.0/STAP.xsd http://www.ivoa.net/xml/CEA/v1.0rc1 http://software.astrogrid.org/schema/vo-resource-types/CEAService/v1.0rc1/CEAService.xsd">
+        <title>UKIDSS DR8 SIAP Service</title>
+        <shortName>UKIDSS DR8 SIAP</shortName>
+        <identifier>ivo://wfau.roe.ac.uk/ukidssdr8-siap</identifier>
+        <curation>
+            <publisher ivo-id="ivo://wfau.roe.ac.uk">WFAU, Institute for Astronomy, University of Edinburgh</publisher>
+            <creator>
+                <name>WFAU, Institute for Astronomy, University of Edinburgh</name>
+                <logo>http://wfaudata.roe.ac.uk/wfau.gif</logo>
+            </creator>
+            <version>1.0</version>
+            <contact>
+                <name>Mark Holliman</name>
+                <email>msh@roe.ac.uk</email>
+            </contact>
+        </curation>
+        <content>
+            <subject>UKIDSS DR8, SIAP, Images</subject>
+            <description>Simple image access to UKIDSS data release 9 images for the LAS, GCS, DXS, and UDS surveys. GPS images are from DR7.</description>
+            <referenceURL>http://wfaudata.roe.ac.uk/ukidssdr8-siap</referenceURL>
+            <type>Survey</type>
+            <contentLevel>Research</contentLevel>
+        </content>
+        <capability standardID="ivo://ivoa.net/std/SIA" xsi:type="sia:SimpleImageAccess">
+            <interface role="std" xsi:type="vs:ParamHTTP">
+                <accessURL use="base">http://wfaudata.roe.ac.uk/ukidssdr8-siap/?</accessURL>
+            </interface>
+            <imageServiceType>Pointed</imageServiceType>
+            <maxQueryRegionSize>
+                <long>360</long>
+                <lat>360</lat>
+            </maxQueryRegionSize>
+            <maxImageExtent>
+                <long>360</long>
+                <lat>360</lat>
+            </maxImageExtent>
+            <maxImageSize>
+                <long>4096</long>
+                <lat>4096</lat>
+            </maxImageSize>
+            <maxFileSize>16800000</maxFileSize>
+            <maxRecords>15000</maxRecords>
+        </capability>
+        <coverage>
+            <waveband>Infrared</waveband>
+        </coverage>
+    </ns0:Resource>
