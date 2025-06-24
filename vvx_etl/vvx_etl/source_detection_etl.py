@@ -39,6 +39,7 @@ def transform(
     source_df: DataFrame,
     detection_df: DataFrame,
     cols_to_transform: list[str],
+    buckets: int,
     schema: StructType,
     spark: SparkSession,
 ):
@@ -54,7 +55,7 @@ def transform(
 
     bucket_save(
         df=detection_arrayvals_df,
-        buckets=8,
+        buckets=buckets,
         key="sourceID",
         table_name="detection_arrays_bucketed",
         spark=spark,
@@ -62,7 +63,7 @@ def transform(
 
     bucket_save(
         df=source_df,
-        buckets=8,
+        buckets=buckets,
         key="sourceID",
         table_name="source_bucketed",
         spark=spark,
@@ -131,6 +132,7 @@ def pipeline():
 
     columns_to_array_value = configs["transform"]["columns_to_array_value"]
     joined_table_name = configs["table_names"]["source_detection"]
+    buckets = configs["partitioning"]["n_buckets"]
 
     with SparkSingleton(warehouse_dir=warehouse_dir) as spark:
         logger.info("Extracting data")
@@ -147,6 +149,7 @@ def pipeline():
             source_df=source,
             detection_df=detection,
             cols_to_transform=columns_to_array_value,
+            buckets=buckets,
             schema=schema_joined_source_detection,
             spark=spark,
         )
