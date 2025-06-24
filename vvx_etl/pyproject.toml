@@ -11,7 +11,10 @@ requires-python = ">=3.8"
 dependencies = []
 
 [tool.setuptools]
-package-dir = { "" = "vvx_etl" }
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
-where = ["vvx_etl"]
+where = ["src"]
+
+[project.scripts]
+vvxetl = "vvx_etl.__main__:pipeline"
