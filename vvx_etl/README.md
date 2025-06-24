@@ -75,6 +75,17 @@ columns_to_array_value = [
 ]
 ```
 
+Run with `vvxetl`
+```
+vvxetl --help
+Usage: vvxetl [OPTIONS]
+
+Options:
+  --config TEXT  Config file in TOML format.
+  --help         Show this message and exit.
+
+```
+
 ### Dependencies
 
 The local conda environment used is available in `spark355.yaml` for reference.

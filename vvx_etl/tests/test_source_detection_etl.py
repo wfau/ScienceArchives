@@ -45,6 +45,7 @@ def run_etl_once(spark_fixture, etl_output_table, request):
         source_df=source_df,
         detection_df=detection_df,
         cols_to_transform=detection_array_cols,
+        buckets=8,
         schema=schema_joined_source_detection,
         spark=spark_fixture,
     )

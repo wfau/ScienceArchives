@@ -87,7 +87,7 @@ def transform(
         spark.table("detection_arrays_bucketed"), on="sourceID"
     )
 
-    joined = cast_df_using_schema(df=joined, schema=schema_joined_source_detection)
+    joined = cast_df_using_schema(df=joined, schema=schema)
 
     return joined
 
@@ -108,7 +108,7 @@ def load(
     )
 
 
-def pipeline():
+def pipeline(config):
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_filename = f"etl_log_{timestamp}.log"
@@ -121,7 +121,7 @@ def pipeline():
         handlers=[logging.FileHandler(log_path, mode="a"), logging.StreamHandler()],
     )
 
-    configs = toml.load("etl_config.toml")
+    configs = toml.load(config)
 
     logging.info(f"SETUP INFO: \n ** Configs ** \n {configs}. \n")
 
@@ -142,7 +142,6 @@ def pipeline():
             detection_data_path=configs["parquet_paths"]["detection"],
             detection_array_cols=columns_to_array_value,
         )
-        logger.info("Data extracted")
 
         logger.info("Transforming data")
         joined = transform(
@@ -194,7 +193,3 @@ def pipeline():
             logger.info("✅ Bucketing matches expectations")
         except BucketingError as e:
             logger.error(f"❌ Validation failed: {e}")
-
-
-if __name__ == "__main__":
-    pipeline()
