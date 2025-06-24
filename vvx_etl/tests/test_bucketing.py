@@ -3,8 +3,8 @@ import os
 import pytest
 import random
 from collections import namedtuple
-from etl.bucketing import bucket_save
-from etl.utils import is_correctly_bucketed, count_parquet_files
+from vvx_etl.bucketing import bucket_save
+from vvx_etl.utils import is_correctly_bucketed, count_parquet_files
 from spark_fixture import spark_fixture
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import monotonically_increasing_id

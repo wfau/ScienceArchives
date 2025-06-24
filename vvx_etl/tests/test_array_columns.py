@@ -10,7 +10,7 @@ from pyspark.sql.types import (
     StringType,
     ArrayType,
 )
-from etl.array_columns import (
+from vvx_etl.array_columns import (
     _transform_passbands,
     _pivot_aggregate_col,
     _merge_all,
