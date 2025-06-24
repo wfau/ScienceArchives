@@ -20,6 +20,7 @@ Software repository for the curation and website hosting of the WFAU Science Arc
 * astropy-7.0.0
 * numpy-2.2.2
 * scipy-1.15.1
+* pandas-2.2.3
 
 ## Installation
 
