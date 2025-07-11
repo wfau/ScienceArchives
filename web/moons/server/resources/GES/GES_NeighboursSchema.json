@@ -1,0 +1,314 @@
+{
+    "tables": {
+        "GES.TargetXGAIADR1gaia_source": {
+            "name": "GES.TargetXGAIADR1gaia_source",
+            "markdown": [
+                {
+                    "h": "Cross-neighbours between the GES Target catalogue and the Gaia DR1 main catalogue\n"
+                },
+                {
+                    "t": "All Gaia DR1 sources within 10 arcsec of\n"
+                },
+                {
+                    "t": "each star in the GES Target catalogue are recorded in this cross-neighbour\n"
+                },
+                {
+                    "t": "table.  The Target table was joined to the GAIADR1..gaia_source table to create\n"
+                },
+                {
+                    "t": "these cross-neighbours.  Use this table for any cross-querying of GES\n"
+                },
+                {
+                    "t": "target stars with Gaia DR1 sources.\n"
+                }
+            ],
+            "columns": {
+                "masterObjID": {
+                    "name": "masterObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID in Target (=targetID )",
+                    "unified_content_descriptor": "meta.id;meta.main"
+                },
+                "slaveObjID": {
+                    "name": "slaveObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID of the neighbour in GAIADR1..gaia_source (=source_id)",
+                    "unified_content_descriptor": "meta.id.cross"
+                },
+                "distanceMins": {
+                    "name": "distanceMins",
+                    "type": "real",
+                    "size": 4,
+                    "default": null,
+                    "description": "Angular separation between neighbours",
+                    "unit": "arcminutes",
+                    "unified_content_descriptor": "pos.angDistance"
+                }
+            }
+        },
+        "GES.TargetXGAIADR1tgas_source": {
+            "name": "GES.TargetXGAIADR1tgas_source",
+            "markdown": [
+                {
+                    "h": "Cross-neighbours between the GES Target catalogue and the Gaia DR1 TGAS catalogue\n"
+                },
+                {
+                    "t": "All Gaia DR1 sources within 10 arcsec of\n"
+                },
+                {
+                    "t": "each star in the GES Target catalogue are recorded in this cross-neighbour\n"
+                },
+                {
+                    "t": "table.  The Target table was joined to the GAIADR1..tgas_source table to create\n"
+                },
+                {
+                    "t": "these cross-neighbours.  Use this table for any cross-querying of GES\n"
+                },
+                {
+                    "t": "target stars with Gaia DR1 sources.\n"
+                }
+            ],
+            "columns": {
+                "masterObjID": {
+                    "name": "masterObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID in Target (=targetID )",
+                    "unified_content_descriptor": "meta.id;meta.main"
+                },
+                "slaveObjID": {
+                    "name": "slaveObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID of the neighbour in GAIADR1..gaia_source (=source_id)",
+                    "unified_content_descriptor": "meta.id.cross"
+                },
+                "distanceMins": {
+                    "name": "distanceMins",
+                    "type": "real",
+                    "size": 4,
+                    "default": null,
+                    "description": "Angular separation between neighbours",
+                    "unit": "arcminutes",
+                    "unified_content_descriptor": "pos.angDistance"
+                }
+            }
+        },
+        "GES.TargetXSSASource": {
+            "name": "GES.TargetXSSASource",
+            "markdown": [
+                {
+                    "h": "Cross-neighbours between the GES Target catalogue and the SSA.\n"
+                },
+                {
+                    "t": "All SSA (SuperCOSMOS Science Archive) point sources within 10 arcsec of\n"
+                },
+                {
+                    "t": "each star in the GES Target catalogue are recorded in this cross-neighbour\n"
+                },
+                {
+                    "t": "table.  The Target table was joined to the SSA..Source table to create\n"
+                },
+                {
+                    "t": "these cross-neighbours.  Use this table for any cross-querying of GES\n"
+                },
+                {
+                    "t": "target stars with SSA sources.\n"
+                }
+            ],
+            "columns": {
+                "masterObjID": {
+                    "name": "masterObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID in Target (=targetID )",
+                    "unified_content_descriptor": "meta.id;meta.main"
+                },
+                "slaveObjID": {
+                    "name": "slaveObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID of the neighbour in SSA..Source (=objID)",
+                    "unified_content_descriptor": "meta.id.cross"
+                },
+                "distanceMins": {
+                    "name": "distanceMins",
+                    "type": "real",
+                    "size": 4,
+                    "default": null,
+                    "description": "Angular separation between neighbours",
+                    "unit": "arcminutes",
+                    "unified_content_descriptor": "pos.angDistance"
+                }
+            }
+        },
+        "GES.TargetXtwomass_psc": {
+            "name": "GES.TargetXtwomass_psc",
+            "markdown": [
+                {
+                    "h": "Cross-neighbours between the GES Target catalogue and the 2MASS PSC.\n"
+                },
+                {
+                    "t": "All sources in the 2MASS point source catalogue (PSC) within 10 arcsec of\n"
+                },
+                {
+                    "t": "each star in the GES Target catalogue are recorded in this cross-neighbour\n"
+                },
+                {
+                    "t": "table.  The Target table was joined to the TWOMASS.. Twomass_psc table to\n"
+                },
+                {
+                    "t": "create these cross-neighbours.  Use this table for any cross-querying of\n"
+                },
+                {
+                    "t": "GES target stars with 2MASS point sources.\n"
+                }
+            ],
+            "columns": {
+                "masterObjID": {
+                    "name": "masterObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID in Target (=targetID )",
+                    "unified_content_descriptor": "meta.id;meta.main"
+                },
+                "slaveObjID": {
+                    "name": "slaveObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID of the neighbour in TWOMASS..Twomass_psc (=pts_key)",
+                    "unified_content_descriptor": "meta.id.cross"
+                },
+                "distanceMins": {
+                    "name": "distanceMins",
+                    "type": "real",
+                    "size": 4,
+                    "default": null,
+                    "description": "Angular separation between neighbours",
+                    "unit": "arcminutes",
+                    "unified_content_descriptor": "pos.angDistance"
+                }
+            }
+        },
+        "GES.TargetXvhsDR4Source": {
+            "name": "GES.TargetXvhsDR4Source",
+            "markdown": [
+                {
+                    "h": "Cross-neighbours between the GES Target catalogue and the VISTA VHS.\n"
+                },
+                {
+                    "t": "All the sources in the VISTA VHSDR4 Source catalogue within 10 arcsec of\n"
+                },
+                {
+                    "t": "each star in the GES Target catalogue are recorded in this cross-neighbour\n"
+                },
+                {
+                    "t": "table.  The Target table was joined to the VSA..vhsSource table to create\n"
+                },
+                {
+                    "t": "these cross-neighbours.  Use this table for any cross-querying of GES\n"
+                },
+                {
+                    "t": "target stars with VISTA VHS sources.\n"
+                }
+            ],
+            "columns": {
+                "masterObjID": {
+                    "name": "masterObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID in Target (=targetID )",
+                    "unified_content_descriptor": "meta.id;meta.main"
+                },
+                "slaveObjID": {
+                    "name": "slaveObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID of the neighbour in VSA..vhsSource (=sourceID)",
+                    "unified_content_descriptor": "meta.id.cross"
+                },
+                "distanceMins": {
+                    "name": "distanceMins",
+                    "type": "real",
+                    "size": 4,
+                    "default": null,
+                    "description": "Angular separation between neighbours",
+                    "unit": "arcminutes",
+                    "unified_content_descriptor": "pos.angDistance"
+                }
+            }
+        },
+        "GES.TargetXatlasDR3Source": {
+            "name": "GES.TargetXatlasDR3Source",
+            "markdown": [
+                {
+                    "h": "Cross-neighbours between the GES Target catalogue and the VST Atlas survey.\n"
+                },
+                {
+                    "t": "All the sources in the VST AtlasDR3 source catalogue within 10 arcsec of\n"
+                },
+                {
+                    "t": "each star in the GES Target catalogue are recorded in this cross-neighbour\n"
+                },
+                {
+                    "t": "table.  The Target table was joined to the OSA..atlasSource table to \n"
+                },
+                {
+                    "t": "create these cross-neighbours.  Use this table for any cross-querying \n"
+                },
+                {
+                    "t": "of GES target stars with VST Atlas sources.\n"
+                }
+            ],
+            "columns": {
+                "masterObjID": {
+                    "name": "masterObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID in Target (=targetID )",
+                    "unified_content_descriptor": "meta.id;meta.main"
+                },
+                "slaveObjID": {
+                    "name": "slaveObjID",
+                    "type": "bigint",
+                    "size": 8,
+                    "default": null,
+                    "description": "The unique ID of the neighbour in OSA..atlasSource (=sourceID)",
+                    "unified_content_descriptor": "meta.id.cross"
+                },
+                "distanceMins": {
+                    "name": "distanceMins",
+                    "type": "real",
+                    "size": 4,
+                    "default": null,
+                    "description": "Angular separation between neighbours",
+                    "unit": "arcminutes",
+                    "unified_content_descriptor": "pos.angDistance"
+                }
+            }
+        }
+    },
+    "views": {},
+    "schema": {
+        "markdown": [
+            "$Id: GES_NeighboursSchema.sql 653 2017-11-30 13:51:24Z EckhardSutorius $\n",
+            "Database schema file containing SQL to create the GES cross-neighbour\n",
+            "tables.\n",
+            "Original author: \n",
+            "  Clive Davenhall, Information Services, University of Edinburgh.\n"
+        ]
+    }
+}

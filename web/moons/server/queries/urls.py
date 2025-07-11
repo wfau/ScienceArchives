@@ -7,7 +7,9 @@ app_name = "queries"
 
 urlpatterns = [
     path('', views.QueryCreateView.as_view(), name='query-create'),
-    # path('schema', views.DatabaseSchemaView.as_view(), name='schema-view'),
+    path('schema', views.DatabaseSchemaView.as_view(), name='schema-view'),
+    path('schema/table/<table_name>', views.TableSchemaView.as_view(), name='table-view'),
+    path('schema/view/<view_name>', views.ViewSchemaView.as_view(), name='view-view'),
     path('query', views.QueryListView.as_view(), name='query-list'),
     path('query/<int:pk>', views.QueryDetailView.as_view(), name='query-detail'),
     path('query/result/<int:pk>', views.QueryResultView.as_view(), name='query-result'),

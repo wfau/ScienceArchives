@@ -34,6 +34,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split()
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'mozilla_django_oidc',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mozilla_django_oidc.middleware.SessionRefresh',
 ]
 
 ROOT_URLCONF = 'moons.urls'
@@ -110,6 +112,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -151,3 +157,26 @@ QUERY_DATABASE = {
     # 'CONNECTION_STRING': 'postgresql://postgres:12345@localhost:5432/',
     # 'DRIVER': 'adbc_driver_postgresql.dbapi',
 }
+
+SCHEMA_FILES = [
+    BASE_DIR / 'resources' / 'GES' / 'GES_CurationLogsSchema.json',
+    BASE_DIR / 'resources' / 'GES' / 'GES_ErrorLogsSchema.json',
+    BASE_DIR / 'resources' / 'GES' / 'GES_NeighboursSchema.json',
+    BASE_DIR / 'resources' / 'GES' / 'GES_SpectrumSchema.json',
+    BASE_DIR / 'resources' / 'GES' / 'GES_Views.json',
+]
+
+OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
+OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
+# OIDC_OP_AUTHORIZATION_ENDPOINT = "https://iris-iam.stfc.ac.uk/authorize"
+# OIDC_OP_TOKEN_ENDPOINT = "https://iris-iam.stfc.ac.uk/token"
+# OIDC_OP_JWKS_ENDPOINT = 'https://iris-iam.stfc.ac.uk/jwk'
+# OIDC_OP_USER_ENDPOINT = "https://iris-iam.stfc.ac.uk/userinfo"
+# OIDC_RP_SCOPES = 'openid profile email'
+OIDC_OP_AUTHORIZATION_ENDPOINT = "https://cilogon.org/authorize"
+OIDC_OP_TOKEN_ENDPOINT = "https://cilogon.org/oauth2/token"
+OIDC_OP_JWKS_ENDPOINT = "https://cilogon.org/oauth2/certs"
+OIDC_OP_USER_ENDPOINT = "https://cilogon.org/oauth2/userinfo"
+OIDC_RP_SCOPES = 'openid profile email org.cilogon.userinfo'
+OIDC_RP_SIGN_ALGO = 'RS256'
+OIDC_CREATE_USER = False

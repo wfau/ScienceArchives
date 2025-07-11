@@ -1,0 +1,13 @@
+{
+    "tables": {},
+    "views": {},
+    "schema": {
+        "markdown": [
+            "$Id: GES_ErrorLogsSchema.sql 632 2017-07-21 11:00:11Z EckhardSutorius $\n",
+            "GES_ErrorLogsSchema.sql\n",
+            "Database schema file containing SQL to create the GES error log tables.\n",
+            "Original author: \n",
+            "  Clive Davenhall, WFAU.\n"
+        ]
+    }
+}

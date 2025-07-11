@@ -1,6 +1,10 @@
+import json
+
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.urls import reverse
+from django.utils.text import slugify
 from django.views.generic import TemplateView, CreateView, DetailView, ListView, View
 from django.views.generic.detail import SingleObjectMixin
 from django_tables2.views import SingleTableMixin
@@ -21,9 +25,70 @@ def linebreaksbr(text):
     value = re_newlines.sub("\n", text)
     return value.replace("\n", "<br>")
 
+def get_schema(context):
+    context['tables'] = {}
+    context['views'] = {}
+    context['schema'] = {}
+    for schema_file in settings.SCHEMA_FILES:
+        with open(schema_file) as f:
+            schema = json.load(f)
+            tables = {}
+            views = {}
+            for n, t in schema.get('tables', {}).items():
+                tables[slugify(n)] = t
+                lines = []
+                for line in t['markdown']:
+                    lines.append({k:linebreaksbr(v) for k,v in line.items()})
+                t['markdown'] = lines
+            schema['tables'] = tables
+            context['tables'].update(tables)
+            for n, v in schema.get('views', {}).items():
+                views[slugify(n)] = v
+                lines = []
+                for line in v['markdown']:
+                    lines.append({k:linebreaksbr(t) for k,t in line.items()})
+                v['markdown'] = lines
+            schema['views'] = views
+            context['views'].update(views)
+            context['schema'][schema_file] = schema
+            lines = []
+            for line in schema['schema']['markdown']:
+                if line.startswith('$'):
+                    context['schema'][schema_file]['id'] = line.split()
+                else:
+                    lines.append(linebreaksbr(line))
+            schema['schema']['markdown'] = lines
 
 class DatabaseSchemaView(TemplateView):
+
     template_name = 'queries/schema_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        get_schema(context)
+        return context
+
+class TableSchemaView(TemplateView):
+
+    template_name = 'queries/table_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        schema = {}
+        get_schema(schema)
+        context['schema'] = schema['tables'].get(self.kwargs['table_name'], {})
+        return context
+
+class ViewSchemaView(TemplateView):
+
+    template_name = 'queries/table_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        schema = {}
+        get_schema(schema)
+        context['schema'] = schema['views'].get(self.kwargs['view_name'], {})
+        return context
 
 class QueryCreateView(LoginRequiredMixin, CreateView):
     model = ExecuteSQL
