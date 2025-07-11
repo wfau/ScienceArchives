@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container p-4">
+
+    <h1>{{ schema.name }}</h1>
+    <div>
+        {% for i in schema.markdown %}
+        {% for t,l in i.items %}
+        {% if t == 'h' %}
+        <div class="my-4 lead">{{ l | safe }}</div>
+        {% else %}
+        {{ l | safe }}
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </div>
+
+    {% if schema.statement %}
+    <div class="my-4">
+        {% for line in schema.statement %}
+        <span class="font-monospace">{{ line | linebreaksbr }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if schema.columns %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Length</th>
+                <th>Description</th>
+                <th>Default Value</th>
+                <th>Unified Content Descriptor</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for name, details in schema.columns.items %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ details.type }}</td>
+            <td>{{ details.size }}</td>
+            <td>{{ details.description | safe }}</td>
+            <td>{{ details.default | default:'' }}</td>
+            <td>{{ details.unified_content_descriptor }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+</div>
+
+{% endblock %}

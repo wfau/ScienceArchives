@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container p-4">
+
+    <h1>Database Schema</h1>
+    {% for name, schema in schema.items %}
+    <div><a href="#{{ schema.id.1 }}">{{ schema.id.1 }}</a></div>
+    {% endfor %}    
+
+    {% for name, schema in schema.items %}
+    <div class="card my-4" id="{{ schema.id.1 }}">
+        <div class="card-header">
+            <h4>{{ schema.id.1 }}</h4>
+            <div><small>Latest Revision: {{ schema.id.2 }} {{ schema.id.3 }} {{ schema.id.4 }}</small></div>
+        </div>
+        <div class="card-body">
+            {% for line in schema.schema.markdown %}
+            {{ line | safe }}
+            {% endfor%}
+            {% if schema.tables %}
+            <hr>
+                <h5>Tables</h5>
+                <div>
+                    {% for slug, table in schema.tables.items %}
+                    <div><a href="{% url 'queries:table-view' slug %}">{{ table.name }}</a></div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if schema.views %}
+            <hr>
+            <h5>Views</h5>
+            <div>
+                {% for slug, view in schema.views.items %}
+                <div><a href="{% url 'queries:view-view' slug %}">{{ view.name }}</a></div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
