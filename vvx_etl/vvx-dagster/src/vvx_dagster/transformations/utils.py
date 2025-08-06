@@ -51,9 +51,9 @@ def get_bucketing_data(spark: SparkSession, table_name: str) -> dict:
 
 def is_correctly_bucketed(
     spark: SparkSession, table_name: str, buckets: int, key: str
-) -> True:
+) -> bool:
     """Check whether a table is bucketed correctly by bucket count and column."""
-    info = get_bucketing_data(table_name, spark)
+    info = get_bucketing_data(spark=spark, table_name=table_name)
 
     if info.get("n_buckets") != buckets:
         raise BucketingError(
