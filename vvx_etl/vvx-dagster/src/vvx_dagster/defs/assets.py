@@ -8,7 +8,6 @@ from ..transformations.schema import schema_joined_source_detection
 from ..transformations.extract import download_parquets
 import pandas as pd
 from dagster import asset, AssetExecutionContext
-from pyspark.sql.types import StructType
 from pyspark.sql import SparkSession
 
 from .configs import DESTINATION, BUCKETS

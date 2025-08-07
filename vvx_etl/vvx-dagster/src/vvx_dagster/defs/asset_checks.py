@@ -14,6 +14,8 @@ from .assets import (
     source_bucketed,
     source_detection_joined,
 )
+from pyspark.sql.types import StructType
+from ..transformations.schema import schema_joined_source_detection
 
 from .configs import DESTINATION, BUCKETS
 
@@ -123,10 +125,12 @@ def source_detection_joined_correctly_bucketed(
     description="Ensure Detection and the joined table have the same number of rows",
 )
 def detection_and_joined_consistent_rows(
-    context: dg.AssetExecutionContext, source_detection_joined
+    context: dg.AssetCheckExecutionContext, source_detection_joined
 ) -> dg.AssetCheckResult:
     spark = context.resources.spark
-    detection_nrows = spark.sql("SELECT COUNT(*) FROM detection").collect()[0][0]
+    detection_nrows = spark.sql(
+        "SELECT COUNT(*) FROM detection_arrays_bucketed"
+    ).collect()[0][0]
     joined_nrows = spark.sql("SELECT COUNT(*) FROM source_detection_joined").collect()[
         0
     ][0]

@@ -39,13 +39,17 @@ def bucket_save(
         print(f"Removing location {table_path}")
 
     df.createOrReplaceTempView("tmp_view")
-    spark.sql(
-        f"""
-        CREATE TABLE {table_name}
-        USING PARQUET
-        CLUSTERED BY ({key}) INTO {buckets} BUCKETS
-        AS SELECT * FROM tmp_view
-        """
-    )
+
+    if not spark.catalog.tableExists(table_name):
+        spark.sql(
+            f"""
+            CREATE TABLE {table_name}
+            USING PARQUET
+            CLUSTERED BY ({key}) INTO {buckets} BUCKETS
+            AS SELECT * FROM tmp_view
+            """
+        )
+    else:
+        spark.sql(f"INSERT OVERWRITE TABLE {table_name} SELECT * FROM tmp_view")
 
     check_table_is_in_catalog(table_name=table_name, spark=spark)
