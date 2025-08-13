@@ -30,7 +30,9 @@ def get_parquet_urls(url: str) -> list[str]:
 
 def download_parquets(url: str, output_path: str) -> None:
     parquet_urls = get_parquet_urls(url)
-    base_url = "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/"
+    base_url = "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/"  # need to change this - shouldn't be hardcoded
+
+    print(parquet_urls)
 
     for url in parquet_urls[0:2]:
         relative_path = url.replace(base_url, "")

@@ -1,12 +1,14 @@
-from dagster import AssetCheckResult, asset_check
+from dagster import AssetCheckResult, asset_check, AssetCheckExecutionContext
 import dagster as dg
 from pathlib import Path
+from typing import List
+from .configs import CONFIG
 from ..transformations.validation import (
     validate_bucketing,
     validate_consistent_nrows,
     validate_schema,
 )
-
+from ..transformations.schema import schema_joined_source_detection
 from .assets import (
     joined_qppv,
     vvv_src5,
@@ -14,150 +16,129 @@ from .assets import (
     source_bucketed,
     source_detection_joined,
 )
-from pyspark.sql.types import StructType
-from ..transformations.schema import schema_joined_source_detection
+from .resources import SparkResource
+import glob
+import os
 
-from .configs import DESTINATION, BUCKETS
+
+def check_parquets_exist(table_name: str) -> AssetCheckResult:
+    expected_path = Path(CONFIG.download_dir).joinpath(table_name)
+    all_parquets = glob.glob(
+        os.path.join(CONFIG.download_dir, "**", "*.parquet"), recursive=True
+    )
+    if expected_path.exists() and any(list(all_parquets)):
+        return AssetCheckResult(passed=True)
+    else:
+        return AssetCheckResult(
+            passed=False, description=f"No Parquet files found in {expected_path}"
+        )
 
 
-@asset_check(asset=joined_qppv, required_resource_keys={"spark"}, blocking=True)
+@asset_check(asset=joined_qppv, blocking=True)
 def check_joined_qppv_files_exist() -> AssetCheckResult:
-    expected_path = Path(DESTINATION).joinpath("JoinedQPPV")
-
-    if expected_path.exists() and any(expected_path.glob("*.parquet")):
-        return AssetCheckResult(passed=True)
-    else:
-        return AssetCheckResult(
-            passed=True, description=f"No Parquet files found in {expected_path}"
-        )
+    return check_parquets_exist("JoinedQPPV")
 
 
-@asset_check(asset=vvv_src5, required_resource_keys={"spark"}, blocking=True)
+# Check: vvv_src5 files exist
+@asset_check(asset=vvv_src5, blocking=True)
 def check_vvv_src5_files_exist() -> AssetCheckResult:
-    expected_path = Path(DESTINATION).joinpath("vvvSrc5")
-
-    if expected_path.exists() and any(expected_path.glob("*.parquet")):
-        return AssetCheckResult(passed=True)
-    else:
-        return AssetCheckResult(
-            passed=True, description=f"No Parquet files found in {expected_path}"
-        )
+    return check_parquets_exist("vvvSrc5")
 
 
-@dg.asset_check(
+# Check: detection_array_valued_bucketed is correctly bucketed
+@asset_check(
     asset=detection_array_valued_bucketed,
-    required_resource_keys={"spark"},
     blocking=True,
     description="Ensure Detection is bucketed correctly",
 )
 def detection_correctly_bucketed(
-    context: dg.AssetCheckExecutionContext, detection_array_valued_bucketed
-) -> dg.AssetCheckResult:
-    spark = context.resources.spark
-
-    print(spark.conf.get("spark.sql.catalogImplementation"))  # should be 'hive'
-    print(spark.catalog.listTables())
-
-    try:
-        spark.sql("SHOW TABLES").show()
-    except RuntimeError as e:
-        print(f"SHOW TABLES failed: {e}")
-
-    return dg.AssetCheckResult(
-        asset_key="detection_array_valued_bucketed",
+    spark: SparkResource,
+) -> AssetCheckResult:
+    spark_session = spark.get_session()
+    return AssetCheckResult(
         passed=validate_bucketing(
             "detection_arrays_bucketed",
-            buckets=BUCKETS,
+            buckets=CONFIG.n_buckets,
             key="sourceID",
-            spark=spark,
-        ),
+            spark=spark_session,
+        )
     )
 
 
-@dg.asset_check(
+# Check: source_bucketed is correctly bucketed
+@asset_check(
     asset=source_bucketed,
     blocking=True,
-    required_resource_keys={"spark"},
     description="Ensure Source is bucketed correctly",
 )
 def source_correctly_bucketed(
-    context: dg.AssetCheckExecutionContext, source_bucketed
-) -> dg.AssetCheckResult:
-    spark = context.resources.spark
-
-    desc = spark.sql(f"DESCRIBE TABLE EXTENDED source_bucketed").collect()
-    print(desc)
-    return dg.AssetCheckResult(
-        asset_key="source_bucketed",
+    spark: SparkResource,
+) -> AssetCheckResult:
+    spark_session = spark.get_session()
+    return AssetCheckResult(
         passed=validate_bucketing(
-            "source_bucketed", buckets=BUCKETS, key="sourceID", spark=spark
-        ),
+            "source_bucketed",
+            buckets=CONFIG.n_buckets,
+            key="sourceID",
+            spark=spark_session,
+        )
     )
 
 
-@dg.asset_check(
+# Check: source_detection_joined is correctly bucketed
+@asset_check(
     asset=source_detection_joined,
     name="correct_bucketing",
-    required_resource_keys={"spark"},
     blocking=True,
     description="Ensure joined Source-Detection is bucketed correctly",
 )
 def source_detection_joined_correctly_bucketed(
-    context: dg.AssetCheckExecutionContext, source_detection_joined
-) -> dg.AssetCheckResult:
-    spark = context.resources.spark
-    return dg.AssetCheckResult(
-        asset_key="source_detection_joined",
+    spark: SparkResource,
+) -> AssetCheckResult:
+    spark_session = spark.get_session()
+    return AssetCheckResult(
         passed=validate_bucketing(
             "source_detection_joined",
-            buckets=BUCKETS,
+            buckets=CONFIG.n_buckets,
             key="sourceID",
-            spark=spark,
-        ),
+            spark=spark_session,
+        )
     )
 
 
-@dg.asset_check(
+# Check: row count consistency
+@asset_check(
     asset=source_detection_joined,
     name="count_rows",
-    required_resource_keys={"spark"},
     blocking=True,
     description="Ensure Detection and the joined table have the same number of rows",
 )
 def detection_and_joined_consistent_rows(
-    context: dg.AssetCheckExecutionContext, source_detection_joined
-) -> dg.AssetCheckResult:
-    spark = context.resources.spark
-    detection_nrows = spark.sql(
+    spark: SparkResource,
+) -> AssetCheckResult:
+    spark_session = spark.get_session()
+    detection_nrows = spark_session.sql(
         "SELECT COUNT(*) FROM detection_arrays_bucketed"
     ).collect()[0][0]
-    joined_nrows = spark.sql("SELECT COUNT(*) FROM source_detection_joined").collect()[
-        0
-    ][0]
-
-    passed = False
-    if detection_nrows == joined_nrows:
-        passed = True
-
-    return dg.AssetCheckResult(passed=passed)
+    joined_nrows = spark_session.sql(
+        "SELECT COUNT(*) FROM source_detection_joined"
+    ).collect()[0][0]
+    return AssetCheckResult(passed=detection_nrows == joined_nrows)
 
 
-@dg.asset_check(
+# Check: schema match
+@asset_check(
     asset=source_detection_joined,
     name="schema_match",
-    required_resource_keys={"spark"},
     blocking=True,
     description="Check that joined table matches expected schema",
 )
 def source_detection_joined_matches_schema(
-    context: dg.AssetCheckExecutionContext, source_detection_joined
-) -> dg.AssetCheckResult:
-
-    spark = context.resources.spark
-
-    expected_schema: StructType = schema_joined_source_detection
-    actual_schema = spark.table("source_detection_joined").schema
-
-    return dg.AssetCheckResult(
+    spark: SparkResource,
+) -> AssetCheckResult:
+    spark_session = spark.get_session()
+    expected_schema = schema_joined_source_detection
+    actual_schema = spark_session.table("source_detection_joined").schema
+    return AssetCheckResult(
         passed=validate_schema(expected=expected_schema, observed=actual_schema)
     )

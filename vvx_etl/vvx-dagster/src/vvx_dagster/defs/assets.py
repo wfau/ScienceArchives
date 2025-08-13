@@ -9,106 +9,82 @@ from ..transformations.extract import download_parquets
 import pandas as pd
 from dagster import asset, AssetExecutionContext
 from pyspark.sql import SparkSession
-
-from .configs import DESTINATION, BUCKETS
-
-
-@asset(required_resource_keys={"spark"})
-def joined_qppv(context: AssetExecutionContext) -> None:
-    source_path = "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/JoinedQPPV/"
-
-    download_parquets(url=source_path, output_path=DESTINATION)
+from typing import List
+from .resources import SparkResource
+from .configs import CONFIG
 
 
-@asset(required_resource_keys={"spark"})
-def vvv_src5(context: AssetExecutionContext) -> None:
-    source_path = "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/vvvSrc5/"
-    download_parquets(url=source_path, output_path=DESTINATION)
+@dg.asset
+def joined_qppv() -> None:
+    download_parquets(url=CONFIG.qppv_url, output_path=CONFIG.download_dir)
 
 
-@dg.asset(
-    deps=["joined_qppv"],
-    required_resource_keys={"spark"},
-)
-def detection_array_valued_bucketed(context: AssetExecutionContext):
-    spark = context.resources.spark
+@dg.asset
+def vvv_src5() -> None:
+    download_parquets(url=CONFIG.vvv_src5_url, output_path=CONFIG.download_dir)
 
-    detection_df = spark.read.parquet(DESTINATION + "/JoinedQPPV/mod0000")
-    columns_to_array_value = [
-        "mjd",
-        "aperMag1",
-        "aperMag1err",
-        "aperMag2",
-        "aperMag2err",
-        "aperMag3",
-        "aperMag3err",
-        "errBits",
-        "averageConf",
-        "class",
-        "classStat",
-        "deprecated",
-        "ppErrBits",
-        "objID",
-        "multiframeID",
-        "extNum",
-        "seqNum",
-        "flag",
-        "modelDistSecs",
-    ]
+
+@dg.asset(deps=["joined_qppv"])
+def detection_array_valued_bucketed(spark: SparkResource):
+    spark_session = spark.get_session()
+    detection_df = spark_session.read.option("mergeSchema", "true").parquet(
+        CONFIG.download_dir + "/JoinedQPPV/*"
+    )
+
     detection_arrayvals_df = make_array_cols(
         detection_df,
         key="sourceID",
         filter_col="filterID",
         order_by="sourceID",
-        cols_to_transform=columns_to_array_value,
+        cols_to_transform=CONFIG.columns_to_transform,
     )
 
     bucket_save(
         df=detection_arrayvals_df,
-        buckets=BUCKETS,
+        buckets=CONFIG.n_buckets,
         key="sourceID",
         table_name="detection_arrays_bucketed",
-        spark=spark,
+        spark=spark_session,
     )
 
 
-@dg.asset(
-    deps=["vvv_src5"],
-    required_resource_keys={"spark"},
-)
-def source_bucketed(context: AssetExecutionContext):
-    spark = context.resources.spark
-    source_df = spark.read.parquet(DESTINATION + "/vvvSrc5/mod0000")
+@dg.asset(deps=["vvv_src5"])
+def source_bucketed(spark: SparkResource):
+    spark_session = spark.get_session()
+    print("path", CONFIG.download_dir + "/vvvSrc5")
+    source_df = spark_session.read.option("mergeSchema", "true").parquet(
+        CONFIG.download_dir + "/vvvSrc5/*"
+    )
+
     bucket_save(
         df=source_df,
-        buckets=BUCKETS,
+        buckets=CONFIG.n_buckets,
         key="sourceID",
         table_name="source_bucketed",
-        spark=spark,
+        spark=spark_session,
     )
 
 
 @dg.asset(
     deps=["detection_array_valued_bucketed", "source_bucketed"],
-    required_resource_keys={"spark"},
 )
-def source_detection_joined(context: AssetExecutionContext):
-    spark = context.resources.spark
+def source_detection_joined(spark: SparkResource):
+    spark_session = spark.get_session()
 
-    tables = spark.catalog.listTables()
+    tables = spark_session.catalog.listTables()
     for table in tables:
         print(f"{table.name} ({table.tableType})")
 
-    joined = spark.table("source_bucketed").join(
-        spark.table("detection_arrays_bucketed"), on="sourceID"
+    joined = spark_session.table("source_bucketed").join(
+        spark_session.table("detection_arrays_bucketed"), on="sourceID"
     )
 
     joined = cast_df_using_schema(df=joined, schema=schema_joined_source_detection)
 
     bucket_save(
         joined,
-        buckets=BUCKETS,
+        buckets=CONFIG.n_buckets,
         key="sourceID",
         table_name="source_detection_joined",
-        spark=spark,
+        spark=spark_session,
     )

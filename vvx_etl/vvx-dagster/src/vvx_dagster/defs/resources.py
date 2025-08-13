@@ -1,31 +1,32 @@
-from dagster import resource
+import dagster as dg
 from pyspark.sql import SparkSession
+from dagster import ConfigurableResource
 
-metastore_location = "/tmp/spark-hive-metastore"
 
+class SparkResource(dg.ConfigurableResource):
+    metastore_uri: str
+    warehouse_dir: str
+    cores: int
+    memory: str
 
-@resource
-def spark(_):
-    return (
-        SparkSession.builder.appName("dagster_spark_asset")
-        .master("local[*]")
-        .config("spark.cores.max", "4")
-        .config("spark.driver.memory", "30g")
-        .enableHiveSupport()
-        .config(
-            "spark.sql.warehouse.dir",
-            "/home/sharnqvi/VVVNewDataModel/ScienceArchives/vvx_etl/vvx-dagster/src/spark-warehouse",
+    def get_session(self) -> SparkSession:
+        return (
+            SparkSession.builder.appName("dagster_spark_asset")
+            .master("local[*]")
+            .config("spark.cores.max", self.cores)
+            .config("spark.driver.memory", self.memory)
+            .enableHiveSupport()
+            .config("spark.sql.warehouse.dir", self.warehouse_dir)
+            .config(
+                "javax.jdo.option.ConnectionURL",
+                f"jdbc:derby:;databaseName={self.metastore_uri};create=true",
+            )
+            .config(
+                "javax.jdo.option.ConnectionDriverName",
+                "org.apache.derby.jdbc.EmbeddedDriver",
+            )
+            .config("datanucleus.autoCreateSchema", "true")
+            .config("datanucleus.fixedDatastore", "false")
+            .config("datanucleus.autoCreateTables", "true")
+            .getOrCreate()
         )
-        .config(
-            "javax.jdo.option.ConnectionURL",
-            f"jdbc:derby:;databaseName={metastore_location};create=true",
-        )
-        .config(
-            "javax.jdo.option.ConnectionDriverName",
-            "org.apache.derby.jdbc.EmbeddedDriver",
-        )
-        .config("datanucleus.autoCreateSchema", "true")
-        .config("datanucleus.fixedDatastore", "false")
-        .config("datanucleus.autoCreateTables", "true")
-        .getOrCreate()
-    )

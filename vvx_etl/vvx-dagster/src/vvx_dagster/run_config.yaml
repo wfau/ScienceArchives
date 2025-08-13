@@ -1,0 +1,35 @@
+resources:
+  config:
+    config:
+      download_dir: "~/VVVNewDataModel/dagster_downloads_temp"
+      n_buckets: 10
+      columns_to_transform:
+          - mjd
+          - aperMag1
+          - aperMag1err
+          - aperMag2
+          - aperMag2err
+          - aperMag3
+          - aperMag3err
+          - errBits
+          - averageConf
+          - class
+          - classStat
+          - deprecated
+          - ppErrBits
+          - objID
+          - multiframeID
+          - extNum
+          - seqNum
+          - flag
+          - modelDistSecs
+
+      vvv_src5_url: "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/vvvSrc5/"
+      joined_qppv_url: "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/JoinedQPPV/"
+
+  spark:
+    config:
+      metastore_uri: "metastore_db"
+      warehouse_dir: "/tmp/spark_warehouse"
+      cores: 4
+      memory: "30g"
