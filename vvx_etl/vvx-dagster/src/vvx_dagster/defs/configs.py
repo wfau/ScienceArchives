@@ -7,6 +7,7 @@ class Config:
     download_dir: str
     n_buckets: int
     columns_to_transform: list[str]
+    spark_db: str
 
 
 CONFIG = Config(
@@ -34,4 +35,5 @@ CONFIG = Config(
         "flag",
         "modelDistSecs",
     ],
+    spark_db="default",
 )

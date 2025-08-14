@@ -33,15 +33,33 @@ def check_parquets_exist(table_name: str) -> AssetCheckResult:
         )
 
 
+def check_table_exists(spark: SparkResource, table_name: str) -> AssetCheckResult:
+    spark_session = spark.get_session()
+    if spark_session.catalog.tableExists(CONFIG.spark_db, table_name):
+        return AssetCheckResult(passed=True)
+    else:
+        return AssetCheckResult(passed=False)
+
+
 @asset_check(asset=joined_qppv, blocking=True)
 def check_joined_qppv_files_exist() -> AssetCheckResult:
     return check_parquets_exist("JoinedQPPV")
 
 
+@asset_check(asset=joined_qppv, blocking=True)
+def check_joined_qppv_table_exists(spark: SparkResource) -> AssetCheckResult:
+    return check_table_exists(spark, "joined_qppv")
+
+
+@asset_check(asset=vvv_src5, blocking=True)
+def check_joined_vvv_src5_table_exists(spark: SparkResource) -> AssetCheckResult:
+    return check_table_exists(spark, "vvv_src5")
+
+
 # Check: vvv_src5 files exist
 @asset_check(asset=vvv_src5, blocking=True)
 def check_vvv_src5_files_exist() -> AssetCheckResult:
-    return check_parquets_exist("vvv_src5")
+    return check_parquets_exist("vvvSrc5")
 
 
 # Check: detection_array_valued_bucketed is correctly bucketed
