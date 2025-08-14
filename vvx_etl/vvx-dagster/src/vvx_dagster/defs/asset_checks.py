@@ -35,7 +35,7 @@ def check_parquets_exist(table_name: str) -> AssetCheckResult:
 
 def check_table_exists(spark: SparkResource, table_name: str) -> AssetCheckResult:
     spark_session = spark.get_session()
-    if spark_session.catalog.tableExists(CONFIG.spark_db, table_name):
+    if spark_session.catalog.tableExists(tableName=table_name, dbName=CONFIG.spark_db):
         return AssetCheckResult(passed=True)
     else:
         return AssetCheckResult(passed=False)
@@ -48,6 +48,7 @@ def check_joined_qppv_files_exist() -> AssetCheckResult:
 
 @asset_check(asset=joined_qppv, blocking=True)
 def check_joined_qppv_table_exists(spark: SparkResource) -> AssetCheckResult:
+    print(f"Found tables: {spark.get_session().catalog.listTables(CONFIG.spark_db)}")
     return check_table_exists(spark, "joined_qppv")
 
 
