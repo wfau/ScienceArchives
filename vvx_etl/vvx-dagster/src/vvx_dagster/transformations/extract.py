@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from pathlib import Path
+from urllib.parse import urljoin
 
 
 def scrape_for_files(url: str, keyword: str) -> list[str]:
@@ -28,9 +29,10 @@ def get_parquet_urls(url: str) -> list[str]:
     return parquets
 
 
-def download_parquets(url: str, output_path: str) -> None:
+def download_parquets(base_url: str, table_name: str, output_path: str) -> None:
+    url = urljoin(base_url + "/", table_name + "/")
+    print(url)
     parquet_urls = get_parquet_urls(url)
-    base_url = "http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/"  # need to change this - shouldn't be hardcoded
 
     print(parquet_urls)
 

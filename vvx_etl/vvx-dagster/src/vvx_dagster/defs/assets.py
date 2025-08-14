@@ -15,13 +15,46 @@ from .configs import CONFIG
 
 
 @dg.asset
-def joined_qppv() -> None:
-    download_parquets(url=CONFIG.qppv_url, output_path=CONFIG.download_dir)
+def joined_qppv(spark: SparkResource) -> None:
+    download_parquets(
+        base_url=CONFIG.base_url,
+        table_name="JoinedQPPV",
+        output_path=CONFIG.download_dir,
+    )
+    spark_session = spark.get_session()
+
+    df = spark_session.read.option("mergeSchema", "true").parquet(
+        CONFIG.download_dir + "/JoinedQPPV/*"
+    )
+
+    bucket_save(
+        df=df,
+        buckets=CONFIG.n_buckets,
+        key="sourceID",
+        table_name="joined_qppv",
+        spark=spark_session,
+    )
 
 
 @dg.asset
-def vvv_src5() -> None:
-    download_parquets(url=CONFIG.vvv_src5_url, output_path=CONFIG.download_dir)
+def vvv_src5(spark: SparkResource) -> None:
+    download_parquets(
+        base_url=CONFIG.base_url, table_name="vvvSrc5", output_path=CONFIG.download_dir
+    )
+
+    spark_session = spark.get_session()
+
+    df = spark_session.read.option("mergeSchema", "true").parquet(
+        CONFIG.download_dir + "/vvvSrc5/*"
+    )
+
+    bucket_save(
+        df=df,
+        buckets=CONFIG.n_buckets,
+        key="sourceID",
+        table_name="vvv_src5",
+        spark=spark_session,
+    )
 
 
 @dg.asset(deps=["joined_qppv"])
@@ -48,25 +81,8 @@ def detection_array_valued_bucketed(spark: SparkResource):
     )
 
 
-@dg.asset(deps=["vvv_src5"])
-def source_bucketed(spark: SparkResource):
-    spark_session = spark.get_session()
-    print("path", CONFIG.download_dir + "/vvvSrc5")
-    source_df = spark_session.read.option("mergeSchema", "true").parquet(
-        CONFIG.download_dir + "/vvvSrc5/*"
-    )
-
-    bucket_save(
-        df=source_df,
-        buckets=CONFIG.n_buckets,
-        key="sourceID",
-        table_name="source_bucketed",
-        spark=spark_session,
-    )
-
-
 @dg.asset(
-    deps=["detection_array_valued_bucketed", "source_bucketed"],
+    deps=["detection_array_valued_bucketed", "vvv_src5"],
 )
 def source_detection_joined(spark: SparkResource):
     spark_session = spark.get_session()
@@ -75,7 +91,7 @@ def source_detection_joined(spark: SparkResource):
     for table in tables:
         print(f"{table.name} ({table.tableType})")
 
-    joined = spark_session.table("source_bucketed").join(
+    joined = spark_session.table("vvv_src5").join(
         spark_session.table("detection_arrays_bucketed"), on="sourceID"
     )
 

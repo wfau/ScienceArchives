@@ -13,7 +13,6 @@ from .assets import (
     joined_qppv,
     vvv_src5,
     detection_array_valued_bucketed,
-    source_bucketed,
     source_detection_joined,
 )
 from .resources import SparkResource
@@ -42,7 +41,7 @@ def check_joined_qppv_files_exist() -> AssetCheckResult:
 # Check: vvv_src5 files exist
 @asset_check(asset=vvv_src5, blocking=True)
 def check_vvv_src5_files_exist() -> AssetCheckResult:
-    return check_parquets_exist("vvvSrc5")
+    return check_parquets_exist("vvv_src5")
 
 
 # Check: detection_array_valued_bucketed is correctly bucketed
@@ -67,7 +66,7 @@ def detection_correctly_bucketed(
 
 # Check: source_bucketed is correctly bucketed
 @asset_check(
-    asset=source_bucketed,
+    asset=vvv_src5,
     blocking=True,
     description="Ensure Source is bucketed correctly",
 )
@@ -77,7 +76,7 @@ def source_correctly_bucketed(
     spark_session = spark.get_session()
     return AssetCheckResult(
         passed=validate_bucketing(
-            "source_bucketed",
+            "vvv_src5",
             buckets=CONFIG.n_buckets,
             key="sourceID",
             spark=spark_session,
