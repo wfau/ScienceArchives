@@ -4,7 +4,7 @@ from pyspark.sql.types import *
 from pyspark.sql.functions import col, udf
 from vvx_etl.spark_singleton import SparkSingleton
 from vvx_etl.source_detection_etl import extract, transform, load
-from vvx_etl.schema import schema_joined_source_detection
+from vvx_etl.schema.schema_joined_source_detection import schema_joined_source_detection
 from vvx_etl.utils import check_schema_alignment
 import toml
 import os

@@ -15,7 +15,7 @@ import toml
 import logging
 from datetime import datetime
 import os
-from vvx_etl.schema import schema_joined_source_detection
+from vvx_etl.schema.schema_joined_source_detection import schema_joined_source_detection
 
 logger = logging.getLogger(__name__)
 
