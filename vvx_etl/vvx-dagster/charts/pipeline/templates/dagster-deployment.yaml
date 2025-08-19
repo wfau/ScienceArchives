@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dagster
+spec:
+  replicas: {{ .Values.dagster.replicas }}
+  selector:
+    matchLabels:
+      app: dagster
+  template:
+    metadata:
+      labels:
+        app: dagster
+    spec:
+      containers:
+        - name: dagster
+          image: {{ .Values.dagster.image }}
+          ports:
+            - containerPort: {{ .Values.dagster.port }}

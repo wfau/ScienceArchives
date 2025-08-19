@@ -17,6 +17,13 @@ def scrape_for_files(url: str, keyword: str) -> list[str]:
     return res
 
 
+def get_mods(base_url: str, table_name: str) -> list[str]:
+    """Get list of mods of a table"""
+    url = urljoin(base_url + "/", table_name + "/")
+    moduli = scrape_for_files(url=url, keyword="mod")
+    return [mod_url.replace(url, "").replace("/", "") for mod_url in moduli]
+
+
 def get_parquet_urls(url: str) -> list[str]:
     """Get list of paths from URL"""
 
@@ -29,14 +36,13 @@ def get_parquet_urls(url: str) -> list[str]:
     return parquets
 
 
-def download_parquets(base_url: str, table_name: str, output_path: str) -> None:
-    url = urljoin(base_url + "/", table_name + "/")
-    print(url)
+def download_parquets(
+    base_url: str, table_name: str, mod: str, output_path: str
+) -> None:
+    url = urljoin(base_url + "/", table_name + "/" + mod + "/")
     parquet_urls = get_parquet_urls(url)
 
-    print(parquet_urls)
-
-    for url in parquet_urls[0:2]:
+    for url in parquet_urls:
         relative_path = url.replace(base_url, "")
         out_path = Path(output_path) / relative_path
 

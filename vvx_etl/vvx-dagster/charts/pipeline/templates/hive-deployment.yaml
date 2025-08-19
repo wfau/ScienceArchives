@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive-metastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hive
+  template:
+    metadata:
+      labels:
+        app: hive
+    spec:
+      containers:
+        - name: hive
+          image: {{ .Values.hive.image }}
+          ports:
+            - containerPort: {{ .Values.hive.port }}
+          volumeMounts:
+            - name: warehouse
+              mountPath: /opt/spark/warehouse
+            - name: hive-secrets
+              mountPath: /run/secrets
+              readOnly: true
+      volumes:
+        - name: warehouse
+          persistentVolumeClaim:
+            claimName: warehouse-pvc
+        - name: hive-secrets
+          secret:
+            secretName: hive-metastore-secrets

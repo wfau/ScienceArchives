@@ -1,6 +1,6 @@
 from pyspark.sql.types import *
 
-schema_vvv_src5 = StructType(
+schema_joined_qppv = StructType(
     [
         StructField("sourceID", LongType(), True),
         StructField("filterID", ShortType(), True),
@@ -11,7 +11,7 @@ schema_vvv_src5 = StructType(
         StructField("aperMag2err", FloatType(), True),
         StructField("aperMag3", FloatType(), True),
         StructField("aperMag3err", FloatType(), True),
-        StructField("errBits", IntegerType(), True),z
+        StructField("errBits", IntegerType(), True),
         StructField("averageConf", FloatType(), True),
         StructField("class", ShortType(), True),
         StructField("classStat", FloatType(), True),

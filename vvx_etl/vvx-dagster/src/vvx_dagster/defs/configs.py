@@ -5,15 +5,14 @@ from dataclasses import dataclass
 class Config:
     base_url: str
     download_dir: str
-    n_buckets: int
     columns_to_transform: list[str]
     spark_db: str
+    max_concurrent_runs: int
 
 
 CONFIG = Config(
     base_url="http://www-wfau.roe.ac.uk/www-data/VVVXDMP/bulkOut/",
     download_dir="~/VVVNewDataModel/dagster_downloads_temp",
-    n_buckets=10,
     columns_to_transform=[
         "mjd",
         "aperMag1",
@@ -36,4 +35,5 @@ CONFIG = Config(
         "modelDistSecs",
     ],
     spark_db="default",
+    max_concurrent_runs=1,
 )

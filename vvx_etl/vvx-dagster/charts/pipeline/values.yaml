@@ -1,0 +1,19 @@
+dagster:
+  image: your-registry/dagster:latest
+  replicas: 1
+  port: 3000
+
+hive:
+  image: your-registry/hive-metastore:latest
+  port: 9083
+
+postgres:
+  image: postgres:16
+  user: hive
+  password: hivepass123
+  database: hive_metastore
+  port: 5432
+  storage: 1Gi
+
+warehouse:
+  storage: 2Gi

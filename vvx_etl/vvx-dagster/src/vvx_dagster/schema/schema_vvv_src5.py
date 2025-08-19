@@ -1,6 +1,6 @@
 from pyspark.sql.types import *
 
-schema_source = StructType(
+schema_vvv_src5 = StructType(
     [
         StructField("sourceID", LongType(), False),
         StructField("cuEventID", IntegerType(), False),

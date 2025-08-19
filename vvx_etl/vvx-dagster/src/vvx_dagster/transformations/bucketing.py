@@ -1,6 +1,7 @@
 from .utils import sanitise_identifier, check_table_is_in_catalog
 from .errors import TableNotInCatalogError
 from pyspark.sql import DataFrame, SparkSession
+from pyspark.errors.exceptions.base import AnalysisException
 from pathlib import Path
 import shutil
 from urllib.parse import urlparse
@@ -40,7 +41,14 @@ def bucket_save(
 
     df.createOrReplaceTempView("tmp_view")
 
-    if not spark.catalog.tableExists(table_name):
+    try:
+        # Check if table exists by trying to read it
+        spark.table(table_name)
+        table_exists = True
+    except AnalysisException:
+        table_exists = False
+
+    if not table_exists:
         spark.sql(
             f"""
             CREATE TABLE {table_name}
@@ -50,6 +58,6 @@ def bucket_save(
             """
         )
     else:
-        spark.sql(f"INSERT OVERWRITE TABLE {table_name} SELECT * FROM tmp_view")
+        spark.sql(f"INSERT INTO TABLE {table_name} SELECT * FROM tmp_view")
 
     check_table_is_in_catalog(table_name=table_name, spark=spark)
