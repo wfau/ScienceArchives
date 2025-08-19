@@ -1,14 +1,20 @@
-FROM python:3.12-slim
+FROM python:3.11
 
-# Install system deps
-RUN apt-get update && apt-get install -y gcc git build-essential curl
+COPY . /
+ENV PYTHONUNBUFFERED=1
 
-# Install Dagster and tools
-RUN pip install dagster dagster-webserver dagster-k8s dagster-postgres
+RUN pip install --upgrade pip
 
-# Copy your code
-WORKDIR /app
-COPY . /app
+RUN \
+    pip install \
+        dagster \
+        dagster-postgres \
+        dagster-k8s \
+        pandas \
+        pyspark
 
-# Set entrypoint for Dagster webserver
-CMD ["dagster", "webserver", "-h", "0.0.0.0", "-p", "3000"]
+
+WORKDIR /vvx_pipeline
+
+# Expose the port that your Dagster instance will run on
+EXPOSE 3000
