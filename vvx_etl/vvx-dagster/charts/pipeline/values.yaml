@@ -1,17 +1,17 @@
-dagster:
-  image: localhost:5000/dagster
-  replicas: 1
-  port: 3000
+dagster-user-deployments:
+... # omitted for brevity
+  deployments:
+    - name: "pipeline" # set to the name of your deployment
+      image:
+        repository: "dagster-docker" # set to the name of your Docker image
+        # When a tag is not supplied, it will default as the Helm chart version.
+        tag: 1 # set to the tag of your Docker image
 
-hive:
-  image: localhost:5000/hive-metastore
-  port: 9083
+        # Only change this value if you are following the guide on your
+        # local machine. If you are pushing images to a registry,
+        # leave the value as Always
+        pullPolicy: IfNotPresent
 
-postgres:
-  image: postgres:16
-  database: hive_metastore
-  port: 5432
-  storage: 1Gi
-
-warehouse:
-  storage: 2Gi
+      dagsterApiGrpcArgs:
+        - "--python-file"
+        - "src/vvx_dagster/definitions.py"
