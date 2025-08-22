@@ -42,6 +42,7 @@ Use pip3 to install:
     pip3 install "psycopg[binary]"
     pip3 install astropy
     pip3 install scipy
+    pip3 install pandas
 
 ### Code installation
 
