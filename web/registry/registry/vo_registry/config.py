@@ -1,3 +1,3 @@
-TITLE = "A VO Registry"
-CONTACT_NAME = "Your Name"
-CONTACT_EMAIL = "your.name@your-domain.edu"
+TITLE = "WFAU VO Publishing Registry"
+CONTACT_NAME = "Mark Holliman"
+CONTACT_EMAIL = "msh@roe.ac.uk"
