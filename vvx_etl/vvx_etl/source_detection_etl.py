@@ -27,8 +27,11 @@ def extract(
     detection_array_cols: list[str],
 ):
 
-    source = spark.read.parquet(source_data_path)
-    detection = spark.read.parquet(detection_data_path).select(
+    source_schema = spark.read.parquet(source_data_path + "/mod0000").schema
+    detection_schema = spark.read.parquet(detection_data_path + "/mod0000").schema
+
+    source = spark.read.parquet(source_data_path, schema=source_schema)
+    detection = spark.read.parquet(detection_data_path, schema=detection_schema).select(
         "sourceID", "filterID", *detection_array_cols
     )
 
