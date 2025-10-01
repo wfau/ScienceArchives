@@ -12,6 +12,7 @@ dependencies = []
 
 [tool.setuptools.packages.find]
 where=["."]
+include = ["vvx_etl*"]
 
 [project.scripts]
 vvxetl = "vvx_etl.cli:main"
