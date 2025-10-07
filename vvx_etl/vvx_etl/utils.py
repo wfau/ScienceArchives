@@ -4,6 +4,12 @@ from pyspark.sql.types import *
 from vvx_etl.errors import TableNotInCatalogError, BucketingError
 import os
 import re
+import glob
+
+
+def get_schema(table_path, spark: SparkSession):
+    schema = spark.read.parquet(glob.glob(f"{table_path}/*")[0]).schema
+    return schema
 
 
 def check_table_is_in_catalog(table_name: str, spark: SparkSession) -> None:

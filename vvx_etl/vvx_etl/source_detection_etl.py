@@ -6,6 +6,7 @@ from vvx_etl.errors import *
 from vvx_etl.validate_source_detection_etl import *
 from vvx_etl.bucketing import bucket_save
 from vvx_etl.utils import (
+    get_schema,
     cast_df_using_schema,
     get_bucketing_data,
 )
@@ -30,8 +31,8 @@ def extract(
     detection_array_cols: list[str],
 ):
 
-    source_schema = spark.read.parquet(source_data_path + "/mod0000").schema
-    detection_schema = spark.read.parquet(detection_data_path + "/mod0000").schema
+    source_schema = get_schema(source_data_path, spark=spark)
+    detection_schema = get_schema(detection_data_path, spark=spark)
 
     source = spark.read.parquet(source_data_path, schema=source_schema)
     detection = spark.read.parquet(detection_data_path, schema=detection_schema).select(
