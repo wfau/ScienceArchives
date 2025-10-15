@@ -43,16 +43,21 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
     'core',
     'queries',
+    'api',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "core.middleware.CustomHeaderRemoteUserMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
@@ -113,8 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    # "django.contrib.auth.backends.RemoteUserBackend",
+    "core.backends.MyRemoteUserBackend",
+    # 'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
 )
 
 # Internationalization
@@ -180,3 +187,46 @@ OIDC_OP_USER_ENDPOINT = "https://cilogon.org/oauth2/userinfo"
 OIDC_RP_SCOPES = 'openid profile email org.cilogon.userinfo'
 OIDC_RP_SIGN_ALGO = 'RS256'
 OIDC_CREATE_USER = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.TabulatorPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.authentication.CustomHeaderRemoteUserAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+CORS_ALLOW_ALL_ORIGINS=True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173/",
+]
+CSRF_USE_SESSIONS=True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}
+
+# MOONS_DB = {
+#     'FILE_COLUMNS' : {
+#         'gesiDR5': {
+#             'SpectrumGroup': ['fileName'],
+#         }
+#     },
+# }

@@ -13,6 +13,7 @@ class ExecuteSQL(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     query = models.TextField(blank=True, null=True)
+    schema = models.CharField(max_length=63, blank=True, null=True)
     timeout = models.PositiveSmallIntegerField(null=True, blank=True)
     format = models.CharField(max_length=127, null=True, blank=True)
     status = models.CharField(max_length=127, choices=StatusType.choices, default=StatusType.CREATED)
@@ -21,6 +22,7 @@ class ExecuteSQL(models.Model):
     completed = models.DateTimeField(null=True, blank=True)
     results_file = models.CharField(max_length=1023, blank=True, null=True)
     results_error = models.TextField(blank=True, null=True)
+    num_rows = models.PositiveIntegerField(blank=True, null=True)
 
     @property
     def current_status(self):

@@ -13,70 +13,16 @@
     <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <span class="navbar-brand mb-0 h1">MOONS</span>
+                <span class="navbar-brand mb-0 h1">MOONS Science Archive</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'core:index' %}">Home</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Freeform SQL
-                </a>
-                <ul class="dropdown-menu">
-                  {% if user.is_authenticated %}
-                  <li><a class="dropdown-item" href="{% url 'queries:query-list' %}">Your Queries</a></li>
-                  <li><a class="dropdown-item" href="{% url 'queries:query-create' %}">New Query</a></li>
-                  {% else %}
-                  <li><a class="dropdown-item" href="{% url 'queries:anonymous-query-create' %}">New Query</a></li>
-                  {% endif %}
-                </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Data
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- <li><a class="dropdown-item" href="">Overview</a></li>
-                  <li><a class="dropdown-item" href="">Access</a></li>
-                  <li><a class="dropdown-item" href="">Releases</a></li> -->
-                  <li><a class="dropdown-item" href="{% url 'queries:schema-view' %}">Schema Browser</a></li>
-                  <!-- <li><a class="dropdown-item" href="">Known Issues</a></li> -->
-                </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Info
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Example Queries</a></li>
-                  <li><a class="dropdown-item" href="#">Q&amp;A</a></li>
-                  <li><a class="dropdown-item" href="#">Glossary</a></li>
-                  <li><a class="dropdown-item" href="#">Publications</a></li>
-                  <li><a class="dropdown-item" href="#">Downtime</a></li>
-                </ul>
-              </li>
             </ul>
             <ul class="navbar-nav">
-              {% if user.is_authenticated %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navAuthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ user.username }}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navAuthDropdown">
-                  <form action="{% url 'admin:logout' %}" method="post">
-                    {% csrf_token %}
-                    <input class="dropdown-item" type="submit" value="Logout">
-                  </form>
-                </div>
-              </li>
-              {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-              {% endif %}
+                <li class="nav-item"><a class="nav-link" href="/frontend/">Database (requires Login)</a></li>
                 <li class="nav-item dropdown">
                     <button class="btn btn-link nav-link dropdown-toggle" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (auto)">
                         <span class="d-lg-none ms-2" id="bd-theme-text">Toggle theme</span>

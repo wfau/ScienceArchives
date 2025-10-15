@@ -22,6 +22,7 @@ from .models import ExecuteSQL
 
 def write_results(cursor, output_file):
     count = 0
+    row_count = 0
     # with pa.OSFile(output_file, 'wb') as sink:
     batchreader = cursor.fetch_record_batch()
     with pq.ParquetWriter(output_file, batchreader.schema) as writer:
@@ -29,12 +30,13 @@ def write_results(cursor, output_file):
             while True:
                 batch = batchreader.read_next_batch()
                 writer.write(batch)
+                row_count += batch.num_rows
                 count += 1
         except StopIteration:
             # finished
             pass
     print(f'Wrote {count} batch(es) to {output_file}', flush=True)
-    return count
+    return row_count
 
 def read_table(input_file):
     return Table.read(input_file)
@@ -68,7 +70,9 @@ def execute(exec_pk):
         conn = db_api.connect(db_url)
         cursor = conn.cursor()
         cursor.execute(job.query)
-        write_results(cursor, results_file)
+        row_count = write_results(cursor, results_file)
+        print(f'row count: {row_count}')
+        job.num_rows = row_count
         cursor.close()
         conn.close()
         job.results_file = results_file
@@ -77,6 +81,8 @@ def execute(exec_pk):
         traceback.print_exc()
         job.results_error = str(exc)
     finally:
+        print('job completed')
+        print(f'has error? {job.results_error}')
         job.completed = timezone.now()
         job.status = ExecuteSQL.StatusType.COMPLETED
         job.save()
