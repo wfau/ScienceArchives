@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, reactive, onMounted, useTemplateRef, computed} from 'vue';
+import {ref, reactive, onMounted, useTemplateRef, computed, onUnmounted} from 'vue';
 import { useRoute } from 'vue-router'
 
 import { getQueryResult } from '@/api/get_result';
@@ -34,8 +34,16 @@ const highlightClass = computed(() => {
     }
 })
 
+var timer: number;
+
 onMounted(async () => {
     queryStatus.value = await getQueryResult(resultId)
+    timer = setInterval(async () => {
+        queryStatus.value = await getQueryResult(resultId)
+    }, 1000);
+})
+onUnmounted(() => {
+    clearInterval(timer)
 })
 
 </script>
