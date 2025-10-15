@@ -24,8 +24,8 @@ services:
       - OAUTH2_PROXY_STANDARD_LOGGING=true
       - OAUTH2_PROXY_REQUEST_LOGGING=true
       - OAUTH2_PROXY_SCOPE = "openid email profile"
-    ports:
-      - 4180:4180
+    # ports:
+    #   - 4180:4180
 
   proxy:
     restart: always
