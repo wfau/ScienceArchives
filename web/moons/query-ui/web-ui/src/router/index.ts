@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import QueryView from '@/views/QueryView.vue'
 import ResultView from '@/views/ResultView.vue'
 import QueryListView from '@/views/QueryListView.vue'
+import SpectrumView from '@/views/SpectrumView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/result/:id(\\d+)',
       name: 'query-result',
       component: ResultView,
+    },
+    {
+      path: '/resultfile/:id(\\d+)',
+      name: 'result-file',
+      component: SpectrumView,
     },
     {
       path: '/about',

@@ -3,6 +3,7 @@ import os
 
 from django.conf import settings
 from django.utils import timezone
+from django.utils.http import urlencode
 
 from celery import shared_task
 
@@ -67,7 +68,13 @@ def execute(exec_pk):
     results_file = os.path.join(settings.LOCAL_FILE_DIR, f'{job.pk}.parquet')
     job.save()
     try:
-        conn = db_api.connect(db_url)
+        if job.schema:
+            # this is PostgreSQL specific
+            options = urlencode({'options': f'--search_path={job.schema}'})
+            url = f'{db_url}?{options}'
+        else:
+            url = db_url
+        conn = db_api.connect(url)
         cursor = conn.cursor()
         cursor.execute(job.query)
         row_count = write_results(cursor, results_file)

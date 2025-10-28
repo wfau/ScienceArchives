@@ -11,7 +11,15 @@ class ExecuteSQLStatusSerializer(serializers.HyperlinkedModelSerializer):
     result_url = serializers.SerializerMethodField()
     class Meta:
         model = ExecuteSQL
-        fields = ['id', 'query', 'created', 'started', 'completed', 'current_status', 'results_error', 'result_url', 'num_rows']
+        fields = [
+            'id',
+            'query',
+            'created', 'started', 'completed',
+            'current_status',
+            'results_error',
+            'result_url',
+            'num_rows',
+        ]
     
     def get_result_url(self, obj):
         if obj.results_file:

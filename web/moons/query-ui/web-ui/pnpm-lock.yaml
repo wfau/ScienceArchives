@@ -32,6 +32,9 @@ importers:
       bootstrap:
         specifier: ^5.3.7
         version: 5.3.7(@popperjs/core@2.11.8)
+      dygraphs:
+        specifier: ^2.2.1
+        version: 2.2.1
       hyparquet:
         specifier: ^1.17.1
         version: 1.17.1
@@ -54,6 +57,9 @@ importers:
       '@tsconfig/node22':
         specifier: ^22.0.2
         version: 22.0.2
+      '@types/dygraphs':
+        specifier: ^2.1.10
+        version: 2.1.10
       '@types/luxon':
         specifier: ^3.7.1
         version: 3.7.1
@@ -567,8 +573,14 @@ packages:
   '@tsconfig/node22@22.0.2':
     resolution: {integrity: sha512-Kmwj4u8sDRDrMYRoN9FDEcXD8UpBSaPQQ24Gz+Gamqfm7xxn+GBR7ge/Z7pK8OXNGyUzbSwJj+TH6B+DS/epyA==}
 
+  '@types/dygraphs@2.1.10':
+    resolution: {integrity: sha512-dYDQcAZaxhyOYjpqGea9yCjDSdAt3iP50kP28zNt4Rry2646ZFd8JePcIJ7mlhgf9URrNWJO6fH4+8h/EFlTWg==}
+
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/google.visualization@0.0.74':
+    resolution: {integrity: sha512-vcBDi9AF7bPGf7v+WvTUUyuF7KT/kdnOg0qyI8UsQtEuW8dYQcQTG3atejfy8Vwb9bzpa42IE80d9571QXy8jg==}
 
   '@types/luxon@3.7.1':
     resolution: {integrity: sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==}
@@ -749,6 +761,9 @@ packages:
   define-lazy-prop@3.0.0:
     resolution: {integrity: sha512-N+MeXYoqr3pOgn8xfyRPREN7gHakLYjhsHhWGT3fWAiL4IkAt0iDw14QiiEm2bE30c5XX5q0FtAA3CK5f9/BUg==}
     engines: {node: '>=12'}
+
+  dygraphs@2.2.1:
+    resolution: {integrity: sha512-xnuvsvh2H/FKvJjTSlXgJpwCOhLOi3u0sHw1gsJg/Bmf29y6bnO14PbTz8MwHOa3GIbKqqgKVBMSOi+Z1gI2Gg==}
 
   electron-to-chromium@1.5.183:
     resolution: {integrity: sha512-vCrDBYjQCAEefWGjlK3EpoSKfKbT10pR4XXPdn65q7snuNOZnthoVpBfZPykmDapOKfoD+MMIPG8ZjKyyc9oHA==}
@@ -1698,7 +1713,13 @@ snapshots:
 
   '@tsconfig/node22@22.0.2': {}
 
+  '@types/dygraphs@2.1.10':
+    dependencies:
+      '@types/google.visualization': 0.0.74
+
   '@types/estree@1.0.8': {}
+
+  '@types/google.visualization@0.0.74': {}
 
   '@types/luxon@3.7.1': {}
 
@@ -1919,6 +1940,8 @@ snapshots:
       default-browser-id: 5.0.0
 
   define-lazy-prop@3.0.0: {}
+
+  dygraphs@2.2.1: {}
 
   electron-to-chromium@1.5.183: {}
 

@@ -1,5 +1,6 @@
 import { asyncBufferFromUrl, parquetReadObjects, parquetMetadataAsync, parquetSchema } from 'hyparquet'
 import { headers, api_url } from './query'
+import router from '@/router/index'
 import type { ColumnDefinition } from 'tabulator-tables'
 
 export const getQueryResult = async(id: Number) => {    
@@ -33,8 +34,8 @@ export const getAGGridResult = async (id: Number) => {
         }
         return result
     })
-    console.log(metadata)
-    console.log(columnNames)
+    // console.log(metadata)
+    // console.log(columnNames)
     let data = await parquetReadObjects({
         file,
         // rowStart: 0,
@@ -114,7 +115,7 @@ var headerMenu = function(e:Event, component:any){
    return menu;
 };
 
-export const getTabulatorData = async (url: string) => {
+export const getTabulatorData = async (url: string, id: Number) => {
     const file = await asyncBufferFromUrl({ url, requestInit: {headers: headers} })
     const metadata = await parquetMetadataAsync(file)
     const schema = parquetSchema(metadata)
@@ -123,24 +124,46 @@ export const getTabulatorData = async (url: string) => {
             headerMenu:headerMenu,
             field: e.element.name,
             title: e.element.name,
-            hozAlign: 'left',
-        }
+        } as ColumnDefinition
         if (e.element.type == 'DOUBLE' || e.element.type == 'FLOAT' || e.element.type == 'INT32' || e.element.type == 'INT64' || e.element.type == 'INT96') {
             result['hozAlign'] = 'right'
         }
+        if (e.element.name.toLowerCase() == 'filename') {
+            result['formatter'] = 'html'
+            result['headerSort'] = false
+        }
         return result as ColumnDefinition
     })
-    console.log(metadata)
-    console.log(columnNames)
+    // console.log(metadata)
+    // console.log(columnNames)
     let data = await parquetReadObjects({
         file,
         // rowStart: 0,
         // get a maximum of 1000 rows
         rowEnd: 1000,
     })
+    data.map((obj:any) => {
+        const f = obj.filename
+        if (f) {
+            // get file link
+            const resulturl = router.resolve({name: 'result-file', params: {id: id.toString()}})
+            obj.filename = `<a href="${resulturl.href}?file=${f}">${f}</a>`
+        }
+    })
     return {
         columns: columnNames,
         numRows: metadata.num_rows,
         data: data,
     }
+}
+
+export const getSpectrumData = async(id: Number, filename: string) => {
+    const url = `${api_url}/results/${id}/file?filename=${filename}`
+    const response = await fetch(url)
+    if (response.status == 200) {
+        return await response.text()
+    } else {
+        return null
+    }
+
 }

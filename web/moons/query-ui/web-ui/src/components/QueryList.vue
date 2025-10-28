@@ -24,6 +24,7 @@ onMounted(() => {
   
   if (table.value) {
   var tabulator = new Tabulator(table.value, {
+      // @ts-ignore
       dependencies:{
         DateTime:DateTime,
       },

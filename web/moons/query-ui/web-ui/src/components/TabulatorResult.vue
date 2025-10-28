@@ -5,7 +5,7 @@ import {getPreferredTheme} from './theme'
 
 import { getTabulatorData } from '@/api/get_result.ts'
 
-const props = defineProps(['result_url'])
+const props = defineProps(['result_url', 'result_id'])
 
 // const table = ref(null); //reference to your table element
 const tabulator = ref<Tabulator | null>(null); //variable to hold your table
@@ -35,7 +35,7 @@ onBeforeMount(async () => {
 
 watchEffect(async () => {
     if (props.result_url && table.value) {
-        const tableData = await getTabulatorData(props.result_url)
+        const tableData = await getTabulatorData(props.result_url, props.result_id)
         tabledata = tableData['data']
         numRows.value = tableData['numRows']
 

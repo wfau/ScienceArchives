@@ -22,10 +22,11 @@ type TableData = {
   data: (string | number)[][];
 };
 const schemaData = tableSchemaJson as {[key: string]: {[key: string] : TableData }}
+const currentSchema = ref<string | null>(Object.keys(schemaData)[0])
 
 const editorTheme = new Compartment()
 
-const currentSchema = ref<string | null>(null)
+
 const csrfToken = ref('')
 
 const codeSchema:any = computed(() => {
@@ -102,12 +103,12 @@ const handleDragStart = (e: Event) => {
 const submit = () => {
     console.log('submitting')
     const sqlQuery = editorView.value?.state.doc.toString()
-    console.log(sqlQuery)
+    // console.log(sqlQuery)
     if (sqlQuery) {
         postQuery(sqlQuery, currentSchema.value, csrfToken.value)
         .then((jsonResponse) => {
             // store the id of the newly created query
-            console.log(jsonResponse)
+            // console.log(jsonResponse)
             router.push({name: 'query-result', params: {id: jsonResponse.id}})
         })
         .catch((e) => console.log(e))
@@ -117,7 +118,7 @@ const submit = () => {
 var response = fetch('/api/csrf')
   .then((response) => {console.log(response); return response.text()})
   .then((text) => new DOMParser().parseFromString(text, "text/html"))
-  .then((dom) => dom.querySelector('[name=csrfmiddlewaretoken]')?.value)
+  .then((dom) => (<HTMLInputElement>dom.querySelector('[name=csrfmiddlewaretoken]'))?.value)
   .then((token => {
     csrfToken.value = token
   }));
@@ -173,7 +174,7 @@ var response = fetch('/api/csrf')
             </label>
             <select v-model="currentSchema">
                 <option v-for="(value, key) in schemaData" :value="key">
-                    {{  key }}
+                    {{ key }}
                 </option>
             </select>
         </div>
