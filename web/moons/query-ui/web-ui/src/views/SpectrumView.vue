@@ -11,21 +11,27 @@ const filename = route.query.file
 
 // const filename = ref('/files/GES_MW_00_01/gir_00000014-6003143_H548.8.fit')
 const url = `${api_url}/results/${resultId}/file?filename=${filename}`
-
+const loading = ref(true)
+const hasError = ref(true)
 const diagram = useTemplateRef('diagram')
 onMounted(async () => {
-    // const data = await getSpectrumData(resultId, '/files/GES_MW_00_01/gir_00000014-6003143_H548.8.fit')
-    // console.log(data)
-    if (diagram.value) {
-        new Dygraph(
+    const data = await getSpectrumData(url)
+    if (data) {
+        hasError.value = false
+        diagram.value && new Dygraph(
             diagram.value,
-            url, 
+            data,
             {
                 customBars: true,
                 height: window.innerHeight*0.5
             }
         );
+        loading.value = false;
     }
+    else {
+        hasError.value = true
+    }
+    loading.value = false
 })
 </script>
 
@@ -33,8 +39,12 @@ onMounted(async () => {
 
     <main class="container-fluid">
         <h1>Spectrum Plot</h1>
-        <h5 class="mb-4">{{ filename }}</h5>
-        <div ref="diagram"></div>
+        <div v-if="loading">Loading ...</div>
+        <div v-if="hasError">An error occurred when loading the data.</div>
+        <div v-if="!hasError">
+            <h5 class="mb-4">{{ filename }}</h5>
+            <div ref="diagram"></div>
+        </div>
     </main>
 
 </template>
