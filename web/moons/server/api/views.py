@@ -1,3 +1,8 @@
+import importlib
+import io
+from pathlib import Path
+
+from django.conf import settings
 from django.http import StreamingHttpResponse, FileResponse
 
 from rest_framework import generics, status, permissions
@@ -8,6 +13,9 @@ from queries.models import ExecuteSQL
 from queries.tasks import execute
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer
+
+import logging
+logger = logging.getLogger(__name__)
 
 class ExecuteSQLListCreateView(generics.ListCreateAPIView):
     serializer_class = ExecuteSQLSerializer
@@ -47,36 +55,38 @@ class ExecuteSQLResultView(APIView):
 class ExecuteSQLResultGraphView(APIView):
 
     def validate_filename(self, filename):
-        from pathlib import Path
-        base = Path('/moons-flatfiles/products/ges/giraffe/stacked_v5.00/')
+        if not filename:
+            return None
+        base = Path(settings.MOONS_DB['BASE_FILE_PATH'])
         local_base = Path('/files/')
         path = Path(filename)
-        print(path)
         if not path.is_relative_to(base):
-            print(f'not relative to {base}')
+            logger.error(f'Requested file path {filename} not relative to {base}')
             return None
         return local_base / path.relative_to(base)
+
+    def generate_csv(self, schema, filename):
+        converter = settings.MOONS_DB['SPECTRA_CONVERTER'].get(schema)
+        if not converter:
+            raise Exception(f'No converter registered for schema {schema}. Please check your settings.')
+        spec_csv = importlib.import_module(converter)
+        f = spec_csv.get_csv(filename)
+        return StreamingHttpResponse(
+            streaming_content=io.StringIO(f),
+            content_type="text/plain")
 
     def get(self, request, pk, format=None):
         try:
             # check if job id is owned by user
             job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
-            filename = request.query_params.get('filename')
-            print(filename)
-            if filename:
-                filename = self.validate_filename(filename)
-                print(filename)
-                if filename is None:
-                    return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
-                from . import spec_csv
-                import io
-                f = spec_csv.get_csv(filename)
-                return StreamingHttpResponse(
-                    streaming_content=io.StringIO(f),
-                    content_type="text/plain")
+            qp = request.query_params.get('filename')
+            filename = self.validate_filename(qp)
+            if filename is None:
+                raise Exception(f'Invalid filename {qp}')
+
+            return self.generate_csv(job.schema, filename)
         except:
-            import traceback
-            traceback.print_exc()
+            logger.error('Failed to generate spectra data', exc_info=True)
 
         return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
 

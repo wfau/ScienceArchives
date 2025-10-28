@@ -206,6 +206,7 @@ CORS_ALLOW_ALL_ORIGINS=True
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173/",
+    "http://localhost:9000/",
 ]
 CSRF_USE_SESSIONS=True
 
@@ -223,10 +224,9 @@ LOGGING = {
     },
 }
 
-# MOONS_DB = {
-#     'FILE_COLUMNS' : {
-#         'gesiDR5': {
-#             'SpectrumGroup': ['fileName'],
-#         }
-#     },
-# }
+MOONS_DB = {
+    'BASE_FILE_PATH': '/moons-flatfiles/products/ges/giraffe/stacked_v5.00/',
+    'SPECTRA_CONVERTER': {
+        'gesdr5': 'api.spec_csv',
+    },
+}
