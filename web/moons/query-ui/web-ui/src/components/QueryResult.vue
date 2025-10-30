@@ -4,14 +4,15 @@ import { useRoute } from 'vue-router'
 
 import { getQueryResult } from '@/api/get_result';
 import TabulatorResult from './TabulatorResult.vue';
-import {getPreferredTheme} from './theme'
-const prefTheme = getPreferredTheme()
+import {getCurrentTheme} from './theme'
+const prefTheme = getCurrentTheme()
 if (prefTheme == 'light') {
     import("tabulator-tables/dist/css/tabulator.min.css")
 }
 else {
     import("tabulator-tables/dist/css/tabulator_midnight.min.css")
 }
+import { api_url } from '@/api/query'
 
 const route = useRoute()
 
@@ -66,6 +67,8 @@ watchEffect(async () => {
     }
 })
 
+const downloadFormats = ['FITS', 'VOTable', 'CSV']
+
 </script>
 
 <template>
@@ -82,32 +85,6 @@ watchEffect(async () => {
     <div class="m-4 container" :class="{['d-none']: !(queryStatus?.value)}">
         <div class="lead">Query not found</div>
     </div>
-    <!-- <div class="m-4 container" :class="{['d-none']: (queryStatus?.value)}">
-        <div class="row">
-            <div class="col-3">Query</div><div class="col font-monospace border rounded p-2 m-2">{{ queryStatus?.query }}</div>
-        </div>
-        <div class="row">
-            <div class="col-3">Status</div>
-            <div class="col">
-                <div class="h5">
-                    <span id="job-badge" :class="highlightClass" class="badge p-2">
-                        <span :class="{['d-none']: isComplete}" class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span>
-                        <span role="status">{{ queryStatus?.current_status || 'Loading...' }}</span>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="row" v-if="queryStatus?.started">
-            <div class="col-3">Start</div><div class="col">{{new Date(queryStatus?.started).toLocaleString() }}</div>
-        </div>
-        <div class="row" v-if="queryStatus?.completed">
-            <div class="col-3">End</div><div class="col">{{ new Date(queryStatus?.completed).toLocaleString() }}</div>
-        </div>
-        <div class="row" v-if="queryStatus?.results_error">
-            <div class="col-3">Error</div>
-            <div class="col border rounded p-2 m-2 border-danger"><pre>{{ queryStatus?.results_error }}</pre></div>
-        </div>
-    </div> -->
 
     <div class="m-4" :class="{['d-none']: (queryStatus?.value)}">
         <div class="col font-monospace border border-3 rounded p-2 m-2 my-4">{{ queryStatus?.query }}</div>
@@ -132,24 +109,12 @@ watchEffect(async () => {
             </div>
         </div>
         <div class="btn-group m-2" role="group" v-if="!queryStatus?.results_error">
-        <button type="button" class="btn btn-primary">
+        <a v-for="format in downloadFormats" type="button" class="btn btn-primary" :href="`${api_url}/results/${resultId}?format=${format.toLowerCase()}`" >
             <svg width="1em" height="1em" class="theme-icon-active">
                 <use href="#icon-download" />
             </svg>
-            FITS
-        </button>
-        <button type="button" class="btn btn-primary">
-            <svg width="1em" height="1em" class="theme-icon-active">
-                <use href="#icon-download" />
-            </svg>
-            VOTable
-        </button>
-        <button type="button" class="btn btn-primary">
-            <svg width="1em" height="1em" class="theme-icon-active">
-                <use href="#icon-download" />
-            </svg>
-            CSV
-        </button>
+            {{ format }}
+        </a>
         </div>
     </div>
 
@@ -160,6 +125,10 @@ watchEffect(async () => {
       <symbol id="icon-download" fill="currentColor" viewBox="0 0 448 512">
           <!-- Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. -->
           <path d="M256 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 210.7-41.4-41.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l96-96c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 242.7 256 32zM64 320c-35.3 0-64 28.7-64 64l0 32c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-32c0-35.3-28.7-64-64-64l-46.9 0-56.6 56.6c-31.2 31.2-81.9 31.2-113.1 0L110.9 320 64 320zm304 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/>
+      </symbol>
+      <symbol id="icon-chart-line" fill="currentColor" viewBox="0 0 512 512">
+          <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. -->
+          <path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64L0 400c0 44.2 35.8 80 80 80l400 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 416c-8.8 0-16-7.2-16-16L64 64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7 262.6 153.4c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l73.4-73.4 57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/>
       </symbol>
   </svg>
 

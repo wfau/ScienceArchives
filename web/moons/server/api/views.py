@@ -3,7 +3,7 @@ import io
 from pathlib import Path
 
 from django.conf import settings
-from django.http import StreamingHttpResponse, FileResponse
+from django.http import StreamingHttpResponse, HttpResponse, FileResponse
 
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
@@ -13,6 +13,7 @@ from queries.models import ExecuteSQL
 from queries.tasks import execute
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer
+from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
 
 import logging
 logger = logging.getLogger(__name__)
@@ -45,14 +46,39 @@ class ExecuteSQLDetailView(generics.RetrieveAPIView):
             return ExecuteSQL.objects.none()
 
 class ExecuteSQLResultView(APIView):
+
+    renderer_classes = [
+        FileRenderer,
+        CSVTextRenderer,
+        FitsFileRenderer,
+        VOTableFileRenderer,
+    ]
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        """
+        Return the response with the proper content disposition and the customized
+        filename instead of the browser default (or lack thereof).
+        """
+        response = super().finalize_response(request, response, *args, **kwargs)
+        if isinstance(response, Response):
+            format = response.accepted_renderer.format
+            if format in ["fits", 'votable']:
+                filename = f'result.{format}'
+                response["content-disposition"] = (
+                    f"attachment; filename={filename}"
+                )
+        return response
+
     def get(self, request, pk, format=None):
         job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
         if job.results_file:
-            return FileResponse(open(job.results_file, 'rb'), filename='result.parquet')
+            if request.accepted_renderer.format == 'parquet':
+                return FileResponse(open(job.results_file, 'rb'), filename='result.parquet')
+            return Response(job.results_file)
         else:
             return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class ExecuteSQLResultGraphView(APIView):
+class LocalFileMixin():
 
     def validate_filename(self, filename):
         if not filename:
@@ -64,6 +90,8 @@ class ExecuteSQLResultGraphView(APIView):
             logger.error(f'Requested file path {filename} not relative to {base}')
             return None
         return local_base / path.relative_to(base)
+
+class ExecuteSQLResultGraphView(LocalFileMixin, APIView):
 
     def generate_csv(self, schema, filename):
         converter = settings.MOONS_DB['SPECTRA_CONVERTER'].get(schema)
@@ -87,6 +115,23 @@ class ExecuteSQLResultGraphView(APIView):
             return self.generate_csv(job.schema, filename)
         except:
             logger.error('Failed to generate spectra data', exc_info=True)
+
+        return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ExecuteSQLResultFilenameView(LocalFileMixin, APIView):
+
+    def get(self, request, pk, format=None):
+        try:
+            # check if job id is owned by user
+            job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
+            qp = request.query_params.get('filename')
+            filename = self.validate_filename(qp)
+            if filename is None:
+                raise Exception(f'Invalid filename {qp}')
+
+            return FileResponse(open(filename, 'rb'), filename=filename.name)
+        except:
+            logger.error('Cannot fetch file for download', exc_info=True)
 
         return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
 

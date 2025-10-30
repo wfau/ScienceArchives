@@ -1,0 +1,29 @@
+/* Legend */
+.dygraph-legend {
+  background: none;
+}
+
+/* Title: */ 
+.dygraph-label, .dygraph-title{
+  color:#fff;
+}
+/* x-axis label: */ 
+.dygraph-label, .dygraph-xlabel{
+  color:#fff;
+}
+/* y-axis label: */ 
+.dygraph-label, .dygraph-ylabel{
+  color:#fff;
+}
+/* x-axis label: */ 
+.dygraph-axis-label, .dygraph-axis-label-x{
+  color:#fff;
+}
+/* y-axis label: */ 
+.dygraph-axis-label, .dygraph-axis-label-y{
+  color:#fff;
+}
+/* y2-axis label */
+.dygraph-axis-label, .dygraph-axis-label-y, .dygraph-axis-label-y2{
+  color:#fff;
+}

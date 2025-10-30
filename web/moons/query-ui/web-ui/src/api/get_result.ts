@@ -17,61 +17,6 @@ export const getQueryResult = async(id: Number) => {
         return null
     }
 }
-
-export const getAGGridResult = async (id: Number) => {
-    const url = `${api_url}/results/${id}`
-    const file = await asyncBufferFromUrl({ url, requestInit: {headers: headers} })
-    const metadata = await parquetMetadataAsync(file)
-    const schema = parquetSchema(metadata)
-    const columnNames = schema.children.map(e => {
-        const result = {
-            field: e.element.name,
-            type: 'leftAligned',
-            title: e.element.name,
-        }
-        if (e.element.type == 'DOUBLE' || e.element.type == 'FLOAT' || e.element.type == 'INT32' || e.element.type == 'INT64' || e.element.type == 'INT96') {
-            result['type'] = ''
-        }
-        return result
-    })
-    // console.log(metadata)
-    // console.log(columnNames)
-    let data = await parquetReadObjects({
-        file,
-        // rowStart: 0,
-        // rowEnd: 4,
-    })
-    return {
-        columns: columnNames,
-        numRows: metadata.num_rows,
-        data: data,
-    }
-    // .then((file) => {
-    //     return parquetMetadataAsync(file)
-    // })
-    // .then((metadata) => {
-    //     // Get total number of rows (convert bigint to number)
-    //     const numRows = Number(metadata.num_rows)
-    //     // Get nested table schema
-    //     const schema = parquetSchema(metadata)
-    //     console.log(schema)
-    //     // Get top-level column header names
-    //     const columnNames = schema.children.map(e => e.element.name)
-    //     console.log(columnNames)
-    //     // return parquetReadObjects({
-    //     //     file,
-    //     //     rowStart: 0,
-    //     //     rowEnd: 4,
-    //     // })
-
-    // })
-    // .catch((error) => {
-    //     console.log(error)
-    // })
-    // const metadata = await parquetMetadataAsync(file)
-
-}
-
 var headerMenu = function(e:Event, component:any){
     var menu = [];
     var columns = component._column.table.getColumns();
@@ -116,9 +61,15 @@ var headerMenu = function(e:Event, component:any){
 };
 
 export const getTabulatorData = async (url: string, id: Number) => {
-    const file = await asyncBufferFromUrl({ url, requestInit: {headers: headers} })
+    const file = await asyncBufferFromUrl({
+        url,
+        requestInit: {
+            headers: {"Content-Type": "application/vnd.apache.parquet"}
+        }
+    })
     const metadata = await parquetMetadataAsync(file)
     const schema = parquetSchema(metadata)
+    var hasFilenameCol = false
     const columnNames:ColumnDefinition[] = schema.children.map(e => {
         const result = {
             headerMenu:headerMenu,
@@ -131,6 +82,7 @@ export const getTabulatorData = async (url: string, id: Number) => {
         if (e.element.name.toLowerCase() == 'filename') {
             result['formatter'] = 'html'
             result['headerSort'] = false
+            hasFilenameCol = true
         }
         return result as ColumnDefinition
     })
@@ -142,12 +94,34 @@ export const getTabulatorData = async (url: string, id: Number) => {
         // get a maximum of 1000 rows
         rowEnd: 1000,
     })
+    if (hasFilenameCol) {
+        columnNames.push(
+            {
+                headerMenu:headerMenu,
+                field: 'spectrum_plot',
+                title: 'Download',
+                formatter: 'html',
+                headerSort: false,
+            } as ColumnDefinition,
+            {
+                headerMenu:headerMenu,
+                field: 'spectrum_plot',
+                title: 'Spectrum',
+                formatter: 'html',
+                headerSort: false,
+            } as ColumnDefinition,
+        )
+    }
     data.map((obj:any) => {
         const f = obj.filename
         if (f) {
             // get file link
-            const resulturl = router.resolve({name: 'result-file', params: {id: id.toString()}})
-            obj.filename = `<a href="${resulturl.href}?file=${f}">${f}</a>`
+            const downloadLoc = `${api_url}/results/${id}/file?filename=${f}`
+            const fn = f.split('/').pop()
+            const spectrumLoc = router.resolve({name: 'result-file', params: {id: id.toString()}})
+            obj.filename = fn
+            obj.download = `<a href="${downloadLoc}" class="download"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-download"/></svg></a>`
+            obj.spectrum_plot = `<a href="${spectrumLoc.href}?file=${f}"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-chart-line" /></svg></a>`
         }
     })
     return {
@@ -157,8 +131,7 @@ export const getTabulatorData = async (url: string, id: Number) => {
     }
 }
 
-export const getSpectrumData = async(id: Number, filename: string) => {
-    const url = `${api_url}/results/${id}/file?filename=${filename}`
+export const getSpectrumData = async(url:string) => {
     const response = await fetch(url)
     if (response.status == 200) {
         return await response.text()

@@ -8,3 +8,12 @@ export const getPreferredTheme = () => {
 
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
+
+export const getCurrentTheme = () => {
+  const storedTheme = getStoredTheme()
+  if (storedTheme && storedTheme !== 'auto') {
+    return storedTheme
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}

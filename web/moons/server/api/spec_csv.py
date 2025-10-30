@@ -67,14 +67,12 @@ def get_csv(path):
         f = io.StringIO()
         if np.any(good):
             flux_col = "flux" if not bunit else f"flux[{bunit}]"
-            header = ",".join(["wavelength_Angstrom" + ("_air" if air_tag else ""), 'low', flux_col, 'high'])
+            header = ",".join(["wavelength_Angstrom" + ("_air" if air_tag else ""), flux_col])
             data = np.column_stack([lam[good], (flux - sigma)[good], flux[good], (flux + sigma)[good]])
             f.write(header)
+            f.write('\n')
             for r in data:
                 # write special format for custom high/low bands
                 f.write(f'{r[0]},{r[1]:.10g};{r[2]:.10g};{r[3]:.10g}\n')
             # np.savetxt(f, data, delimiter=",", header=header, comments="", fmt="%.10g")
         return f.getvalue()
-
-# f = get_csv(path)
-# print(f.getvalue())

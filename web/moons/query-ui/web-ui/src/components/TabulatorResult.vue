@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, reactive, onBeforeMount, useTemplateRef, computed, watchEffect} from 'vue';
+import {ref, onBeforeMount, useTemplateRef, computed, watchEffect} from 'vue';
 import {TabulatorFull as Tabulator} from 'tabulator-tables'; //import Tabulator library
 import {getPreferredTheme} from './theme'
 
@@ -42,14 +42,14 @@ watchEffect(async () => {
         tabulator.value = new Tabulator(
             table.value, 
             {
-                layout: 'fitColumns',
+                layout: 'fitDataFill',
                 data: tabledata, //link data to table
                 reactiveData:true, //enable data reactivity
                 columns:tableData['columns'],
                 movableColumns: true,
             }
         );
-        }
+    }
 })
 
 </script>
