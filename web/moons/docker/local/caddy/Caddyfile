@@ -16,6 +16,11 @@
 		}
 	}
 
+	# handle public home page
+	handle / {
+		reverse_proxy web:8000
+	}
+
 	handle {
 
 		forward_auth auth:4180 {
@@ -46,7 +51,6 @@
 
 		reverse_proxy /api/* web:8000
 		reverse_proxy /admin/* web:8000
-		reverse_proxy / web:8000
 		reverse_proxy host.docker.internal:5173
 
 	}
