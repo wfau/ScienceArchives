@@ -1,4 +1,5 @@
 {
+	debug
     fallback_sni 192.41.122.237
 }
 
@@ -6,20 +7,13 @@
 
 	encode zstd gzip
 
-	encode zstd gzip
+	root * /frontend
 
 	handle_path /static/* {
 		file_server {
 			root "/app/staticfiles"
 		}
 	}
-
-	handle /frontend/* {
-		file_server /frontend/* {
-			root "/frontend"
-		}
-	}
-
 
 	handle /oauth2/* {
 		reverse_proxy auth:4180 {
@@ -28,6 +22,11 @@
 			header_up X-Real-IP {remote_host}
 			header_up X-Forwarded-Uri {uri}
 		}
+	}
+
+	# handle public home page
+	handle / {
+		reverse_proxy web:8000
 	}
 
 	handle {
@@ -58,9 +57,13 @@
 			}
 		}
 
-		reverse_proxy /api/* web:8000
-		reverse_proxy /admin/* web:8000
-		reverse_proxy / web:8000
+		route {
+			reverse_proxy /api/* web:8000
+			reverse_proxy /admin/* web:8000
+
+			try_files {path} /frontend/index.html
+			file_server /frontend/*
+		}
 
 	}
 }
