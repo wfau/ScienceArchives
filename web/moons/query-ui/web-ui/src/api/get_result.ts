@@ -98,7 +98,7 @@ export const getTabulatorData = async (url: string, id: Number) => {
         columnNames.push(
             {
                 headerMenu:headerMenu,
-                field: 'spectrum_plot',
+                field: 'download',
                 title: 'Download',
                 formatter: 'html',
                 headerSort: false,
