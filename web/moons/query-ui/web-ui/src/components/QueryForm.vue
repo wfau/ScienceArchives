@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useTemplateRef, ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
 import { EditorState, Compartment } from '@codemirror/state';
 import { indentWithTab, history, defaultKeymap, historyKeymap, cursorDocEnd } from '@codemirror/commands';
 import { indentOnInput, indentUnit, bracketMatching, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
@@ -13,10 +15,14 @@ import { oneDark } from "@codemirror/theme-one-dark";
 import { sql } from "@codemirror/lang-sql";
 
 import tableSchemaJson from '@/assets/schema/gesiDR5.json'
+import { getQueryResult } from '@/api/get_result';
 
 // query submission
 import {postQuery} from '@/api/query'
 import router from '@/router/index'
+
+// edit query if provided
+const route = useRoute()
 
 type TableData = {
   data: (string | number)[][];
@@ -25,7 +31,6 @@ const schemaData = tableSchemaJson as {[key: string]: {[key: string] : TableData
 const currentSchema = ref<string | null>(Object.keys(schemaData)[0])
 
 const editorTheme = new Compartment()
-
 
 const csrfToken = ref('')
 
@@ -54,9 +59,15 @@ if (theme == 'auto') {
 const editor = useTemplateRef('editor')
 const editorView= ref<EditorView | null>(null)
 
-onMounted(() => {
+onMounted(async () => {
     if (Object.keys(schemaData).length == 1) {
         currentSchema.value = Object.keys(schemaData)[0]
+    }
+    var doc = 'SELECT '
+    if (route.params.id) {
+        const queryId = parseInt(route.params.id as string)
+        const queryStatus = await getQueryResult(queryId)
+        doc = queryStatus.query
     }
 
     let sqlOptions = {
@@ -88,7 +99,7 @@ onMounted(() => {
     ];
     if (editor.value) {
         editorView.value = new EditorView({
-            doc: 'SELECT ',
+            doc: doc,
             extensions,
             parent: editor.value })
     }

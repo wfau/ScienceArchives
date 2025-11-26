@@ -25,6 +25,11 @@ const router = createRouter({
       component: QueryView,
     },
     {
+      path: '/query/:id(\\d+)',
+      name: 'query-edit',
+      component: QueryView,
+    },
+    {
       path: '/result/:id(\\d+)',
       name: 'query-result',
       component: ResultView,

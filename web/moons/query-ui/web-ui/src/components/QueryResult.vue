@@ -79,7 +79,9 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
                 <li class="breadcrumb-item"><RouterLink :to="{ name: 'query-list'}">&laquo; Your Queries</RouterLink></li>
             </ol>
         </nav>
-        <button class="btn btn-secondary"><RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-form'}">New Query</RouterLink></button>
+        <div>
+            <button class="btn btn-secondary"><RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-form'}">New Query</RouterLink></button>
+        </div>
     </div>
     <div class="d-flex flex-column">
     <div class="m-4 container" :class="{['d-none']: !(queryStatus?.value)}">
@@ -87,7 +89,18 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
     </div>
 
     <div class="m-4" :class="{['d-none']: (queryStatus?.value)}">
-        <div class="col font-monospace border border-3 rounded p-2 m-2 my-4">{{ queryStatus?.query }}</div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-secondary">
+                <RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-edit', params:{id: queryStatus?.id }}">
+                    Edit
+                    <svg width="1em" height="1em" class="theme-icon-active">
+                        <use href="#icon-edit" />
+                    </svg>
+                </RouterLink>
+            </button>
+        </div>
+
+        <div class="font-monospace border border-3 rounded p-2 m-2 my-4">{{ queryStatus?.query }}</div>
         <div class="card m-2" :class="borderClass">
             <div class="card-header" :class="highlightClass">
                 <div class="d-flex justify-content-between">
@@ -130,7 +143,11 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
           <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc. -->
           <path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64L0 400c0 44.2 35.8 80 80 80l400 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L80 416c-8.8 0-16-7.2-16-16L64 64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7 262.6 153.4c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l73.4-73.4 57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/>
       </symbol>
-  </svg>
+      <symbol id="icon-edit" fill="currentColor" viewBox="0 0 512 512">
+          <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+          <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152L0 424c0 48.6 39.4 88 88 88l272 0c48.6 0 88-39.4 88-88l0-112c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 112c0 22.1-17.9 40-40 40L88 464c-22.1 0-40-17.9-40-40l0-272c0-22.1 17.9-40 40-40l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24L88 64z"/>
+      </symbol>
+    </svg>
 
 
 </template>
