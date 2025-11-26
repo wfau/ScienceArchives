@@ -54,13 +54,21 @@ onMounted(async () => {
 <template>
 
     <main class="container-fluid">
-        <h1>Spectrum Plot</h1>
-        <div v-if="loading">Loading ...</div>
-        <div v-if="!loading && hasError">An error occurred when loading the data.</div>
-        <div v-if="!loading && !hasError">
-            <div class="m-5">{{ filename }}</div>
+        <div class="m-4">
+            <h1>Spectrum Plot</h1>
+            <div v-if="loading">Loading ...</div>
+            <div v-if="!loading && hasError">An error occurred when loading the data.</div>
+            <div v-if="!loading && !hasError">
+                <div class="small">
+                    This graph is interactive.
+                    Move the mouse over the series to display individual values.
+                    Select regions of the graph to zoom in and
+                    double-click on the graph to reset the zoom (zoom out).
+                </div>
+                <div class="my-4 font-monospace">{{ filename }}</div>
+            </div>
+            <div style="height:60vh;" ref="diagram"></div>
         </div>
-        <div style="height:60vh;" ref="diagram"></div>
     </main>
 
 </template>
