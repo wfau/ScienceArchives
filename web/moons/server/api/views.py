@@ -117,9 +117,7 @@ class ExecuteSQLPageResultView(generics.RetrieveAPIView):
                 schema[name] = str(field.type)
 
             return Response({
-                # 'page': page_no,
-                'slice': [start, start+self.default_pagination_size],
-                'count': result_table.num_rows,
+                'last_row': result_table.num_rows,
                 'last_page': last_page,
                 'data': page.to_pylist(),
                 'schema': schema,

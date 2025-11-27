@@ -18,7 +18,7 @@ class TabulatorPagination(pagination.PageNumberPagination):
                'next': self.get_next_link(),
                'previous': self.get_previous_link()
             },
-            'count': self.page.paginator.count,
+            'last_row': self.page.paginator.count,
             'last_page': self.page.paginator.num_pages,
             'data': data
         })
