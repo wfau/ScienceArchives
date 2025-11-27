@@ -145,7 +145,13 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <h1>Your Queries</h1>
+    <div class="d-flex justify-content-between">
+
+      <h1>Your Queries</h1>
+      <div>
+        <button class="btn btn-primary"><RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-form'}">New Query</RouterLink></button>
+      </div>
+    </div>
 
     <div id="table" ref="queries-table"></div>
 
