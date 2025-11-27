@@ -91,7 +91,6 @@ watchEffect(async () => {
                         obj.spectrum_plot = `<a href="${spectrumLoc.href}?file=${f}"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-chart-line" /></svg></a>`
                     }
                 })
-                console.log(response)
                 return response
             },
         });
