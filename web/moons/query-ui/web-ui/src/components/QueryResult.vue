@@ -121,13 +121,18 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
                 </div>
             </div>
         </div>
-        <div class="btn-group m-2" role="group" v-if="!queryStatus?.results_error">
-        <a v-for="format in downloadFormats" type="button" class="btn btn-primary" :href="`${api_url}/results/${resultId}?format=${format.toLowerCase()}`" >
-            <svg width="1em" height="1em" class="theme-icon-active">
-                <use href="#icon-download" />
-            </svg>
-            {{ format }}
-        </a>
+        <div class="btn-group m-2" role="group" v-if="!queryStatus?.results_error && queryStatus?.results_url">
+            <a v-for="format in downloadFormats" type="button" class="btn btn-primary" :href="`${api_url}/results/${resultId}?format=${format.toLowerCase()}`" >
+                <svg width="1em" height="1em" class="theme-icon-active">
+                    <use href="#icon-download" />
+                </svg>
+                {{ format }}
+            </a>
+        </div>
+        <div class="m-2" v-if="!queryStatus?.results_url">
+            <div>
+                Results were removed. Press "Edit" above to run the query again.
+            </div>
         </div>
     </div>
 

@@ -98,6 +98,7 @@ onMounted(() => {
       pagination:true,
       paginationSize:20,
       paginationMode:"remote",
+      paginationCounter:"rows",
       sortMode:"remote",
       dataSendParams: {
         // 'sorters':'sort',
