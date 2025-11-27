@@ -129,9 +129,9 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
                 {{ format }}
             </a>
         </div>
-        <div class="m-2" v-if="!queryStatus?.results_error && !queryStatus?.result_url">
+        <div class="m-3" :class="{['d-none']: !isComplete}" v-if="!queryStatus?.results_error && !queryStatus?.result_url">
             <div>
-                Results were removed. Press "Edit" above to run the query again.
+                The results of this query are not available any more. Press "Edit" above to submit the query again.
             </div>
         </div>
     </div>
