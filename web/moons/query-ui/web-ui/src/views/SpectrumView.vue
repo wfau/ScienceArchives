@@ -54,6 +54,15 @@ onMounted(async () => {
 <template>
 
     <main class="container-fluid">
+
+        <div class="m-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><RouterLink :to="{ name: 'query-result', params: {id: route.params.id}}">&laquo; Query Results</RouterLink></li>
+                </ol>
+            </nav>
+        </div>
+
         <div class="m-4">
             <h1>Spectrum Plot</h1>
             <div v-if="loading">Loading ...</div>

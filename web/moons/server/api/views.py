@@ -5,7 +5,7 @@ from pathlib import Path
 from django.conf import settings
 from django.http import StreamingHttpResponse, HttpResponse, FileResponse
 
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status, permissions, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -36,7 +36,7 @@ class ExecuteSQLListCreateView(generics.ListCreateAPIView):
         execute_sql = serializer.save(user=self.request.user)
         execute.delay(exec_pk=execute_sql.pk)
 
-class ExecuteSQLDetailView(generics.RetrieveAPIView):
+class ExecuteSQLDetailView(generics.RetrieveDestroyAPIView):
     serializer_class = ExecuteSQLStatusSerializer
 
     def get_queryset(self):
@@ -44,6 +44,18 @@ class ExecuteSQLDetailView(generics.RetrieveAPIView):
             return ExecuteSQL.objects.filter(user=self.request.user)
         else:
             return ExecuteSQL.objects.none()
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        results_file = instance.results_file
+        if results_file:
+            try:
+                path = Path(results_file)
+                path.unlink(missing_ok=True)
+            except:
+                # any other error
+                pass
+        return super().delete(request, *args, **kwargs)
 
 class ExecuteSQLResultView(APIView):
 
@@ -77,6 +89,48 @@ class ExecuteSQLResultView(APIView):
             return Response(job.results_file)
         else:
             return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ExecuteSQLPageResultView(generics.RetrieveAPIView):
+    default_pagination_size = 20
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return ExecuteSQL.objects.filter(user=self.request.user)
+        else:
+            return ExecuteSQL.objects.none()
+    def retrieve(self, request, *args, **kwargs):
+        job = self.get_object()
+        if job.results_file:
+            import pyarrow.parquet as pq
+            import pyarrow as pa
+            import math
+            # start = int(request.query_params.get('start'), 0)
+            page_no = int(request.query_params.get('page', 1))
+            last_page = math.ceil(job.num_rows / self.default_pagination_size)
+            if page_no <= 0 or page_no > last_page:
+                return Response({'error': 'invalid page'}, status=status.HTTP_404_NOT_FOUND)
+            start = (page_no - 1) * self.default_pagination_size
+            result_table = pq.read_table(job.results_file)
+            page = result_table.slice(start, self.default_pagination_size)
+            schema = {}
+            for name in result_table.schema.names:
+                field = result_table.schema.field(name)
+                schema[name] = str(field.type)
+
+            return Response({
+                # 'page': page_no,
+                'slice': [start, start+self.default_pagination_size],
+                'count': result_table.num_rows,
+                'last_page': last_page,
+                'data': page.to_pylist(),
+                'schema': schema,
+            })
+            # pq.write_table(page, f)
+            # f.flush()
+            # return FileResponse(
+            #     io.BytesIO(f.getvalue()),
+            #     content_type='application/vnd.apache.parquet'
+            # )
+        return Response('ok')
 
 class LocalFileMixin():
 
