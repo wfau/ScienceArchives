@@ -68,6 +68,7 @@ onMounted(async () => {
         const queryId = parseInt(route.params.id as string)
         const queryStatus = await getQueryResult(queryId)
         doc = queryStatus.query
+        currentSchema.value = queryStatus.schema
     }
 
     let sqlOptions = {

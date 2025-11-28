@@ -14,6 +14,7 @@ class ExecuteSQLStatusSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'query',
+            'schema',
             'created', 'started', 'completed',
             'current_status',
             'results_error',

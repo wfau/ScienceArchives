@@ -89,7 +89,10 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
     </div>
 
     <div class="m-4" :class="{['d-none']: (queryStatus?.value)}">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-between align-items-end">
+            <div class="m-2">
+                Database Release: {{ queryStatus?.schema }}
+            </div>
             <button class="btn btn-secondary">
                 <RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-edit', params:{id: queryStatus?.id }}">
                     Edit
