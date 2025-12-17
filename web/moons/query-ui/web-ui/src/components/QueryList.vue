@@ -37,6 +37,10 @@ onMounted(() => {
           widthGrow: 4,
         },
         {
+          title: 'Release',
+          field:'schema',
+        },
+        {
           title: 'Status',
           field:'current_status',
           headerSort:false,
@@ -89,7 +93,7 @@ onMounted(() => {
           hozAlign:"right",
         },
         {
-          title: 'Results',
+          title: 'View',
           field:'result_link',
           formatter:"html",
           headerSort:false,
