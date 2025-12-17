@@ -159,8 +159,9 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 
 LOCAL_FILE_DIR = BASE_DIR / 'files' / 'moons-web'
 QUERY_DATABASE = {
-    'CONNECTION_STRING': os.environ.get('QUERY_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
     'DRIVER': os.environ.get('QUERY_DB_DRIVER', 'adbc_driver_sqlite.dbapi'),
+    'CONNECTION_STRING': os.environ.get('QUERY_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
+    'CONNECTION_STRING_PUBLIC': os.environ.get('QUERY_PUBLIC_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
     # 'CONNECTION_STRING': 'postgresql://postgres:12345@localhost:5432/',
     # 'DRIVER': 'adbc_driver_postgresql.dbapi',
 }
@@ -172,6 +173,12 @@ SCHEMA_FILES = [
     BASE_DIR / 'resources' / 'GES' / 'GES_SpectrumSchema.json',
     BASE_DIR / 'resources' / 'GES' / 'GES_Views.json',
 ]
+
+QUERY_SCHEMA = {
+    'PERMISSIONS': BASE_DIR / 'resources' / 'schema' / 'schema_permissions.json',
+    'SCHEMA_VIEW': BASE_DIR / 'resources' / 'schema' / 'GES_Tables_Views.json',
+    'QUERY_VIEW': BASE_DIR / 'resources' / 'schema' / 'table_schema.json',
+}
 
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']

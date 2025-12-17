@@ -16,8 +16,9 @@ from astropy.table import Table
 # db_url = 'file:///Users/amy/MOONS/development/mockdb/mock-gesiDR5.sqlite3'
 # db_url = 'postgresql://postgres:12345@localhost:5432/'
 
-db_url = settings.QUERY_DATABASE['CONNECTION_STRING']
 db_api = import_module(settings.QUERY_DATABASE['DRIVER'])
+db_url = settings.QUERY_DATABASE['CONNECTION_STRING']
+db_public_url = settings.QUERY_DATABASE['CONNECTION_STRING_PUBLIC']
 
 from .models import ExecuteSQL
 
@@ -63,6 +64,10 @@ def to_json(schema):
 @shared_task
 def execute(exec_pk):
     job = ExecuteSQL.objects.get(pk=exec_pk)
+    if job.user.has_perm('queries.view_execute_sql'):
+        url = db_url
+    else:
+        url = db_public_url
     job.started = timezone.now()
     job.status = ExecuteSQL.StatusType.RUNNING
     results_file = os.path.join(settings.LOCAL_FILE_DIR, f'{job.pk}.parquet')
@@ -71,14 +76,12 @@ def execute(exec_pk):
         if job.schema:
             # this is PostgreSQL specific
             options = urlencode({'options': f'--search_path={job.schema}'})
-            url = f'{db_url}?{options}'
-        else:
-            url = db_url
+            url = f'{url}?{options}'
         conn = db_api.connect(url)
         cursor = conn.cursor()
         cursor.execute(job.query)
         row_count = write_results(cursor, results_file)
-        print(f'row count: {row_count}')
+        # print(f'row count: {row_count}')
         job.num_rows = row_count
         cursor.close()
         conn.close()
@@ -88,8 +91,8 @@ def execute(exec_pk):
         traceback.print_exc()
         job.results_error = str(exc)
     finally:
-        print('job completed')
-        print(f'has error? {job.results_error}')
-        job.completed = timezone.now()
+        # print('job completed')
+        # print(f'has error? {job.results_error}')
+        # job.completed = timezone.now()
         job.status = ExecuteSQL.StatusType.COMPLETED
         job.save()

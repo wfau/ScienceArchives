@@ -12,4 +12,6 @@ urlpatterns = [
     path('results/<int:pk>/plot', views.ExecuteSQLResultGraphView.as_view(), name='plot-detail'),
     path('results/<int:pk>/file', views.ExecuteSQLResultFilenameView.as_view(), name='file-detail'),
     path('csrf', views.EnsureCSRFView.as_view(), name='csrf-view'),
+    path('schema', views.UserDatabaseSchemaView.as_view(), name='schema'),
+    path('schema/query', views.UserQuerySchemaView.as_view(), name='query-schema'),
 ]

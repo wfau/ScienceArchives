@@ -8,6 +8,9 @@ import re
 columndef = r'(\w+)\s+(TIMESTAMP|real|float|INTEGER|int|tinyint|SMALLINT|smallint|bigint|varchar)(\(\d+\))?\s+(not\s+null)?(\s+default\s(-?\d+(\.\d+)?(e[+-]?\d+)?|[\"\'][\w\s\-\:]+[\'\"]))?\,?'
 pattern = re.compile(columndef, re.IGNORECASE)
 
+constraint_def = r'CONSTRAINT (\w+) PRIMARY KEY \(([\w,\s]*)\)'
+constraint_pattern = re.compile(constraint_def, re.IGNORECASE)
+
 def extract_comment(line):
     if line.startswith('/H'):
         return {'h': line[3:]}
@@ -20,8 +23,8 @@ def extract_column_info(line):
     parts = line.split('--')
     col_info = {}
     if len(parts) > 1:
-        if 'datetime' in parts[0]:
-            print(parts[0])
+        # if 'datetime' in parts[0]:
+        #     print(parts[0])
         match = pattern.search(parts[0].strip())
         if match:
             groups = match.groups()
@@ -58,8 +61,9 @@ def extract_column_info(line):
                 col_info['unit'] = text
             elif part.startswith('/D'):
                 col_info['description'] = text
-            elif part.startswith('/N'):
-                col_info['default'] = text
+            # using default from the column definition
+            # elif part.startswith('/N'):
+            #     col_info['default'] = text
             elif part.startswith('/K'):
                 col_info['casu_keyword'] = text
             elif part.startswith('/F'):
@@ -90,13 +94,30 @@ def extract_table_description(f, output):
     view_name = None
     while line and not line.startswith('-- --'):
         if line.startswith('CREATE VIEW'):
-            view_name = line[len('CREATE VIEW '):].strip()
-            current_context = {'name': view_name, 'markdown': [], 'statement': []}
-            output['views'][view_name] = current_context
+            vn = line[len('CREATE VIEW '):].strip()
+            try:
+                schema_name, view_name = vn.split('.')
+            except:
+                view_name = vn
+                schema_name = None
+
+            current_context = {'schema': schema_name, 'name': view_name, 'markdown': [], 'statement': []}
+            if schema_name in output['views']:
+                output['views'][schema_name][view_name] = current_context
+            else:
+                output['views'][schema_name] = {view_name: current_context}
         elif line.startswith('CREATE TABLE'):
-            table_name = line[len('CREATE TABLE '):].strip()[:-1]
-            current_context = {'name': table_name, 'markdown': [], 'columns': {}}
-            output['tables'][table_name] = current_context
+            tn = line[len('CREATE TABLE '):].strip()[:-1]
+            try:
+                schema_name, table_name = tn.split('.')
+            except:
+                table_name = tn
+                schema_name = None
+            current_context = {'schema': schema_name, 'name': table_name, 'markdown': [], 'columns': {}}
+            if schema_name in output['tables']:
+                output['tables'][schema_name][table_name] = current_context
+            else:
+                output['tables'][schema_name] = {table_name: current_context}
         elif line.startswith('create table'):
             # continue parsing but don't store the output
             current_context = {'markdown': [], 'columns': {}}
@@ -112,6 +133,11 @@ def extract_table_description(f, output):
             markdown = extract_comment(line[2:])
             if markdown:
                 current_context['markdown'].append(markdown)
+        elif line.startswith('CONSTRAINT'):
+            match = constraint_pattern.search(line.strip())
+            if match:
+                groups = match.groups()
+                current_context['primary_keys'] = [g.strip() for g in groups[1].split(',')]
         elif '--' in line:
             col_info = extract_column_info(line)
             if not 'name' in col_info:

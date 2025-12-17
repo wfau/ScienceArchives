@@ -53,7 +53,7 @@ setTheme(getPreferredTheme())
                   <!-- <li><a class="dropdown-item" href="">Overview</a></li>
                   <li><a class="dropdown-item" href="">Access</a></li>
                   <li><a class="dropdown-item" href="">Releases</a></li> -->
-                  <li><a class="dropdown-item" href="">Schema Browser</a></li>
+                  <li><RouterLink class="dropdown-item" :to="{ name: 'database-schema'}">Schema Browser</RouterLink></li>
                   <!-- <li><a class="dropdown-item" href="">Known Issues</a></li> -->
                 </ul>
               </li>

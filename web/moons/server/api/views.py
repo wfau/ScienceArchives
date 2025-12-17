@@ -1,5 +1,6 @@
 import importlib
 import io
+import json
 from pathlib import Path
 
 from django.conf import settings
@@ -192,3 +193,39 @@ class EnsureCSRFView(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
         return Response({'detail': 'CSRF cookie set'})
+
+class UserQuerySchemaView(APIView):
+
+    def get(self, request):
+        result = {}
+        schema_file = settings.QUERY_SCHEMA['QUERY_VIEW']
+        with open(schema_file) as f:
+            table_schema = json.load(f)
+        perm_file = settings.QUERY_SCHEMA['PERMISSIONS']
+        with open(perm_file) as f:
+            permissions = json.load(f)
+        if request.user.has_perm('queries.view_execute_sql'):
+            all_schema = permissions['proprietary'] + permissions['public']
+            result = {k: v for k,v in table_schema.items() if k in all_schema}
+        else:
+            # public tables only
+            result = {k: v for k,v in table_schema.items() if k in permissions['proprietary']}
+        return Response(result)
+
+class UserDatabaseSchemaView(APIView):
+
+    def get(self, request):
+        result = {}
+        schema_file = settings.QUERY_SCHEMA['SCHEMA_VIEW']
+        with open(schema_file) as f:
+            table_schema = json.load(f)
+        perm_file = settings.QUERY_SCHEMA['PERMISSIONS']
+        with open(perm_file) as f:
+            permissions = json.load(f)
+        if request.user.has_perm('queries.view_execute_sql'):
+            all_schema = permissions['proprietary'] + permissions['public']
+            result = {k: v for k,v in table_schema.items() if k in all_schema}
+        else:
+            # public tables only
+            result = {k: v for k,v in table_schema.items() if k in permissions['proprietary']}
+        return Response(result)

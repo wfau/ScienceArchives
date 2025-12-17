@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef, ref, computed, onMounted } from 'vue'
+import { useTemplateRef, ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { EditorState, Compartment } from '@codemirror/state';
@@ -14,12 +14,13 @@ import { oneDark } from "@codemirror/theme-one-dark";
 // Language
 import { sql } from "@codemirror/lang-sql";
 
-import tableSchemaJson from '@/assets/schema/gesiDR5.json'
 import { getQueryResult } from '@/api/get_result';
 
 // query submission
 import {postQuery} from '@/api/query'
 import router from '@/router/index'
+
+import { getQuerySchema } from '@/api/schema';
 
 // edit query if provided
 const route = useRoute()
@@ -27,8 +28,7 @@ const route = useRoute()
 type TableData = {
   data: (string | number)[][];
 };
-const schemaData = tableSchemaJson as {[key: string]: {[key: string] : TableData }}
-const currentSchema = ref<string | null>(Object.keys(schemaData)[0])
+const currentSchema = ref<string | null>()
 
 const editorTheme = new Compartment()
 
@@ -36,8 +36,8 @@ const csrfToken = ref('')
 
 const codeSchema:any = computed(() => {
     var result:any = {}
-    if (currentSchema.value) {
-        const cs = schemaData[currentSchema.value]
+    if (currentSchema.value && schemaData.value) {
+        const cs = schemaData.value[currentSchema.value]
         for (let tableName of Object.keys(cs).sort()) {
             let data: TableData = cs[tableName]
             result[tableName] = []
@@ -59,9 +59,13 @@ if (theme == 'auto') {
 const editor = useTemplateRef('editor')
 const editorView= ref<EditorView | null>(null)
 
-onMounted(async () => {
-    if (Object.keys(schemaData).length == 1) {
-        currentSchema.value = Object.keys(schemaData)[0]
+const schemaData = ref<{[key: string]: {[key: string] : TableData }}>()
+
+watch(schemaData, async (newSchema, oldSchema) => {
+    if (newSchema) {
+        if (Object.keys(newSchema).length >= 1) {
+            currentSchema.value = Object.keys(newSchema)[0]
+        }
     }
     var doc = 'SELECT '
     if (route.params.id) {
@@ -106,6 +110,10 @@ onMounted(async () => {
     }
 })
 
+onMounted(async () => {
+    schemaData.value = await getQuerySchema() as {[key: string]: {[key: string] : TableData }}
+})
+
 const handleDragStart = (e: Event) => {
     const data = e.target as HTMLElement
     const event = e as { dataTransfer?: DataTransfer } 
@@ -113,10 +121,10 @@ const handleDragStart = (e: Event) => {
 }
 
 const submit = () => {
-    console.log('submitting')
+    // console.log('submitting')
     const sqlQuery = editorView.value?.state.doc.toString()
     // console.log(sqlQuery)
-    if (sqlQuery) {
+    if (sqlQuery && currentSchema.value) {
         postQuery(sqlQuery, currentSchema.value, csrfToken.value)
         .then((jsonResponse) => {
             // store the id of the newly created query
