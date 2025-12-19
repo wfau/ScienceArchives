@@ -108,10 +108,10 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
                 </RouterLink>
             </button>
         </div>
-        <div class="font-monospace border border-3 rounded p-2 m-2 my-4 d-flex justify-content-between align-items-center">
-            {{ queryStatus?.query }}
-            <button class="btn" @click="copyQueryText()">
-            <svg width="1em" height="1em" class="theme-icon-active" ><use href="#icon-copy"/></svg>
+        <div class="border border-3 rounded p-2 m-2 my-4 d-flex justify-content-between">
+            <pre>{{ queryStatus?.query }}</pre>
+            <button class="btn" @click="copyQueryText()" v-if="queryStatus?.query">
+                <svg width="1em" height="1em" class="theme-icon-active" ><use href="#icon-copy"/></svg>
             </button>
         </div>
         <div class="card m-2" :class="borderClass">

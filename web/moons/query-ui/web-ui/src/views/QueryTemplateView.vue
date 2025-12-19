@@ -42,20 +42,18 @@ const copyQueryText = () => {
                 <div v-if="currentTemplate">
                     <div class="d-flex justify-content-between">
                         <div class="lead">{{ currentTemplate?.name }}</div>
-
-                        <button class="btn btn-secondary">
+                        <button class="btn btn-primary">
                             <RouterLink class="text-decoration-none text-reset" :to="{ name: 'template-edit', params:{tid: currentTemplate?.id }}">
                                 Run
                             </RouterLink>
                         </button>
-
                     </div>
                     <div>{{ currentTemplate?.description }}</div>
                     <div class="mt-4">Data Release: <span class="fst-italic">{{ currentTemplate?.schema }}</span></div>
-                    <div class="font-monospace border border-3 rounded p-2 d-flex justify-content-between align-items-center">
-                        {{ currentTemplate?.query }}
+                    <div class="border border-3 rounded p-2 d-flex justify-content-between">
+                        <pre>{{ currentTemplate?.query }}</pre>
                         <button class="btn" @click="copyQueryText()">
-                        <svg width="1em" height="1em" class="theme-icon-active" ><use href="#icon-copy"/></svg>
+                            <svg width="1em" height="1em" class="theme-icon-active" ><use href="#icon-copy"/></svg>
                         </button>
                     </div>
                 </div>
