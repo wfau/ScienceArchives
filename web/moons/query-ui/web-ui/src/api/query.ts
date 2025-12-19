@@ -1,6 +1,3 @@
-const username = 'amy'
-const password = '12345'
-
 export const api_url = 'http://localhost:9000/api'
 
 export const headers = {
