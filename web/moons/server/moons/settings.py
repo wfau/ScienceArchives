@@ -175,7 +175,6 @@ SCHEMA_FILES = [
 ]
 
 QUERY_SCHEMA = {
-    'PERMISSIONS': BASE_DIR / 'resources' / 'schema' / 'schema_permissions.json',
     'SCHEMA_VIEW': BASE_DIR / 'resources' / 'schema' / 'GES_Tables_Views.json',
     'QUERY_VIEW': BASE_DIR / 'resources' / 'schema' / 'table_schema.json',
 }

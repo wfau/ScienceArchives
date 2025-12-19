@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from queries.models import ExecuteSQL
+from queries.models import ExecuteSQL, QueryTemplate
 
 class ExecuteSQLSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -27,3 +27,8 @@ class ExecuteSQLStatusSerializer(serializers.HyperlinkedModelSerializer):
             return reverse('api:result-detail', args=[obj.pk], request=self.context.get('request'))
         else:
             return None
+
+class QueryTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QueryTemplate
+        fields = '__all__'

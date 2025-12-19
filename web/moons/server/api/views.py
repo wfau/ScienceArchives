@@ -1,8 +1,8 @@
 import importlib
 import io
-import json
 from pathlib import Path
 
+from django.db.models import Subquery
 from django.conf import settings
 from django.http import StreamingHttpResponse, HttpResponse, FileResponse
 
@@ -10,11 +10,12 @@ from rest_framework import generics, status, permissions, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from queries.models import ExecuteSQL
+from queries.models import ExecuteSQL, QueryPermissions, QueryTemplate
 from queries.tasks import execute
 
-from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer
+from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer, QueryTemplateSerializer
 from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
+from .helpers import query_view_schemas, schema_view_schemas
 
 import logging
 logger = logging.getLogger(__name__)
@@ -197,35 +198,30 @@ class EnsureCSRFView(APIView):
 class UserQuerySchemaView(APIView):
 
     def get(self, request):
-        result = {}
-        schema_file = settings.QUERY_SCHEMA['QUERY_VIEW']
-        with open(schema_file) as f:
-            table_schema = json.load(f)
-        perm_file = settings.QUERY_SCHEMA['PERMISSIONS']
-        with open(perm_file) as f:
-            permissions = json.load(f)
         if request.user.has_perm('queries.view_execute_sql'):
-            all_schema = permissions['proprietary'] + permissions['public']
-            result = {k: v for k,v in table_schema.items() if k in all_schema}
+            result = query_view_schemas(QueryPermissions.AccessType.PROPRIETARY)
         else:
             # public tables only
-            result = {k: v for k,v in table_schema.items() if k in permissions['proprietary']}
+            result = query_view_schemas(QueryPermissions.AccessType.PUBLIC)
         return Response(result)
 
 class UserDatabaseSchemaView(APIView):
 
     def get(self, request):
-        result = {}
-        schema_file = settings.QUERY_SCHEMA['SCHEMA_VIEW']
-        with open(schema_file) as f:
-            table_schema = json.load(f)
-        perm_file = settings.QUERY_SCHEMA['PERMISSIONS']
-        with open(perm_file) as f:
-            permissions = json.load(f)
         if request.user.has_perm('queries.view_execute_sql'):
-            all_schema = permissions['proprietary'] + permissions['public']
-            result = {k: v for k,v in table_schema.items() if k in all_schema}
+            result = schema_view_schemas(QueryPermissions.AccessType.PROPRIETARY)
         else:
             # public tables only
-            result = {k: v for k,v in table_schema.items() if k in permissions['proprietary']}
+            result = schema_view_schemas(QueryPermissions.AccessType.PUBLIC)
         return Response(result)
+
+class QueryTemplateListView(generics.ListAPIView):
+    serializer_class = QueryTemplateSerializer
+
+    def get_queryset(self):
+        if self.request.user.has_perm('queries.view_execute_sql'):
+            access = QueryPermissions.AccessType.PROPRIETARY
+        else:
+            access = QueryPermissions.AccessType.PUBLIC
+        schemas = QueryPermissions.objects.filter(access=access).values_list('schema', flat=True)
+        return QueryTemplate.objects.filter(schema__in=schemas)

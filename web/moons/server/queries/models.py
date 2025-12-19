@@ -38,3 +38,15 @@ class ExecuteSQL(models.Model):
 class AnonymousQuery(models.Model):
     sqlquery = models.ForeignKey(ExecuteSQL, on_delete=models.CASCADE)
     slug = models.UUIDField(unique=True, default=uuid.uuid4)
+
+class QueryPermissions(models.Model):
+    AccessType = models.TextChoices("AccessType", "PUBLIC PROPRIETARY")
+
+    schema = models.CharField(max_length=63, blank=True, null=True)
+    access = models.CharField(max_length=63, choices=AccessType.choices)
+
+class QueryTemplate(models.Model):
+    name = models.CharField(max_length=255)
+    query = models.TextField()
+    schema = models.TextField(blank=True, null=True)
+    description = models.TextField()
