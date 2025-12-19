@@ -31,4 +31,4 @@ class ExecuteSQLStatusSerializer(serializers.HyperlinkedModelSerializer):
 class QueryTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = QueryTemplate
-        fields = '__all__'
+        fields = ['id', 'name', 'schema', 'query', 'description', ]

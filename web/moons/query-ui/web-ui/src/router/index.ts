@@ -5,6 +5,7 @@ import ResultView from '@/views/ResultView.vue'
 import QueryListView from '@/views/QueryListView.vue'
 import SpectrumView from '@/views/SpectrumView.vue'
 import SchemaView from '@/views/SchemaView.vue'
+import QueryTemplateView from '@/views/QueryTemplateView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,16 @@ const router = createRouter({
       path: '/schema',
       name: 'database-schema',
       component: SchemaView,
+    },
+    {
+      path: '/template',
+      name: 'query-templates',
+      component: QueryTemplateView,
+    },
+    {
+      path: '/template/:tid(\\d+)',
+      name: 'template-edit',
+      component: QueryView,
     },
     {
       path: '/about',

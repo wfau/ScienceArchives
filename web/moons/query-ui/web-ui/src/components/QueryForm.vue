@@ -17,7 +17,7 @@ import { sql } from "@codemirror/lang-sql";
 import { getQueryResult } from '@/api/get_result';
 
 // query submission
-import {postQuery} from '@/api/query'
+import {getQueryTemplate, postQuery} from '@/api/query'
 import router from '@/router/index'
 
 import { getQuerySchema } from '@/api/schema';
@@ -73,6 +73,12 @@ watch(schemaData, async (newSchema, oldSchema) => {
         const queryStatus = await getQueryResult(queryId)
         doc = queryStatus.query
         currentSchema.value = queryStatus.schema
+    }
+    else if (route.params.tid) {
+        const templateId = parseInt(route.params.tid as string)
+        const template = await getQueryTemplate(templateId)
+        doc = template.query
+        currentSchema.value = template.schema
     }
 
     let sqlOptions = {
@@ -171,7 +177,8 @@ var response = fetch('/api/csrf')
                                     </summary>
                                     <ul>
                                         <li v-for="col in table.data">
-                                            <span draggable="true" @dragstart="handleDragStart">{{col[0]}}</span>: <span class="fst-italic">{{col[1]}}</span></li>
+                                            <span draggable="true" @dragstart="handleDragStart">{{col[0]}}</span>: <span class="fst-italic">{{col[1]}}</span>
+                                        </li>
                                     </ul>
                                 </details>
                             </li>
@@ -210,7 +217,7 @@ var response = fetch('/api/csrf')
 
         <div id="div_id_editor" class="mb-3">
             <label for="editor" class="form-label">
-                Query
+                Enter your freeform SQL query here or start with a <RouterLink :to="{ name: 'query-templates'}">Query Template</RouterLink>.
             </label>
             <div id="editor" ref="editor" class="form-control"></div>
         </div>

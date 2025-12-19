@@ -217,6 +217,18 @@ class UserDatabaseSchemaView(APIView):
 
 class QueryTemplateListView(generics.ListAPIView):
     serializer_class = QueryTemplateSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        if self.request.user.has_perm('queries.view_execute_sql'):
+            access = QueryPermissions.AccessType.PROPRIETARY
+        else:
+            access = QueryPermissions.AccessType.PUBLIC
+        schemas = QueryPermissions.objects.filter(access=access).values_list('schema', flat=True)
+        return QueryTemplate.objects.filter(schema__in=schemas)
+
+class QueryTemplateRetrieveView(generics.RetrieveAPIView):
+    serializer_class = QueryTemplateSerializer
 
     def get_queryset(self):
         if self.request.user.has_perm('queries.view_execute_sql'):

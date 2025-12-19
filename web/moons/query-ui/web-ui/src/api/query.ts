@@ -33,3 +33,37 @@ export const postQuery = (sqlQuery: string, schemaName: string | null, csrfToken
         console.log(err)
     })
 }
+
+export type QueryTemplate = {
+    id: number,
+    name: string,
+    schema: string,
+    query: string,
+    description: string,
+}
+
+export const getQueryTemplates = async() => {
+    const url = `${api_url}/templates`
+    const response = await fetch(
+        url,
+        {
+            headers: headers,
+        }
+    )
+    if (response.status == 200) {
+        return response.json()
+    }
+}
+
+export const getQueryTemplate = async(id: Number) => {
+    const url = `${api_url}/templates/${id}`
+    const response = await fetch(
+        url,
+        {
+            headers: headers,
+        }
+    )
+    if (response.status == 200) {
+        return response.json()
+    }
+}
