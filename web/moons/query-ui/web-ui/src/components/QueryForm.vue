@@ -160,9 +160,18 @@ var response = fetch('/api/csrf')
                         <ul>
                             <li v-for="(table, name) in tableSchema">
                                 <details>
-                                    <summary><span draggable="true" @dragstart="handleDragStart">{{ name }}</span></summary>
+                                    <summary><span draggable="true" @dragstart="handleDragStart">
+                                        {{ name }}
+                                        <RouterLink :to="{ name: 'database-schema', query: {schema: schemaName, table: name}}">
+                                            <svg width="1em" height="1em" class="theme-icon-active">
+                                                <use href="#icon-question" />
+                                            </svg>
+                                        </RouterLink>
+                                    </span>
+                                    </summary>
                                     <ul>
-                                        <li v-for="col in table.data"><span draggable="true" @dragstart="handleDragStart">{{col[0]}}</span>: <span class="fst-italic">{{col[1]}}</span></li>
+                                        <li v-for="col in table.data">
+                                            <span draggable="true" @dragstart="handleDragStart">{{col[0]}}</span>: <span class="fst-italic">{{col[1]}}</span></li>
                                     </ul>
                                 </details>
                             </li>
@@ -210,8 +219,16 @@ var response = fetch('/api/csrf')
 
     </div>
 
-
 </div>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="base-svgs" width="1em" height="1em">
+    <symbol id="icon-question" fill="currentColor" viewBox="0 0 512 512">
+    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+    <path d="M464 256a208 208 0 1 0 -416 0 208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0 256 256 0 1 1 -512 0zm256-80c-17.7 0-32 14.3-32 32 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-44.2 35.8-80 80-80s80 35.8 80 80c0 47.2-36 67.2-56 74.5l0 3.8c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-8.1c0-20.5 14.8-35.2 30.1-40.2 6.4-2.1 13.2-5.5 18.2-10.3 4.3-4.2 7.7-10 7.7-19.6 0-17.7-14.3-32-32-32zM224 368a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+    </symbol>
+</svg>
+
+
 </template>
 
 <style scoped>

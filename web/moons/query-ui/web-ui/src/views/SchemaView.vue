@@ -1,16 +1,27 @@
 <script setup lang="ts">
-import { ref, onBeforeMount} from 'vue'
+import { ref, onBeforeMount, watch} from 'vue'
+import { useRoute } from 'vue-router'
 
 import { getDatabaseSchema } from '@/api/schema';
-import type { Schemas, TablesMap, TableDefinition } from '@/api/schema';
+import type { Schemas, Schema, TablesMap, TableDefinition } from '@/api/schema';
 
 const currentTable = ref<TableDefinition>()
-const currentSchema = ref<any>(null)
+const currentSchema = ref<Schema>()
 
-const tableSchema = ref<Schemas|null>()
+const tableSchema = ref<Schemas>()
 
+const route = useRoute()
 onBeforeMount(async () => {
     tableSchema.value = await getDatabaseSchema()
+})
+
+watch(tableSchema, async (newSchema, oldSchema) => {
+    if (newSchema && route.query.schema && route.query.table) {
+        currentSchema.value = newSchema[route.query.schema as string]
+        const table = currentSchema.value.tables[route.query.table as string]
+        const view = currentSchema.value.views[route.query.table as string]
+        currentTable.value = table ? table : view
+    }
 })
 
 </script>
@@ -23,25 +34,31 @@ onBeforeMount(async () => {
             <div class="col-6 col-lg-4">
                 <ul class="tree">
                 <li v-for="(schema, schemaName) in tableSchema">
-                     <details>
+                     <details :open="schema == currentSchema">
                         <summary>{{ schemaName }}</summary>
                         <ul>
                             <li>
-                                <details>
+                                <details :open="schema == currentSchema && currentTable && currentTable.name in currentSchema.tables">
                                     <summary>Tables</summary>
                                     <ul>
-                                        <li v-for="tableName in Object.keys(schema.tables).sort()" @click="()=>{currentSchema=schema; currentTable=schema.tables[tableName]}">
-                                        {{ tableName }}
+                                        <li v-for="tableName in Object.keys(schema.tables).sort()"
+                                            @click="()=>{currentSchema=schema; currentTable=schema.tables[tableName]}"
+                                        >
+                                            <span :class="(schema == currentSchema && tableName == currentTable?.name) ? 'text-primary' : ''">
+                                            {{ tableName }}
+                                            </span>
                                         </li>
                                     </ul>
                                 </details>
                             </li>
                             <li>
-                                <details>
+                                <details :open="schema == currentSchema && currentTable && currentTable.name in currentSchema.views">
                                     <summary>Views</summary>
                                     <ul>
                                         <li v-for="tableName in Object.keys(schema.views).sort()" @click="()=>{currentSchema=schema; currentTable=schema.views[tableName]}">
-                                        {{ tableName }}
+                                            <span :class="(schema == currentSchema && tableName == currentTable?.name) ? 'text-primary' : ''">
+                                            {{ tableName }}
+                                            </span>
                                         </li>
                                     </ul>
                                 </details>

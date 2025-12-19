@@ -1,10 +1,11 @@
 import { headers, api_url } from './query'
 
-export interface Schemas {
-    [key: string]: {
-        tables: TablesMap,
-        views: TablesMap,
-    }
+export type Schemas = {
+    [key: string]: Schema,
+}
+export interface Schema {
+    tables: TablesMap,
+    views: TablesMap,
 }
 export type TablesMap = Record<string, TableDefinition>;
 type MarkdownEntry = { h?: string; t?: string };
@@ -44,7 +45,7 @@ export const getDatabaseSchema = async() => {
         const schema:Schemas = await response.json()
         return schema
     } else {
-        return null
+        return undefined
     }
 }
 
