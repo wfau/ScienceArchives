@@ -220,7 +220,7 @@ class QueryTemplateListView(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        if self.request.user.has_perm('queries.view_execute_sql'):
+        if self.request.user.has_perm('queries.view_executesql'):
             access = QueryPermissions.AccessType.PROPRIETARY
         else:
             access = QueryPermissions.AccessType.PUBLIC
@@ -231,7 +231,7 @@ class QueryTemplateRetrieveView(generics.RetrieveAPIView):
     serializer_class = QueryTemplateSerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm('queries.view_execute_sql'):
+        if self.request.user.has_perm('queries.view_executesql'):
             access = QueryPermissions.AccessType.PROPRIETARY
         else:
             access = QueryPermissions.AccessType.PUBLIC
