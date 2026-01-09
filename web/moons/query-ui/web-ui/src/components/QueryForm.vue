@@ -20,7 +20,7 @@ import { getQueryResult } from '@/api/get_result';
 import {getQueryTemplate, postQuery} from '@/api/query'
 import router from '@/router/index'
 
-import { getQuerySchema } from '@/api/schema';
+import { getDatabaseSchema, type Schemas } from '@/api/schema';
 
 // edit query if provided
 const route = useRoute()
@@ -38,11 +38,18 @@ const codeSchema:any = computed(() => {
     var result:any = {}
     if (currentSchema.value && schemaData.value) {
         const cs = schemaData.value[currentSchema.value]
-        for (let tableName of Object.keys(cs).sort()) {
-            let data: TableData = cs[tableName]
+        for (let tableName of Object.keys(cs.tables).sort()) {
+            let data = cs.tables[tableName]
             result[tableName] = []
-            for (let col of data.data) {
-                result[tableName].push(col[0])
+            for (let colName in data.columns) {
+                result[tableName].push(colName)
+            }
+        }
+        for (let viewName of Object.keys(cs.views).sort()) {
+            let data = cs.views[viewName]
+            result[viewName] = []
+            for (let colName in data.columns) {
+                result[viewName].push(colName)
             }
         }
     }
@@ -59,13 +66,18 @@ if (theme == 'auto') {
 const editor = useTemplateRef('editor')
 const editorView= ref<EditorView | null>(null)
 
-const schemaData = ref<{[key: string]: {[key: string] : TableData }}>()
+const schemaData = ref<Schemas>()
+const accessDenied = ref(false)
 
 watch(schemaData, async (newSchema, oldSchema) => {
     if (newSchema) {
+        accessDenied.value = false
         if (Object.keys(newSchema).length >= 1) {
             currentSchema.value = Object.keys(newSchema)[0]
         }
+    }
+    else if (newSchema === null) {
+        accessDenied.value = true
     }
     var doc = 'SELECT '
     if (route.params.id) {
@@ -117,7 +129,8 @@ watch(schemaData, async (newSchema, oldSchema) => {
 })
 
 onMounted(async () => {
-    schemaData.value = await getQuerySchema() as {[key: string]: {[key: string] : TableData }}
+    // schemaData.value = await getQuerySchema() as {[key: string]: {[key: string] : TableData }}
+    schemaData.value = await getDatabaseSchema()
 })
 
 const handleDragStart = (e: Event) => {
@@ -152,7 +165,10 @@ var response = fetch('/api/csrf')
 </script>
 
 <template>
-<div class="split left p-4">
+<div v-if="accessDenied" class="m-4 alert alert-danger">
+    Access Denied
+</div>
+<div class="split left p-4" v-if="!accessDenied" >
     <h5>Database Schema</h5>
     <div>
         <ul class="tree">
@@ -161,14 +177,14 @@ var response = fetch('/api/csrf')
             <summary>GES</summary>
             <ul>
                 <li v-for="(tableSchema, schemaName) in schemaData">
-                    <details>
+                    <details :open="schemaName == currentSchema">
                         <summary>{{ schemaName }}</summary>
                         <ul>
-                            <li v-for="(table, name) in tableSchema">
+                            <li v-for="table of Object.entries({...tableSchema.tables, ...tableSchema.views}).sort()">
                                 <details>
-                                    <summary><span draggable="true" @dragstart="handleDragStart">
-                                        {{ name }}
-                                        <RouterLink :to="{ name: 'database-schema', query: {schema: schemaName, table: name}}">
+                                    <summary><span draggable="true" @dragstart="handleDragStart" :title="table[1].markdown && table[1].markdown[0].h">
+                                        {{ table[0] }}
+                                        <RouterLink :to="{ name: 'database-schema', query: {schema: schemaName, table: table[0]}}">
                                             <svg width="1em" height="1em" class="theme-icon-active">
                                                 <use href="#icon-question" />
                                             </svg>
@@ -176,8 +192,12 @@ var response = fetch('/api/csrf')
                                     </span>
                                     </summary>
                                     <ul>
-                                        <li v-for="col in table.data">
-                                            <span draggable="true" @dragstart="handleDragStart">{{col[0]}}</span>: <span class="fst-italic">{{col[1]}}</span>
+                                        <li v-for="col in table[1].columns">
+                                            <span draggable="true" @dragstart="handleDragStart" :title="col.description">
+                                                {{col.name}}
+                                            </span>
+                                            :
+                                            <span class="fst-italic">{{col.type}}</span>
                                         </li>
                                     </ul>
                                 </details>
@@ -192,7 +212,7 @@ var response = fetch('/api/csrf')
     </div>
 </div>
 
-<div class="split right p-4">
+<div class="split right p-4"  v-if="!accessDenied">
 
     <div class="">
 
