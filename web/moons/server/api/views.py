@@ -198,7 +198,7 @@ class EnsureCSRFView(APIView):
 class UserQuerySchemaView(APIView):
 
     def get(self, request):
-        if request.user.has_perm('queries.view_execute_sql'):
+        if request.user.has_perm('queries.view_executesql'):
             result = query_view_schemas(QueryPermissions.AccessType.PROPRIETARY)
         else:
             # public tables only
@@ -208,7 +208,7 @@ class UserQuerySchemaView(APIView):
 class UserDatabaseSchemaView(APIView):
 
     def get(self, request):
-        if request.user.has_perm('queries.view_execute_sql'):
+        if request.user.has_perm('queries.view_executesql'):
             result = schema_view_schemas(QueryPermissions.AccessType.PROPRIETARY)
         else:
             # public tables only
