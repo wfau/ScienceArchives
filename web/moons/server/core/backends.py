@@ -15,7 +15,7 @@ class MyRemoteUserBackend(RemoteUserBackend):
         # only identify users by email
         user = None
         email = UserModel._default_manager.normalize_email(remote_user)
-        user, created = UserModel._default_manager.get_or_create(email=email, defaults={'username': email})
+        user, created = UserModel._default_manager.get_or_create(email=email, defaults={'username': email[:150]})
         if created:
             logger.info(f'New user: "{email}"')
         return user if super().user_can_authenticate(user) else None
