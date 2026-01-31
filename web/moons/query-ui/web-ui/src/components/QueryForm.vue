@@ -155,7 +155,7 @@ const submit = () => {
 }
 
 var response = fetch('/api/csrf')
-  .then((response) => {console.log(response); return response.text()})
+  .then((response) => {return response.text()})
   .then((text) => new DOMParser().parseFromString(text, "text/html"))
   .then((dom) => (<HTMLInputElement>dom.querySelector('[name=csrfmiddlewaretoken]'))?.value)
   .then((token => {
