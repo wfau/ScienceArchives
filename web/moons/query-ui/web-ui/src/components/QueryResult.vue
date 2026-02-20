@@ -46,6 +46,15 @@ const borderClass = computed(() => {
     }
 })
 
+const matchedRows = computed(() => {
+    if (queryStatus?.value.num_rows == 1) {
+        return 'Matched 1 row'
+    }
+    else {
+        return `Matched ${queryStatus?.value.num_rows} rows`
+    }
+})
+
 const copyQueryText = () => {
     if (queryStatus.value) {
         navigator.clipboard.writeText(queryStatus.value?.query);
@@ -119,7 +128,7 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
                 <div class="d-flex justify-content-between">
                     <div>
                         <span :class="{['d-none']: isComplete}" class="spinner-border spinner-border-sm pe-2" aria-hidden="true"></span>
-                        <span v-if="queryStatus?.current_status === 'Success'">Matched {{ queryStatus?.num_rows }} rows</span>
+                        <span v-if="queryStatus?.current_status === 'Success'">{{ matchedRows }}</span>
                         <span v-if="queryStatus?.current_status !== 'Success'">{{ queryStatus?.current_status || 'Loading...' }}</span>
                     </div>
                     <div>
