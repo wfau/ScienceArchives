@@ -24,3 +24,12 @@ export const getSpectrumData = async(url:string) => {
     }
 
 }
+
+export const getSpectrumMetaData = async(url:string) => {
+    const response = await fetch(url)
+    if (response.status == 200) {
+        return await response.json()
+    } else {
+        return []
+    }
+}

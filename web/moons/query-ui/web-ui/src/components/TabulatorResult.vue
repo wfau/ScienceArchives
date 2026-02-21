@@ -6,7 +6,7 @@ import {getPreferredTheme} from './theme'
 import router from '@/router/index'
 import { api_url } from '@/api/query'
 
-const props = defineProps(['result_url', 'result_id'])
+const props = defineProps(['result_url', 'result_id', 'schema'])
 
 const tabulator = ref<Tabulator | null>(null); //variable to hold your table
 
@@ -81,14 +81,17 @@ watchEffect(async () => {
                 colSchema.value = response.schema
                 response.data.map((obj:any) => {
                     const f = obj.filename
+                    const cname = encodeURIComponent(obj.cname)
                     if (f) {
                         // get file link
                         const downloadLoc = `${api_url}/results/${props.result_id}/file?filename=${f}`
-                        const fn = f.split('/').pop()
-                        const spectrumLoc = router.resolve({name: 'result-file', params: {id: props.result_id.toString()}})
-                        obj.filename = fn
                         obj.download = `<a href="${downloadLoc}" class="download"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-download"/></svg></a>`
-                        obj.spectrum_plot = `<a href="${spectrumLoc.href}?file=${f}"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-chart-line" /></svg></a>`
+                        const fn = f.split('/').pop()
+                        obj.filename = fn
+                    }
+                    if (cname && cname != 'NONE') {
+                        const spectrumLoc = router.resolve({name: 'result-file', params: {id: props.result_id.toString()}})
+                        obj.spectrum_plot = `<a href="${spectrumLoc.href}?schema=${props.schema}&cname=${cname}"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-chart-line" /></svg></a>`
                     }
                 })
                 return response
@@ -96,7 +99,7 @@ watchEffect(async () => {
         });
         tabulator.value.on("dataLoaded", function(data){
             const columnNames:ColumnDefinition[] = []
-            var hasFilename = false
+            var hasTarget = false
             for (const name in colSchema.value) {
                 const updatedDef:ColumnDefinition = {
                     title: name,
@@ -107,13 +110,13 @@ watchEffect(async () => {
                 if (colSchema.value[name] == 'double') {
                     updatedDef['hozAlign'] = 'right'
                 }
-                if (name.toLowerCase() == 'filename') {
-                    hasFilename = true
+                if (name.toLowerCase() == 'cname') {
+                    hasTarget = true
                     updatedDef['formatter'] = 'html'
                 }
                 columnNames.push(updatedDef)
             }
-            if (hasFilename) {
+            if (hasTarget) {
                 columnNames.push(
                     {
                         field: 'download',

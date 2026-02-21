@@ -158,7 +158,11 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
         </div>
     </div>
 
-    <TabulatorResult :result_url="queryStatus?.result_url" :result_id="queryStatus?.id" class="flex-grow-1"/>
+    <TabulatorResult
+        :result_url="queryStatus?.result_url"
+        :result_id="queryStatus?.id"
+        :schema="queryStatus?.schema"
+        class="flex-grow-1"/>
   </div>
 
   <svg xmlns="http://www.w3.org/2000/svg" class="base-svgs" width="1em" height="1em">
