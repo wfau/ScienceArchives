@@ -234,5 +234,6 @@ MOONS_DB = {
     'BASE_FILE_PATH': '/moons-flatfiles/products/ges/giraffe/stacked_v5.00/',
     'SPECTRA_CONVERTER': {
         'gesdr5': 'api.spec_csv',
+        'gesdr6': 'api.spec_csv',
     },
 }

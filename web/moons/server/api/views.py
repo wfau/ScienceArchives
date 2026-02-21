@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from queries.models import ExecuteSQL, QueryPermissions, QueryTemplate
-from queries.tasks import execute
+from queries.tasks import execute, execute_sync
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer, QueryTemplateSerializer
 from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
@@ -237,3 +237,45 @@ class QueryTemplateRetrieveView(generics.RetrieveAPIView):
             access = QueryPermissions.AccessType.PUBLIC
         schemas = QueryPermissions.objects.filter(access=access).values_list('schema', flat=True)
         return QueryTemplate.objects.filter(schema__in=schemas)
+
+metadata_query = '''
+SELECT Target.cName, ra, dec, instrument, gratings, gesType, gesField, gesObject, TEff, logg, FeH, vRad, fileName
+FROM SpectrumGroup, RecommendedAstroAnalysis, Target
+WHERE RecommendedAstroAnalysis.specGroupId=SpectrumGroup.specGroupID
+and Target.targetID=RecommendedAstroAnalysis.targetID
+and Target.cName='{cname}'
+'''
+
+class MetadataRetrieveView(APIView):
+    def get(self, request):
+        cname = request.query_params.get('cname')
+        schema = request.query_params.get('schema')
+        query = metadata_query.format(cname=cname)
+        metadata_table = execute_sync(request.user, query, schema)
+        filenames = []
+        result = {}
+        item = None
+        for item in metadata_table.to_pylist():
+            filenames.append(item['filename'])
+        if item:
+            result = {
+                'metadata': {
+                    cname: {
+                        'Instrument': item['instrument'],
+                        'GES Type': item['gestype'],
+                        'Gratings': item['gratings'],
+                        'RA': item['ra'],
+                        'DEC': item['dec'],
+                        'GES Object': item['gesobject'],
+                        'GES Field': item['gesfield'],
+                    },
+                    'Astrophysical Parameters': {
+                        'Teff': item['teff'],
+                        'logg': item['logg'],
+                        'FeH': item['feh'],
+                        'Vrad': item['vrad'],
+                    },
+                },
+                'files': filenames,
+            }
+        return Response(result)
