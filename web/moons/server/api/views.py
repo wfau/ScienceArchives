@@ -250,32 +250,12 @@ class MetadataRetrieveView(APIView):
     def get(self, request):
         cname = request.query_params.get('cname')
         schema = request.query_params.get('schema')
-        query = metadata_query.format(cname=cname)
-        metadata_table = execute_sync(request.user, query, schema)
-        filenames = []
-        result = {}
-        item = None
-        for item in metadata_table.to_pylist():
-            filenames.append(item['filename'])
-        if item:
-            result = {
-                'metadata': {
-                    cname: {
-                        'Instrument': item['instrument'],
-                        'GES Type': item['gestype'],
-                        'Gratings': item['gratings'],
-                        'RA': item['ra'],
-                        'DEC': item['dec'],
-                        'GES Object': item['gesobject'],
-                        'GES Field': item['gesfield'],
-                    },
-                    'Astrophysical Parameters': {
-                        'Teff': item['teff'],
-                        'logg': item['logg'],
-                        'FeH': item['feh'],
-                        'Vrad': item['vrad'],
-                    },
-                },
-                'files': filenames,
-            }
+        targetpage_module = settings.MOONS_DB['TARGET_PAGE'].get(schema)
+        if not targetpage_module:
+            logger.error(f'No target page query for {schema}')
+            return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        targetpage = importlib.import_module(targetpage_module)
+        result = targetpage.get_targetpage(schema=schema, cname=cname, user=request.user)
+
         return Response(result)

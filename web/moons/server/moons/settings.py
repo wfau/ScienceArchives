@@ -236,4 +236,8 @@ MOONS_DB = {
         'gesdr5': 'api.spec_csv',
         'gesdr6': 'api.spec_csv',
     },
+    'TARGET_PAGE': {
+        'gesdr5': 'api.targetpage_ges',
+        'gesdr6': 'api.targetpage_ges',
+    },
 }
