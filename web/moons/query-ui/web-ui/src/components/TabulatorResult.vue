@@ -100,6 +100,7 @@ watchEffect(async () => {
         tabulator.value.on("dataLoaded", function(data){
             const columnNames:ColumnDefinition[] = []
             var hasTarget = false
+            var hasFilename = false
             for (const name in colSchema.value) {
                 const updatedDef:ColumnDefinition = {
                     title: name,
@@ -114,9 +115,13 @@ watchEffect(async () => {
                     hasTarget = true
                     updatedDef['formatter'] = 'html'
                 }
+                if (name.toLowerCase() == 'filename') {
+                    hasFilename = true
+                    updatedDef['formatter'] = 'html'
+                }
                 columnNames.push(updatedDef)
             }
-            if (hasTarget) {
+            if (hasFilename) {
                 columnNames.push(
                     {
                         field: 'download',
@@ -125,6 +130,10 @@ watchEffect(async () => {
                         headerSort: false,
                         headerMenu:headerMenu,
                     } as ColumnDefinition,
+                )
+            }
+            if (hasTarget) {
+                columnNames.push(
                     {
                         field: 'spectrum_plot',
                         title: 'Spectrum',
