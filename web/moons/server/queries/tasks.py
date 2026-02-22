@@ -61,22 +61,26 @@ def to_json(schema):
         result.append([n, type_name])
     return result
 
-@shared_task
-def execute(exec_pk):
-    job = ExecuteSQL.objects.get(pk=exec_pk)
-    if job.user.has_perm('queries.view_execute_sql'):
+def get_db_url(user, schema):
+    if user.has_perm('queries.view_execute_sql'):
         url = db_url
     else:
         url = db_public_url
+    if schema:
+        # this is PostgreSQL specific
+        options = urlencode({'options': f'--search_path={schema}'})
+        url = f'{url}?{options}'
+    return url
+
+@shared_task
+def execute(exec_pk):
+    job = ExecuteSQL.objects.get(pk=exec_pk)
     job.started = timezone.now()
     job.status = ExecuteSQL.StatusType.RUNNING
     results_file = os.path.join(settings.LOCAL_FILE_DIR, f'{job.pk}.parquet')
     job.save()
     try:
-        if job.schema:
-            # this is PostgreSQL specific
-            options = urlencode({'options': f'--search_path={job.schema}'})
-            url = f'{url}?{options}'
+        url = get_db_url(job.user, job.schema)
         conn = db_api.connect(url)
         cursor = conn.cursor()
         cursor.execute(job.query)
@@ -96,3 +100,20 @@ def execute(exec_pk):
         # job.completed = timezone.now()
         job.status = ExecuteSQL.StatusType.COMPLETED
         job.save()
+
+def execute_sync(user, query, schema=None):
+    '''
+    Synchronous SQL query
+    Use with caution - small resultsets only.
+
+    This is used to provide the metadata for the target page
+    which only contains one or two rows.
+    '''
+    url = get_db_url(user, schema)
+    conn = db_api.connect(url)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    table = cursor.fetch_arrow_table()
+    cursor.close()
+    conn.close()
+    return table

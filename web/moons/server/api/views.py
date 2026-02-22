@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from queries.models import ExecuteSQL, QueryPermissions, QueryTemplate
-from queries.tasks import execute, execute_sync
+from queries.tasks import execute
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer, QueryTemplateSerializer
 from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
