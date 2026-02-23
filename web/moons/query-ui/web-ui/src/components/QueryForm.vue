@@ -12,7 +12,7 @@ import { lineNumbers, highlightActiveLineGutter, highlightSpecialChars, highligh
 import { oneDark } from "@codemirror/theme-one-dark";
 
 // Language
-import { sql } from "@codemirror/lang-sql";
+import { sql, PostgreSQL } from "@codemirror/lang-sql";
 
 import { getQueryResult } from '@/api/get_result';
 
@@ -95,6 +95,7 @@ watch(schemaData, async (newSchema, oldSchema) => {
 
     let sqlOptions = {
         upperCaseKeywords: true,
+        dialect: PostgreSQL,
         schema: codeSchema.value,
     }
 

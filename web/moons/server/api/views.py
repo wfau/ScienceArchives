@@ -15,7 +15,7 @@ from queries.tasks import execute
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer, QueryTemplateSerializer
 from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
-from .helpers import query_view_schemas, schema_view_schemas
+from .helpers import schema_view_schemas
 
 import logging
 logger = logging.getLogger(__name__)
@@ -195,16 +195,6 @@ class EnsureCSRFView(APIView):
     def get(self, request):
         return Response({'detail': 'CSRF cookie set'})
 
-class UserQuerySchemaView(APIView):
-
-    def get(self, request):
-        if request.user.has_perm('queries.view_executesql'):
-            result = query_view_schemas(QueryPermissions.AccessType.PROPRIETARY)
-        else:
-            # public tables only
-            result = query_view_schemas(QueryPermissions.AccessType.PUBLIC)
-        return Response(result)
-
 class UserDatabaseSchemaView(APIView):
 
     def get(self, request):
@@ -237,14 +227,6 @@ class QueryTemplateRetrieveView(generics.RetrieveAPIView):
             access = QueryPermissions.AccessType.PUBLIC
         schemas = QueryPermissions.objects.filter(access=access).values_list('schema', flat=True)
         return QueryTemplate.objects.filter(schema__in=schemas)
-
-metadata_query = '''
-SELECT Target.cName, ra, dec, instrument, gratings, gesType, gesField, gesObject, TEff, logg, FeH, vRad, fileName
-FROM SpectrumGroup, RecommendedAstroAnalysis, Target
-WHERE RecommendedAstroAnalysis.specGroupId=SpectrumGroup.specGroupID
-and Target.targetID=RecommendedAstroAnalysis.targetID
-and Target.cName='{cname}'
-'''
 
 class MetadataRetrieveView(APIView):
     def get(self, request):

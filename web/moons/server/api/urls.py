@@ -13,7 +13,6 @@ urlpatterns = [
     path('results/<int:pk>/file', views.ExecuteSQLResultFilenameView.as_view(), name='file-detail'),
     path('csrf', views.EnsureCSRFView.as_view(), name='csrf-view'),
     path('schema', views.UserDatabaseSchemaView.as_view(), name='schema'),
-    path('schema/query', views.UserQuerySchemaView.as_view(), name='query-schema'),
     path('templates', views.QueryTemplateListView.as_view(), name='template-list'),
     path('templates/<int:pk>', views.QueryTemplateRetrieveView.as_view(), name='template-detail'),
     path('metadata', views.MetadataRetrieveView.as_view(), name='metadata-detail'),
