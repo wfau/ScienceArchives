@@ -48,18 +48,3 @@ export const getDatabaseSchema = async() => {
         return undefined
     }
 }
-
-export const getQuerySchema = async() => {    
-    const url = `${api_url}/schema/query`
-    const response = await fetch(
-        url,
-        {
-            headers: headers,
-        }
-    )
-    if (response.status == 200) {
-        return await response.json()
-    } else {
-        return null
-    }
-}

@@ -12,7 +12,7 @@ import { lineNumbers, highlightActiveLineGutter, highlightSpecialChars, highligh
 import { oneDark } from "@codemirror/theme-one-dark";
 
 // Language
-import { sql, PostgreSQL } from "@codemirror/lang-sql";
+import { sql, PostgreSQL, SQLDialect } from "@codemirror/lang-sql";
 
 import { getQueryResult } from '@/api/get_result';
 
@@ -95,7 +95,8 @@ watch(schemaData, async (newSchema, oldSchema) => {
 
     let sqlOptions = {
         upperCaseKeywords: true,
-        dialect: PostgreSQL,
+        // dialect: PostgreSQL,
+        dialect: SQLDialect.define({...PostgreSQL.spec, caseInsensitiveIdentifiers: true}),
         schema: codeSchema.value,
     }
 
@@ -130,7 +131,6 @@ watch(schemaData, async (newSchema, oldSchema) => {
 })
 
 onMounted(async () => {
-    // schemaData.value = await getQuerySchema() as {[key: string]: {[key: string] : TableData }}
     schemaData.value = await getDatabaseSchema()
 })
 
