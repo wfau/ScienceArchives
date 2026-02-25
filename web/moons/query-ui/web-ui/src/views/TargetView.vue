@@ -20,7 +20,7 @@ const schema = route.query.schema
 
 const loading = ref(true)
 const metadataUrl = `${api_url}/metadata?cname=${encodeURIComponent(cname)}&schema=${schema}`
-const metadata = ref<{metadata?:any,files?:string[]}>({})
+const metadata = ref<{metadata?:any,files?:string[],thumbnail?:string}>({})
 
 const graphRefs = ref<any[]>([])
 const graphs = ref<any[]>([])
@@ -32,6 +32,14 @@ function setGraphRef(el:any, index:number) {
 
 const fileDownloadLink = computed(() => {
     return ((filename:string) => `${api_url}/results/${resultId}/file?filename=${filename}`)
+})
+
+const thumbnailTag = computed(() => {
+    const pathEl = metadata.value.thumbnail?.split('/')
+    if (pathEl) {
+        const filename = pathEl[pathEl.length-1]
+        return filename?.substring(cname.length+1).replace('_', '-').replace('.jpeg','')
+    }
 })
 
 async function loadData() {
@@ -84,20 +92,28 @@ onMounted(() => {
             </nav>
         </div>
 
-        <div class="card m-4" v-for="(entries, header) in metadata.metadata">
-            <div class="card-header">
-                {{ header }}
-            </div>
-            <div class="card-body p-0">
-                 <div class="table-responsive">
-                <table class="table table-hover table-sm mb-0">
-                    <tbody>
-                        <tr v-for="(value, key) in entries">
-                            <th>{{key}}</th><td>{{value}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="row">
+            <div class="col-lg-8">
+            <div class="card m-4" v-for="(entries, header) in metadata.metadata">
+                <div class="card-header">
+                    {{ header }}
                 </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm mb-0">
+                            <tbody>
+                                <tr v-for="(value, key) in entries">
+                                    <th>{{key}}</th><td>{{value}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col d-flex flex-column justify-content-center align-items-center" v-if="metadata.thumbnail">
+                <img class="img-fluid w-50 thumbnail" :src="fileDownloadLink(metadata.thumbnail)" :alt="metadata.thumbnail">
+                <div>{{ thumbnailTag }}</div>
             </div>
         </div>
 
@@ -167,5 +183,9 @@ onMounted(() => {
 /* remove top border for the first row so it sits flush with the header */
 .card .table tbody tr:first-child td {
   border-top: none;
+}
+
+.thumbnail {
+    object-fit: contain;
 }
 </style>

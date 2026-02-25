@@ -2,9 +2,8 @@ import importlib
 import io
 from pathlib import Path
 
-from django.db.models import Subquery
 from django.conf import settings
-from django.http import StreamingHttpResponse, HttpResponse, FileResponse
+from django.http import StreamingHttpResponse, FileResponse
 
 from rest_framework import generics, status, permissions, mixins
 from rest_framework.response import Response
@@ -15,7 +14,7 @@ from queries.tasks import execute
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer, QueryTemplateSerializer
 from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
-from .helpers import schema_view_schemas
+from .helpers import schema_view_schemas, validate_path
 
 import logging
 logger = logging.getLogger(__name__)
@@ -132,20 +131,7 @@ class ExecuteSQLPageResultView(generics.RetrieveAPIView):
             # )
         return Response('ok')
 
-class LocalFileMixin():
-
-    def validate_filename(self, filename):
-        if not filename:
-            return None
-        base = Path(settings.MOONS_DB['BASE_FILE_PATH'])
-        local_base = Path('/files/')
-        path = Path(filename)
-        if not path.is_relative_to(base):
-            logger.error(f'Requested file path {filename} not relative to {base}')
-            return None
-        return local_base / path.relative_to(base)
-
-class ExecuteSQLResultGraphView(LocalFileMixin, APIView):
+class ExecuteSQLResultGraphView(APIView):
 
     def generate_csv(self, schema, filename):
         converter = settings.MOONS_DB['SPECTRA_CONVERTER'].get(schema)
@@ -162,7 +148,7 @@ class ExecuteSQLResultGraphView(LocalFileMixin, APIView):
             # check if job id is owned by user
             job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
             qp = request.query_params.get('filename')
-            filename = self.validate_filename(qp)
+            filename = validate_path(qp)
             if filename is None:
                 raise Exception(f'Invalid filename {qp}')
 
@@ -172,14 +158,14 @@ class ExecuteSQLResultGraphView(LocalFileMixin, APIView):
 
         return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class ExecuteSQLResultFilenameView(LocalFileMixin, APIView):
+class ExecuteSQLResultFilenameView(APIView):
 
     def get(self, request, pk, format=None):
         try:
             # check if job id is owned by user
             job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
             qp = request.query_params.get('filename')
-            filename = self.validate_filename(qp)
+            filename = validate_path(qp)
             if filename is None:
                 raise Exception(f'Invalid filename {qp}')
 
