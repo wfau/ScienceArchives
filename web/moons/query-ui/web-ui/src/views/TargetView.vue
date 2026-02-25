@@ -103,7 +103,7 @@ onMounted(() => {
                         <table class="table table-hover table-sm mb-0">
                             <tbody>
                                 <tr v-for="(value, key) in entries">
-                                    <th>{{key}}</th><td>{{value}}</td>
+                                    <th>{{key}}</th><td>{{value.value || value}}</td><td>{{ value.unit }}</td>
                                 </tr>
                             </tbody>
                         </table>

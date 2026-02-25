@@ -50,10 +50,16 @@ def get_targetpage(schema, cname, user):
                         'GES Field': item['gesfield'],
                     },
                     'Astrophysical Parameters': {
-                        'Teff': get_rounded(item['teff']),
+                        'Teff': {
+                            'unit': 'K',
+                            'value': get_rounded(item['teff']),
+                        },
                         'logg': get_rounded(item['logg']),
                         'FeH': get_rounded(item['feh']),
-                        'Vrad': get_rounded(item['vrad']),
+                        'vRad': {
+                            'unit': 'km/s',
+                            'value': get_rounded(item['vrad']),
+                        },
                     },
                 },
                 'files': filenames,
