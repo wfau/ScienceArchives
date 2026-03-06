@@ -62,7 +62,7 @@ def to_json(schema):
     return result
 
 def get_db_url(user, schema):
-    if user.has_perm('queries.view_execute_sql'):
+    if user.has_perm(settings.QUERY_DATABASE['PERMISSION_PROPRIETARY']):
         url = db_url
     else:
         url = db_public_url
