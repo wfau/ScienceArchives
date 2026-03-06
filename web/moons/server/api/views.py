@@ -14,7 +14,7 @@ from queries.tasks import execute
 
 from .serializers import ExecuteSQLSerializer, ExecuteSQLStatusSerializer, QueryTemplateSerializer
 from .renderers import FileRenderer, CSVTextRenderer, FitsFileRenderer, VOTableFileRenderer
-from .helpers import schema_view_schemas, validate_path
+from .helpers import schema_view_schemas, validate_path, has_perm_proprietary
 
 import logging
 logger = logging.getLogger(__name__)
@@ -184,7 +184,7 @@ class EnsureCSRFView(APIView):
 class UserDatabaseSchemaView(APIView):
 
     def get(self, request):
-        if request.user.has_perm('queries.view_executesql'):
+        if has_perm_proprietary(request.user):
             result = schema_view_schemas(QueryPermissions.AccessType.PROPRIETARY)
         else:
             # public tables only
@@ -196,7 +196,7 @@ class QueryTemplateListView(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        if self.request.user.has_perm('queries.view_executesql'):
+        if has_perm_proprietary(self.request.user):
             access = QueryPermissions.AccessType.PROPRIETARY
         else:
             access = QueryPermissions.AccessType.PUBLIC
@@ -207,7 +207,7 @@ class QueryTemplateRetrieveView(generics.RetrieveAPIView):
     serializer_class = QueryTemplateSerializer
 
     def get_queryset(self):
-        if self.request.user.has_perm('queries.view_executesql'):
+        if has_perm_proprietary(self.request.user):
             access = QueryPermissions.AccessType.PROPRIETARY
         else:
             access = QueryPermissions.AccessType.PUBLIC

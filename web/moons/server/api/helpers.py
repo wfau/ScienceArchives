@@ -34,3 +34,6 @@ def validate_path(filename):
         logger.error(f'Requested file path {filename} not relative to {base}')
         return None
     return local_base / path.relative_to(base)
+
+def has_perm_proprietary(user):
+    return user.has_perm(settings.QUERY_DATABASE['PERMISSION_PROPRIETARY'])

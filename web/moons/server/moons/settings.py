@@ -162,6 +162,7 @@ QUERY_DATABASE = {
     'DRIVER': os.environ.get('QUERY_DB_DRIVER', 'adbc_driver_sqlite.dbapi'),
     'CONNECTION_STRING': os.environ.get('QUERY_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
     'CONNECTION_STRING_PUBLIC': os.environ.get('QUERY_PUBLIC_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
+    'PERMISSION_PROPRIETARY': 'queries.view_executesql',
     # 'CONNECTION_STRING': 'postgresql://postgres:12345@localhost:5432/',
     # 'DRIVER': 'adbc_driver_postgresql.dbapi',
 }
@@ -231,7 +232,7 @@ LOGGING = {
 }
 
 MOONS_DB = {
-    'BASE_FILE_PATH': '/moons-flatfiles/products/ges/giraffe/stacked_v5.00/',
+    'BASE_FILE_PATH': '/moons-flatfiles/products/',
     'SPECTRA_CONVERTER': {
         'gesdr5': 'api.spec_csv',
         'gesdr6': 'api.spec_csv',
