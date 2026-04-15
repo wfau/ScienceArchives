@@ -8,12 +8,12 @@ from dateutil.relativedelta import relativedelta
 from queries.models import ExecuteSQL
 
 class Command(BaseCommand):
-    help = "Closes the specified poll for voting"
+    help = "Removes result files that are older than the specified time period"
 
     def add_arguments(self, parser):
-        parser.add_argument("--days", type=int, default=0)
-        parser.add_argument("--hours", type=int, default=0)
-        parser.add_argument("--dry-run", action='store_true')
+        parser.add_argument("--days", type=int, default=0, help='remove all files older than DAYS days (required if hours is not specified)')
+        parser.add_argument("--hours", type=int, default=0, help='remove all files older than HOURS hours (required if days is not specified)')
+        parser.add_argument("--dry-run", action='store_true', help='list files to be deleted and exit')
 
     def handle(self, *args, **options):
         self.stdout.write(
@@ -22,9 +22,7 @@ class Command(BaseCommand):
         hours = options['hours']
         days = options['days']
         if not days and not hours:
-            self.stdout.write(
-               self.style.SUCCESS('No arguments provided')
-            )
+            self.print_help('manage.py', 'remove_results')
             return
         
         deleted_files = 0
@@ -43,6 +41,11 @@ class Command(BaseCommand):
                     self.stdout.write(
                         self.style.WARNING(f'Error deleting "{path.name}"')
                     )
-        self.stdout.write(
-            self.style.SUCCESS(f'Deleted {deleted_files} query results files generated before {max_age}')
-        )
+        if options['dry_run']:
+            self.stdout.write(
+                self.style.SUCCESS(f'Dry-run: Found {deleted_files} query results files generated before {max_age}')
+            )
+        else:
+            self.stdout.write(
+                self.style.SUCCESS(f'Deleted {deleted_files} query results files generated before {max_age}')
+            )
