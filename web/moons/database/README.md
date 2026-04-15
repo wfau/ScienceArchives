@@ -2,7 +2,7 @@
 
 Parse the SQL schema for the GES database and create a configuration for the freeform SQL web interface.
 
-## Prerequisites
+## Prerequisites
 
 Create a Python envirnoment and install the requirements with
 
