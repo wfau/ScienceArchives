@@ -11,6 +11,9 @@ pattern = re.compile(columndef, re.IGNORECASE)
 constraint_def = r'CONSTRAINT (\w+) PRIMARY KEY \(([\w,\s]*)\)'
 constraint_pattern = re.compile(constraint_def, re.IGNORECASE)
 
+reference_def = r'\(([^)]+)\)\s*references\s+([A-Za-z_]\w*)\s*\(\s*([^)]+)\s*\)'
+reference_pattern = re.compile(reference_def, re.IGNORECASE)
+
 def extract_comment(line):
     if line.startswith('/H'):
         return {'h': line[3:]}
@@ -130,6 +133,16 @@ def extract_table_description(f, output):
                 view_name = None
                 in_view_stmt = False
         elif line.startswith('--'): # comment after the tag
+            match = reference_pattern.search(line.strip())
+            if match:
+                groups = match.groups()
+                refs = current_context.get('references', [])
+                refs += [{
+                    'sourceCol': [g.strip() for g in groups[0].split(',')],
+                    'target': groups[1],
+                    'targetCol': [g.strip() for g in groups[2].split(',')],
+                }]
+                current_context['references'] = refs
             markdown = extract_comment(line[2:])
             if markdown:
                 current_context['markdown'].append(markdown)
@@ -169,10 +182,13 @@ if __name__ == '__main__':
         prog='SchemaParser',
         description='Parse the comments in a schema and write to a json structure',
     )
-    parser.add_argument('-i', '--input-file')
-    parser.add_argument('-o', '--output-file')
-    parser.add_argument('-j', '--json-indent', type=int)
+    parser.add_argument('-i', '--input-file', required=True, help='input schema SQL file')
+    parser.add_argument('-o', '--output-file', help='output JSON file (optional, default prints to stdout)')
+    parser.add_argument('-j', '--json-indent', type=int, default=0, help='indentation of json output (optional)')
     args = parser.parse_args()
     output = parse_schema(args)
-    with open(args.output_file, 'w') as o:
-        json.dump(output, o, indent=args.json_indent)
+    if args.output_file:
+        with open(args.output_file, 'w') as o:
+            json.dump(output, o, indent=args.json_indent)
+    else:
+        print(json.dumps(output, indent=args.json_indent))

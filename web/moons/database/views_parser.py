@@ -28,9 +28,6 @@ def construct_view(view_file, tables_schema):
     for sn, sv in v['views'].items():
         view_schemas[sn] = {}
         for vn, vd in sv.items():
-            # print(vn)
-            # if vn != 'RecommendedOutlierAnalysis':
-            #     continue
             statement = ' '.join([l.strip() for l in vd['statement']]).strip()
             # print(statement)
             ast = parse_one(statement)
@@ -93,7 +90,7 @@ if __name__ == '__main__':
     )
     parser.add_argument('-t', '--tables-file', nargs='+', default=[])
     parser.add_argument('-v', '--view-file')
-    parser.add_argument('-o', '--output-file')
+    parser.add_argument('-o', '--output-file', required=False)
     parser.add_argument('-j', '--json-indent', type=int)
     args = parser.parse_args()
     tables_schema = parse_tables(args.tables_file)
