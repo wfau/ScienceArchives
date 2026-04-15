@@ -28,9 +28,15 @@ export interface TableDefinition {
   // columns is a mapping of columnKey -> ColumnDefinition
   columns: Record<string, ColumnDefinition>;
   primary_keys?: string[];
+  references?: ForeignKey[];
   statement?: string[];
   // allow additional unknown table-level keys
   [extra: string]: unknown;
+}
+interface ForeignKey {
+    sourceCol: string[];
+    target: string;
+    targetCol: string[];
 }
 
 export const getDatabaseSchema = async() => {    

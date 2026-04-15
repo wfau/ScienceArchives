@@ -1259,6 +1259,26 @@
                         "unified_content_descriptor": "CODE_MISC"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specFrameID"
+                        ],
+                        "target": "SpecFrame",
+                        "targetCol": [
+                            "specFrameID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specID"
                 ]
@@ -1724,6 +1744,17 @@
                         "unified_content_descriptor": "CODE_MISC"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specNightlyID"
                 ]
@@ -1810,6 +1841,17 @@
                         "description": " Description of the FITS keyword"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specFrameID"
+                        ],
+                        "target": "SpecFrame",
+                        "targetCol": [
+                            "specFrameID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specFrameID",
                     "extNum",
@@ -1870,6 +1912,17 @@
                         "description": "Flag, is the spectrum group complete: R - all files resolved ok; U one or more files undefined."
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specGroupID",
                     "specID",
@@ -6855,6 +6908,17 @@
                         "description": "Unique identifier of ingestion event"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specGroupID",
                     "wg",
@@ -8147,6 +8211,17 @@
                         "unified_content_descriptor": "CODE_MISC"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "surveyID"
+                        ],
+                        "target": "Survey",
+                        "targetCol": [
+                            "surveyID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "surveyID",
                     "releaseNum"
@@ -8245,6 +8320,17 @@
                         "unified_content_descriptor": "??"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "cuID"
+                        ],
+                        "target": "CurationTask",
+                        "targetCol": [
+                            "cuID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "cuEventID"
                 ]
@@ -31006,6 +31092,26 @@
                         "unified_content_descriptor": "CODE_MISC"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specFrameID"
+                        ],
+                        "target": "SpecFrame",
+                        "targetCol": [
+                            "specFrameID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specID"
                 ]
@@ -31471,6 +31577,17 @@
                         "unified_content_descriptor": "CODE_MISC"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specNightlyID"
                 ]
@@ -31557,6 +31674,17 @@
                         "description": " Description of the FITS keyword"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specFrameID"
+                        ],
+                        "target": "SpecFrame",
+                        "targetCol": [
+                            "specFrameID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specFrameID",
                     "extNum",
@@ -31617,6 +31745,17 @@
                         "description": "Flag, is the spectrum group complete: R - all files resolved ok; U one or more files undefined."
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specGroupID",
                     "specID",
@@ -36602,6 +36741,17 @@
                         "description": "Unique identifier of ingestion event"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "specGroupID",
                     "wg",
@@ -37894,6 +38044,17 @@
                         "unified_content_descriptor": "CODE_MISC"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "surveyID"
+                        ],
+                        "target": "Survey",
+                        "targetCol": [
+                            "surveyID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "surveyID",
                     "releaseNum"
@@ -37992,6 +38153,17 @@
                         "unified_content_descriptor": "??"
                     }
                 },
+                "references": [
+                    {
+                        "sourceCol": [
+                            "cuID"
+                        ],
+                        "target": "CurationTask",
+                        "targetCol": [
+                            "cuID"
+                        ]
+                    }
+                ],
                 "primary_keys": [
                     "cuEventID"
                 ]
@@ -59493,5 +59665,4 @@
             }
         }
     }
-
 }

@@ -77,6 +77,25 @@ watch(tableSchema, async (newSchema, oldSchema) => {
                             <span v-for="(t,l) in item as object" :class="[ l == 'h' ? 'my-4 lead': '' ]" v-html="t"></span>
                         </div>
                     </div>
+                    <div v-if="currentTable.primary_keys" class="mt-4">
+                        <div class="fw-bold">Primary Keys</div>
+                        <ul>
+                            <li v-for="pk in currentTable.primary_keys">
+                                <a :href="`#${pk}`">{{ pk }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-if="currentTable.references" class="mt-4">
+                        <div class="fw-bold">Foreign Keys</div>
+                        <ul>
+                            <li v-for="fk in currentTable.references">
+                                <a :href="`#${fk.sourceCol.join(', ')}`">{{ fk.sourceCol.join(', ') }}</a> &rarr;
+                                <a :href="`#${fk.targetCol.join(', ')}`" @click="()=>{currentTable=currentSchema?.tables[fk.target]}">
+                                    {{ fk.target }}.{{ fk.targetCol.join(', ') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <div v-if="currentTable.statement" class="mt-4">
                     <pre class="p-2 border rounded text-warning"><span v-for="item in currentTable.statement" v-html="item"></span></pre>
                     </div>
@@ -93,7 +112,7 @@ watch(tableSchema, async (newSchema, oldSchema) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="column, columnName in currentTable.columns">
+                            <tr v-for="column, columnName in currentTable.columns" :id="`${columnName}`">
                                 <td>{{columnName}}</td>
                                 <td>{{ column.type }}</td>
                                 <td>{{ column.size }}</td>
