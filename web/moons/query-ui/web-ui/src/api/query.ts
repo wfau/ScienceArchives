@@ -64,3 +64,15 @@ export const getQueryTemplate = async(id: Number) => {
         return response.json()
     }
 }
+
+export const deleteResult = ( async (id:Number) => {
+    const res = await fetch(`${api_url}/queries/${id}`, {
+        method: 'DELETE',
+        headers: headers,
+    })
+    if (!res.ok) {
+        const msg = await res.text()
+        throw new Error(`Delete failed (${res.status}): ${msg}`)
+    }
+
+})

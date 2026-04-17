@@ -1,5 +1,8 @@
 from importlib import import_module
+from pathlib import Path
 import os
+
+from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.utils import timezone
@@ -21,6 +24,9 @@ db_url = settings.QUERY_DATABASE['CONNECTION_STRING']
 db_public_url = settings.QUERY_DATABASE['CONNECTION_STRING_PUBLIC']
 
 from .models import ExecuteSQL
+
+import logging
+logger = logging.getLogger(__name__)
 
 def write_results(cursor, output_file):
     count = 0
@@ -117,3 +123,23 @@ def execute_sync(user, query, schema=None):
     cursor.close()
     conn.close()
     return table
+
+@shared_task
+def remove_results(hours=0, days=0):
+    if not hours and not days:
+        logger.info('Did not specify days or hours: No files to remove')
+        return
+    deleted_files = 0
+    max_age = timezone.now() - relativedelta(hours=hours, days=days)
+    for query in ExecuteSQL.objects.filter(completed__lte=max_age):
+        if query.results_file:
+            try:
+                path = Path(query.results_file)
+                logger.info(f'Removing results file "{path.name}" generated {query.completed}')
+                path.unlink(missing_ok=True)
+                query.results_file = None
+                query.save()
+                deleted_files += 1
+            except:
+                logger.error(f'Error removing results file "{path.name}"')
+    logger.info(f'Deleted {deleted_files} query results files generated before {max_age}')

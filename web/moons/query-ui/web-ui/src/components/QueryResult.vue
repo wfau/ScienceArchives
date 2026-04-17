@@ -12,7 +12,8 @@ if (prefTheme == 'light') {
 else {
     import("tabulator-tables/dist/css/tabulator_midnight.min.css")
 }
-import { api_url } from '@/api/query'
+import { api_url, deleteResult } from '@/api/query'
+import router from '@/router/index'
 
 const route = useRoute()
 
@@ -23,6 +24,9 @@ const isComplete = computed(() => {
     return st && !(st === 'Queued' || st === 'Running')
 })
 const queryComplete = ref(false)
+const deleteModal = ref(false)
+const deleteMsg = ref()
+const deleteError = ref(false)
 
 const highlightClass = computed(() => {
     const st = queryStatus.value?.current_status
@@ -84,9 +88,44 @@ watchEffect(async () => {
 
 const downloadFormats = ['FITS', 'VOTable', 'CSV']
 
+const deleteQuery = (async () => {
+    deleteModal.value = false
+    deleteMsg.value = undefined
+    deleteError.value = false
+    try {
+        await deleteResult(resultId)
+        deleteMsg.value = 'The query has been deleted.'
+        deleteError.value = false
+        setTimeout(() => {
+            router.push({name: 'query-list'})
+        }, 2000)
+    } catch(err) {
+        deleteMsg.value = 'There was a problem deleting the query.'
+        deleteError.value = true
+    }
+})
+
 </script>
 
 <template>
+
+    <div v-if="deleteMsg" class="m-4 alert" :class="deleteError?'alert-danger':'alert-success'" role="alert">
+        {{ deleteMsg }}
+    </div>
+    <div class="modal-backdrop" v-if="deleteModal" @click.self="deleteModal=false">
+        <div class="modal-wrap">
+            <div class="modal-dialog" @click.stop>
+                <h5>Remove Query</h5>
+                <div class="modal-body">
+                    Would you like to delete this query and the results?
+                    <div class="m-2 mt-4 text-center">
+                        <button class="btn btn-danger m-1" @click="deleteQuery">Delete</button>
+                        <button class="btn btn-secondary m-1" @click="deleteModal=false">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="m-4 d-flex justify-content-between">
         <nav aria-label="breadcrumb">
@@ -108,14 +147,22 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
             <div class="m-2">
                 Database Release: {{ queryStatus?.schema }}
             </div>
-            <button class="btn btn-secondary">
-                <RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-edit', params:{id: queryStatus?.id }}">
-                    Edit
+            <div>
+                <button class="btn btn-danger m-1" @click="deleteModal=true">
+                    Delete
                     <svg width="1em" height="1em" class="theme-icon-active">
-                        <use href="#icon-edit" />
+                        <use href="#icon-bin" />
                     </svg>
-                </RouterLink>
-            </button>
+                </button>
+                <button class="btn btn-secondary m-1">
+                    <RouterLink class="text-decoration-none text-reset" :to="{ name: 'query-edit', params:{id: queryStatus?.id }}">
+                        Edit
+                        <svg width="1em" height="1em" class="theme-icon-active">
+                            <use href="#icon-edit" />
+                        </svg>
+                    </RouterLink>
+                </button>
+            </div>
         </div>
         <div class="border border-3 rounded p-2 m-2 my-4 d-flex justify-content-between">
             <pre>{{ queryStatus?.query }}</pre>
@@ -178,10 +225,43 @@ const downloadFormats = ['FITS', 'VOTable', 'CSV']
           <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
           <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152L0 424c0 48.6 39.4 88 88 88l272 0c48.6 0 88-39.4 88-88l0-112c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 112c0 22.1-17.9 40-40 40L88 464c-22.1 0-40-17.9-40-40l0-272c0-22.1 17.9-40 40-40l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24L88 64z"/>
       </symbol>
-      <symbol id="icon-copy" fill="currentColor"  viewBox="0 0 448 512">
+      <symbol id="icon-copy" fill="currentColor" viewBox="0 0 448 512">
           <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
           <path d="M384 336l-192 0c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l133.5 0c4.2 0 8.3 1.7 11.3 4.7l58.5 58.5c3 3 4.7 7.1 4.7 11.3L400 320c0 8.8-7.2 16-16 16zM192 384l192 0c35.3 0 64-28.7 64-64l0-197.5c0-17-6.7-33.3-18.7-45.3L370.7 18.7C358.7 6.7 342.5 0 325.5 0L192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-16-48 0 0 16c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l16 0 0-48-16 0z"/>
+      </symbol>
+      <symbol id="icon-bin" fill="currentColor" viewBox="0 0 640 640">
+        <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path d="M262.2 48C248.9 48 236.9 56.3 232.2 68.8L216 112L120 112C106.7 112 96 122.7 96 136C96 149.3 106.7 160 120 160L520 160C533.3 160 544 149.3 544 136C544 122.7 533.3 112 520 112L424 112L407.8 68.8C403.1 56.3 391.2 48 377.8 48L262.2 48zM128 208L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 208L464 208L464 512C464 520.8 456.8 528 448 528L192 528C183.2 528 176 520.8 176 512L176 208L128 208zM288 280C288 266.7 277.3 256 264 256C250.7 256 240 266.7 240 280L240 456C240 469.3 250.7 480 264 480C277.3 480 288 469.3 288 456L288 280zM400 280C400 266.7 389.3 256 376 256C362.7 256 352 266.7 352 280L352 456C352 469.3 362.7 480 376 480C389.3 480 400 469.3 400 456L400 280z"/>
       </symbol>
     </svg>
 
 </template>
+
+<style>
+.modal-backdrop {
+  z-index: 9998;
+  background: rgba(89, 89, 89, 0.5);
+  position: fixed;
+  inset: 0;
+}
+.modal-wrap{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none; /* key: only dialog will be clickable */
+}
+.modal-dialog {
+  pointer-events: auto;
+  width: 30rem;
+  background: rgb(255, 255, 255);
+  color: black;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 0.3rem;
+}
+</style>
