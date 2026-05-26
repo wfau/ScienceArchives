@@ -128,12 +128,12 @@ watch(tableSchema, async (newSchema, oldSchema) => {
                                             <use href="#icon-key" />
                                         </svg>
                                     </template>
-                                    <template v-else-if="(foreignKeys || []).includes(columnName)">
-                                        {{ columnName }}&nbsp;<sup class="fst-italic">FK</sup>
-                                    </template>
                                     <span v-else>
                                         {{ columnName }}
                                     </span>
+                                    <template v-if="(foreignKeys || []).includes(columnName)">
+                                        <sup class="fst-italic">FK</sup>
+                                    </template>
                                 </td>
                                 <td>{{ column.type }}</td>
                                 <td>{{ column.size }}</td>

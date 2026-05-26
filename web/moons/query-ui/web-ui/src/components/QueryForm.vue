@@ -207,14 +207,14 @@ var response = fetch('/api/csrf')
                                             <span draggable="true" @dragstart="handleDragStart" :title="col.description"
                                                 :class="(table[1].primary_keys || []).includes(col.name) ? 'text-decoration-underline': ''">
                                                 {{col.name}}
-                                                <svg width="1.5em" height="1.5em" v-if="(table[1].primary_keys || []).includes(col.name)">
-                                                    <use href="#icon-key" />
-                                                </svg>
-                                                <sup class="fst-italic"
-                                                    v-if="(foreignKeys(table[1]) || []).includes(col.name)">
-                                                    FK
-                                                </sup>
                                             </span>
+                                            <svg width="1.5em" height="1.5em" v-if="(table[1].primary_keys || []).includes(col.name)">
+                                                <use href="#icon-key" />
+                                            </svg>
+                                            <sup class="fst-italic"
+                                                v-if="(foreignKeys(table[1]) || []).includes(col.name)">
+                                                FK
+                                            </sup>
                                             :
                                             <span class="fst-italic">{{col.type}}</span>
                                         </li>
