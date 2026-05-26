@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, watch} from 'vue'
+import { ref, onBeforeMount, watch, computed} from 'vue'
 import { useRoute } from 'vue-router'
 
 import { getDatabaseSchema } from '@/api/schema';
-import type { Schemas, Schema, TablesMap, TableDefinition } from '@/api/schema';
+import type { Schemas, Schema, TableDefinition } from '@/api/schema';
 
 const currentTable = ref<TableDefinition>()
 const currentSchema = ref<Schema>()
 
 const tableSchema = ref<Schemas>()
+
+const foreignKeys = computed(() => {
+    const result:string[] = []
+    for (const fk of (currentTable?.value?.references || [])) {
+        result.push(...fk.sourceCol)
+    }
+    return result
+})
 
 const route = useRoute()
 onBeforeMount(async () => {
@@ -119,6 +127,9 @@ watch(tableSchema, async (newSchema, oldSchema) => {
                                         <svg width="1.5em" height="1.5em">
                                             <use href="#icon-key" />
                                         </svg>
+                                    </template>
+                                    <template v-else-if="(foreignKeys || []).includes(columnName)">
+                                        {{ columnName }}&nbsp;<sup class="fst-italic">FK</sup>
                                     </template>
                                     <span v-else>
                                         {{ columnName }}
