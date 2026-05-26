@@ -65,4 +65,10 @@ def get_targetpage(schema, cname, user):
                 'files': filenames,
                 'thumbnail': str(thumbnail),
             }
+        else:
+             result = {
+                'cname': cname,
+                'thumbnail': str(thumbnail),
+             }
+
         return result   

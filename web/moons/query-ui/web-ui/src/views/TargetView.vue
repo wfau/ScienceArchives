@@ -20,11 +20,12 @@ const schema = route.query.schema
 
 const loading = ref(true)
 const metadataUrl = `${api_url}/metadata?cname=${encodeURIComponent(cname)}&schema=${schema}`
-const metadata = ref<{metadata?:any,files?:string[],thumbnail?:string}>({})
+const metadata = ref<{metadata?:any,files?:string[],thumbnail?:string,cname?:string}>({})
 
 const graphRefs = ref<any[]>([])
 const graphs = ref<any[]>([])
 const hasError = ref<boolean[]>([])
+const hasFiles = ref(false)
 
 function setGraphRef(el:any, index:number) {
   graphRefs.value[index] = el
@@ -45,30 +46,40 @@ const thumbnailTag = computed(() => {
 async function loadData() {
     metadata.value = await getSpectrumMetaData(metadataUrl)
     metadata.value.files?.forEach(async (filename, i) => {
-        const url = `${api_url}/results/${resultId}/plot?filename=${filename}`
-        const data = await getSpectrumData(url)
-        if (data) {
-            const header = data.split('\n', 1)[0]
-            var colNames:string[] = ['', '']
-            if (header) {
-                colNames = header.split(',')
-            }
-            const el = graphRefs.value[i]
-            if (!el) return
-            const g = new Dygraph(
-                el,
-                data,
-                {
-                    xlabel: colNames[0],
-                    ylabel: colNames[1],
-                    customBars: true,
-                    axisLineColor: prefTheme == 'dark'? 'white' : 'black',
-                }
-            );
-            graphs.value.push(g)
-            hasError.value.push(false)
+        if (filename == 'NONE') {
+            hasError.value.push(true)
+            return;
         }
-        else {
+        hasFiles.value = true
+        const url = `${api_url}/results/${resultId}/plot?filename=${filename}`
+        try {
+            const data = await getSpectrumData(url)
+            if (data) {
+                const header = data.split('\n', 1)[0]
+                var colNames:string[] = ['', '']
+                if (header) {
+                    colNames = header.split(',')
+                }
+                const el = graphRefs.value[i]
+                if (!el) return
+                const g = new Dygraph(
+                    el,
+                    data,
+                    {
+                        xlabel: colNames[0],
+                        ylabel: colNames[1],
+                        customBars: true,
+                        axisLineColor: prefTheme == 'dark'? 'white' : 'black',
+                    }
+                );
+                graphs.value.push(g)
+                hasError.value.push(false)
+            }
+            else {
+                hasError.value.push(true)
+            }
+        }
+        catch (e) {
             hasError.value.push(true)
         }
     })
@@ -94,6 +105,9 @@ onMounted(() => {
 
         <div class="row">
             <div class="col-lg-8">
+            <div v-if="!metadata.metadata" class="card-header p-2 m-2 rounded">
+                {{ metadata.cname }}
+            </div>
             <div class="card m-4" v-for="(entries, header) in metadata.metadata">
                 <div class="card-header">
                     {{ header }}
@@ -117,7 +131,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="m-4">
+        <div class="m-4" v-if="hasFiles">
             <h1>Spectrum Plot</h1>
             <div v-if="loading">Loading ...</div>
             <div v-else>
@@ -143,7 +157,7 @@ onMounted(() => {
                         style="height:60vh;" 
                     >
                     </div>
-                    <div v-else>There was an error loading the data.</div>
+                    <div class="alert alert-danger" v-else>There was an error plotting this file.</div>
                 </div>
             </div>
         </div>
