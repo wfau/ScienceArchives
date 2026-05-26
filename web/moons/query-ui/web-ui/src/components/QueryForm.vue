@@ -20,7 +20,7 @@ import { getQueryResult } from '@/api/get_result';
 import {getQueryTemplate, postQuery} from '@/api/query'
 import router from '@/router/index'
 
-import { getDatabaseSchema, type Schemas } from '@/api/schema';
+import { getDatabaseSchema, type Schemas, type TableDefinition } from '@/api/schema';
 
 // edit query if provided
 const route = useRoute()
@@ -55,6 +55,16 @@ const codeSchema:any = computed(() => {
     }
     return result
 })
+
+const foreignKeys = (table:TableDefinition) => {
+    const result:string[] = []
+    for (const fk of (table.references || [])) {
+        result.push(...fk.sourceCol)
+    }
+    return result
+}
+
+
 
 // get current theme (light or dark)
 // this doesn't pick up a change
@@ -200,6 +210,10 @@ var response = fetch('/api/csrf')
                                                 <svg width="1.5em" height="1.5em" v-if="(table[1].primary_keys || []).includes(col.name)">
                                                     <use href="#icon-key" />
                                                 </svg>
+                                                <sup class="fst-italic"
+                                                    v-if="(foreignKeys(table[1]) || []).includes(col.name)">
+                                                    FK
+                                                </sup>
                                             </span>
                                             :
                                             <span class="fst-italic">{{col.type}}</span>
