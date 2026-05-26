@@ -45,11 +45,18 @@ Copy the environment template `env-template` to `.env` and update the entries as
     DJANGO_SUPERUSER_EMAIL=someone@example.com
     ````
 
+    Alternatively, start up the containers and run
+    ```
+    python manage.py createsuperuser
+    ```
+    from the Django container.
+
 ### Build
 
 Build the image.
 ```
-docker compose build
+DEPLOYMENT=local docker compose -f docker-compose.yaml build
+DEPLOYMENT=production docker compose -f docker-compose-prod.yaml build
 ```
 This only needs to be done before the first run, or when there are updates.
 
@@ -84,10 +91,16 @@ Choose the number of replicas for the workers that run SQL queries:
 
 Start docker compose in detached mode, running containers with django, database, celery worker, celerybeat:
 ```
-docker compose up -d
+DEPLOYMENT=local docker compose -f docker-compose.yaml up -d
+DEPLOYMENT=production docker compose -f docker-compose-prod.yaml up  
 ```
 
-In local deployment, access the server at http://localhost:9000.
+Start up the frontend development server with
+```
+pnpm dev
+```
+
+In local deployment, access the server at http://localhost:9000. 
 
 ### Shut down
 
@@ -95,6 +108,18 @@ Stop containers:
 ```
 docker compose down
 ```
+
+## Configure Django database
+
+### Proprietary vs public view permissions
+
+Permissions are public or proprietary for a database.
+This ensures which database schemas are visible to a user.
+
+Add a QueryPermissions object for each data release and choose proprietary and/or public permissions.
+Public data releases are not automatically proprietary so both permissions have to be added for public data.
+
+Users with permissions defined by the setting `QUERY_DATABASE.PERMISSION_PROPRIETARY` (default `queries.view_executesql`) are allowed to view proprietary databases. All other users only have permissions for public databases.
 
 ## Manual Set Up
 
