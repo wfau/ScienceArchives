@@ -46,7 +46,7 @@ const thumbnailTag = computed(() => {
 async function loadData() {
     metadata.value = await getSpectrumMetaData(metadataUrl)
     metadata.value.files?.forEach(async (filename, i) => {
-        if (filename == 'NONE') {
+        if (!filename || filename === 'NONE') {
             hasError.value.push(true)
             return;
         }
