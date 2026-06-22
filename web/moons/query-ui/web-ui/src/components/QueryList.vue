@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeMount, useTemplateRef } from 'vue'
-import { api_url, headers } from '@/api/query'
+import { api_url, deleteResult, headers } from '@/api/query'
 import router from '@/router/index'
 
 import {getPreferredTheme} from './theme'
@@ -9,6 +9,33 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables'; //import Tabulator 
 import { DateTime } from "luxon";
 
 const table = useTemplateRef('queries-table')
+const tabulator = ref<Tabulator>()
+
+const deleteModal = ref(false)
+const deleteId = ref()
+const deleteMsg = ref()
+const deleteError = ref(false)
+
+const deleteQuery = (async () => {
+    deleteModal.value = false
+    deleteMsg.value = undefined
+    deleteError.value = false
+    try {
+        await deleteResult(deleteId.value)
+        deleteId.value = undefined
+        deleteMsg.value = 'The query has been deleted.'
+        deleteError.value = false
+        setTimeout(() => {
+            router.push({name: 'query-list'})
+        }, 2000)
+    } catch(err) {
+        deleteMsg.value = 'There was a problem deleting the query.'
+        deleteError.value = true
+        deleteId.value = undefined
+    } finally {
+      await tabulator.value?.replaceData();
+    }
+})
 
 onBeforeMount(async () => {
     const prefTheme = getPreferredTheme()
@@ -21,9 +48,10 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
-  
-  if (table.value) {
-  var tabulator = new Tabulator(table.value, {
+  try {
+  if (!table.value) return;
+
+  tabulator.value = new Tabulator(table.value, {
       // @ts-ignore
       dependencies:{
         DateTime:DateTime,
@@ -93,10 +121,34 @@ onMounted(() => {
           hozAlign:"right",
         },
         {
-          title: 'View',
-          field:'result_link',
-          formatter:"html",
-          headerSort:false,
+          title: "Actions",
+          field: 'actions',
+          formatter: function(cell, formatterParams, onRendered) {
+            const queryId = cell.getRow().getData().id;
+            const resulturl = router.resolve({name: 'query-result', params: {id: queryId}})
+            return `
+                <a href="${resulturl.href}" class="view-btn">View</a>
+                <button class="btn delete-btn"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-bin"/></svg></button>
+              `;
+          },
+          width: 100,
+          headerSort: false,
+          hozAlign: "center",
+          cellClick: function(e, cell) {
+            e.stopPropagation();
+            const target = e.target as HTMLElement;
+            const viewBtn = target.closest(".view-btn");
+            const deleteBtn = target.closest(".delete-btn");
+            const rowData = cell.getRow().getData();
+            if (viewBtn) {
+              router.push({name: 'query-result', params: {id: rowData.id.toString() }})
+            }
+            if (deleteBtn) {
+              console.log('delete')
+              deleteId.value = rowData.id
+              deleteModal.value = true
+            }
+          },
         },
       ],
       pagination:true,
@@ -128,12 +180,16 @@ onMounted(() => {
         });
         return purl
       },     
-  });
+    });
   
-    tabulator.on("rowClick", function(e, row) {
+    tabulator.value.on("rowClick", function(e, row) {
+      const target = e.target as Element;
+      if (!target || target.closest('[tabulator-field="actions"]')) {
+        return;
+      }
       router.push({name: 'query-result', params: {id: row.getData().id}})
     });
-    tabulator.on("dataLoadError", function(error){
+    tabulator.value.on("dataLoadError", function(error){
       const response = error as unknown as Response
       // if (response.status == 401) {
       //   window.location.replace('/oidc/authenticate')
@@ -142,7 +198,10 @@ onMounted(() => {
       //   window.location.replace('/oidc/authenticate')
       // }
     });
+    } catch (error) {
+    console.error("Tabulator initialization failed during mount:", error);
   }
+
 })
 
 </script>
@@ -157,8 +216,33 @@ onMounted(() => {
       </div>
     </div>
 
+    <div v-if="deleteMsg" class="m-4 alert" :class="deleteError?'alert-danger':'alert-success'" role="alert">
+      {{ deleteMsg }}
+    </div>
+    <div class="modal-backdrop" v-if="deleteModal" @click.self="deleteModal=false">
+        <div class="modal-wrap">
+            <div class="modal-dialog" @click.stop>
+                <h5>Remove Query</h5>
+                <div class="modal-body">
+                    Would you like to delete this query and the results?
+                    <div class="m-2 mt-4 text-center">
+                        <button class="btn btn-danger m-1" @click="deleteQuery">Delete</button>
+                        <button class="btn btn-secondary m-1" @click="deleteModal=false">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="table" ref="queries-table"></div>
 
   </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" class="base-svgs" width="1em" height="1em">
+      <symbol id="icon-bin" fill="currentColor" viewBox="0 0 640 640">
+        <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+        <path d="M262.2 48C248.9 48 236.9 56.3 232.2 68.8L216 112L120 112C106.7 112 96 122.7 96 136C96 149.3 106.7 160 120 160L520 160C533.3 160 544 149.3 544 136C544 122.7 533.3 112 520 112L424 112L407.8 68.8C403.1 56.3 391.2 48 377.8 48L262.2 48zM128 208L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 208L464 208L464 512C464 520.8 456.8 528 448 528L192 528C183.2 528 176 520.8 176 512L176 208L128 208zM288 280C288 266.7 277.3 256 264 256C250.7 256 240 266.7 240 280L240 456C240 469.3 250.7 480 264 480C277.3 480 288 469.3 288 456L288 280zM400 280C400 266.7 389.3 256 376 256C362.7 256 352 266.7 352 280L352 456C352 469.3 362.7 480 376 480C389.3 480 400 469.3 400 456L400 280z"/>
+      </symbol>
+    </svg>
 
 </template>

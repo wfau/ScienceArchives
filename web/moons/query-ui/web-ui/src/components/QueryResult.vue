@@ -68,7 +68,12 @@ const copyQueryText = () => {
 var timer: number;
 
 onMounted(async () => {
-    queryStatus.value = await getQueryResult(resultId)
+    try {
+        queryStatus.value = await getQueryResult(resultId)
+    } catch (error) {
+        // try again later
+    }
+
     timer = setInterval(async () => {
         const st = await getQueryResult(resultId)
         queryStatus.value = st
@@ -78,7 +83,9 @@ onMounted(async () => {
     }, 1000);
 })
 onUnmounted(() => {
-    clearInterval(timer)
+    if (timer) {
+        clearInterval(timer)
+    }
 })
 watchEffect(async () => {
     if (queryComplete.value) {
