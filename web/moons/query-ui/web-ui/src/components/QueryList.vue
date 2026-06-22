@@ -82,7 +82,7 @@ onMounted(() => {
           formatter:"datetime", 
           formatterParams:{
             inputFormat:"iso",
-            outputFormat:"dd/MM/yyyy HH:ss",
+            outputFormat:"dd/MM/yyyy HH:mm",
             invalidPlaceholder:"(invalid date)",
             timezone:"Europe/London",
           }

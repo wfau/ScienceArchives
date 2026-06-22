@@ -103,7 +103,7 @@ def execute(exec_pk):
     finally:
         # print('job completed')
         # print(f'has error? {job.results_error}')
-        # job.completed = timezone.now()
+        job.completed = timezone.now()
         job.status = ExecuteSQL.StatusType.COMPLETED
         job.save()
 
