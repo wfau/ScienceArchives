@@ -127,8 +127,14 @@ onMounted(() => {
             const queryId = cell.getRow().getData().id;
             const resulturl = router.resolve({name: 'query-result', params: {id: queryId}})
             return `
-                <a href="${resulturl.href}" class="view-btn">View</a>
-                <button class="btn delete-btn"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-bin"/></svg></button>
+                <div class="actions-wrapper d-flex">
+                  <a href="${resulturl.href}" class="view-btn w-50 d-flex align-items-center justify-content-center py-1">
+                    View
+                  </a>
+                  <button class="delete-btn btn w-50 btn-outline-secondary text-danger">
+                    <svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-bin"/></svg>
+                  </button>
+                </div>
               `;
           },
           width: 100,
