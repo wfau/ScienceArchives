@@ -20,7 +20,7 @@ const schema = route.query.schema
 
 const loading = ref(true)
 const metadataUrl = `${api_url}/metadata?cname=${encodeURIComponent(cname)}&schema=${schema}`
-const metadata = ref<{metadata?:any,files?:string[],thumbnail?:string,cname?:string}>({})
+const metadata = ref<{metadata?:any,files?:string[],thumbnails?:string[],cname?:string}>({})
 
 const graphRefs = ref<any[]>([])
 const graphs = ref<any[]>([])
@@ -35,13 +35,21 @@ const fileDownloadLink = computed(() => {
     return ((filename:string) => `${api_url}/results/${resultId}/file?filename=${filename}`)
 })
 
-const thumbnailTag = computed(() => {
-    const pathEl = metadata.value.thumbnail?.split('/')
-    if (pathEl) {
-        const filename = pathEl[pathEl.length-1]
-        return filename?.substring(cname.length+1).replace('_', '-').replace('.jpeg','')
+const getThumbnailTag = (thumbnailPath: string): string => {
+    if (!thumbnailPath) return ''
+    const pathEl = thumbnailPath.split('/')
+    if (pathEl.length > 0) {
+        const filename = pathEl[pathEl.length - 1]
+
+        // Safe check to avoid runtime errors if cname is undefined or empty
+        const prefixLength = cname ? cname.length + 1 : 0
+
+        return filename?.substring(prefixLength)
+            .replace('_', '-')
+            .replace('.jpeg', '') || ''
     }
-})
+    return ''
+}
 
 async function loadData() {
     metadata.value = await getSpectrumMetaData(metadataUrl)
@@ -125,9 +133,29 @@ onMounted(() => {
                 </div>
             </div>
             </div>
-            <div class="col d-flex flex-column justify-content-center align-items-center" v-if="metadata.thumbnail">
-                <img class="img-fluid w-50 thumbnail" :src="fileDownloadLink(metadata.thumbnail)" :alt="metadata.thumbnail">
-                <div>{{ thumbnailTag }}</div>
+            <div class="col-lg-4 d-flex flex-column justify-content-center align-items-center" v-if="metadata.thumbnails && metadata.thumbnails.length">
+                <div class="row g-3 justify-content-center align-items-center w-100">
+                    <div
+                        v-for="(thumb, index) in metadata.thumbnails.slice(0, 4)"
+                        :key="index"
+                        :class="{
+                            'col-10': metadata.thumbnails.length === 1,
+                            'col-6 col-lg-10': metadata.thumbnails.length === 2,
+                            'col-lg-6 col-4': metadata.thumbnails.length === 3,
+                            'col-6 col-md-3 col-lg-6': metadata.thumbnails.length >= 4,
+                        }"
+                        class="d-flex flex-column justify-content-center align-items-center"
+                    >
+                        <img
+                            class="img-fluid rounded border thumbnail mb-1"
+                            :src="fileDownloadLink(thumb)"
+                            :alt="thumb"
+                        >
+                        <div class="small text-muted text-center text-break">
+                            {{ getThumbnailTag(thumb) }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -201,5 +229,7 @@ onMounted(() => {
 
 .thumbnail {
     object-fit: contain;
+    max-height: 200px;
+    width: auto;
 }
 </style>
