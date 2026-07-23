@@ -47,13 +47,13 @@ INSTALLED_APPS = [
     'core',
     'queries',
     'api',
-    "corsheaders",
+    # "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+    # "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -241,3 +241,7 @@ MOONS_DB = {
         'gesdr6': 'api.targetpage_ges',
     },
 }
+
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+OPENAI_API_URL = os.environ.get('OPENAI_API_URL')
+OPENAI_MODEL_NAME = os.environ.get('OPENAI_MODEL_NAME')

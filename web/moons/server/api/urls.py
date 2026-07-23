@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from . import views
+from . import views, sqlgen_views
 
 app_name = "api"
 
@@ -16,4 +16,8 @@ urlpatterns = [
     path('templates', views.QueryTemplateListView.as_view(), name='template-list'),
     path('templates/<int:pk>', views.QueryTemplateRetrieveView.as_view(), name='template-detail'),
     path('metadata', views.MetadataRetrieveView.as_view(), name='metadata-detail'),
+
+    path('v1/queries/generate/', sqlgen_views.SubmitSQLJobView.as_view(), name='submit-sql-job'),
+    path('v1/queries/generate/poll/<uuid:task_id>/', sqlgen_views.PollSQLJobStatusView.as_view(), name='poll-sql-job-status'),
+
 ]
