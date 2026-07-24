@@ -1,5 +1,5 @@
 import json
-import logging
+import importlib
 import time
 from celery import shared_task
 from django.utils import timezone
@@ -9,6 +9,11 @@ from openai import OpenAI
 from .models import SQLGenerationTask
 from .helpers import schema_view_schemas
 from queries.models import QueryPermissions
+
+from collections import defaultdict, deque
+
+import logging
+logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, max_retries=3)
 def generate_sql_celery_task(self, task_id: str):
@@ -99,8 +104,21 @@ def generate_sql_celery_task(self, task_id: str):
             "3. If two tables cannot be directly joined, look for an intermediary table in the schema "
             "whose foreign keys connect them, and include it in the query.\n"
             "4. Follow the full foreign key path even if it requires multiple intermediary tables.\n"
-            "5. If no foreign key path exists between two tables, do not attempt to join them.\n"
+            "5. If no foreign key path exists between two tables, do not attempt to join them.\n\n"
+            "COLUMN NAMES:\n"
+            "- Use ONLY column names exactly as they appear in the 'columns' field of the schema.\n"
+            "- Do NOT invent, abbreviate, or modify column names.\n"
+            "- Do NOT assume a column exists in a table unless it is explicitly listed in that table's 'columns'.\n"
         )
+        # add data release specific instructions
+        try:
+            targetpage_module = settings.MOONS_DB['TARGET_PAGE'].get(schema_key)
+            if targetpage_module:
+                targetpage = importlib.import_module(targetpage_module)
+                system_prompt += targetpage.custom_prompt()
+        except:
+            logger.error(f'Failed to load {targetpage_module} or load data release instructions', exc_info=True)
+
         if selected_schema_context:
             system_prompt += (
                 "\n\nDATABASE SCHEMAS:\n"

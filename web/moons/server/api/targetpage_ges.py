@@ -44,7 +44,6 @@ def get_rounded(value, ndigits=4):
     except:
         return value
 
-
 def get_targetpage(schema, cname, user):
     query = metadata_with_fallback.format(cname=cname)
     metadata_table = execute_sync(user, query, schema)
@@ -106,11 +105,21 @@ def get_targetpage(schema, cname, user):
             }
         if astro_md:
             result['metadata']['Astrophysical Parameters'] = astro_md
-        print(result)
     else:
         result = {
             'cname': cname,
-            'thumbnail': str(thumbnail),
+            'thumbnails': thumbnails,
         }
 
     return result
+
+def custom_prompt():
+    return (
+        "SPECIAL COLUMNS:\n"
+        "The following columns have special meaning in the frontend and MUST follow these rules:\n"
+        "- 'cName': NEVER rename or alias this column. Include it in SELECT if the user requests "
+        "a target page, target link, or wants to identify/navigate to a target.\n"
+        "- 'fileName': NEVER rename or alias this column. Include it in SELECT if the user requests "
+        "a download link, spectrum file, file access, or any reference to retrieving a file.\n"
+        "If either column is included, it must appear exactly as 'cName' or 'fileName' with no alias.\n"
+    )
