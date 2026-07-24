@@ -179,7 +179,9 @@ var response = fetch('/api/csrf')
 <div v-if="accessDenied" class="m-4 alert alert-danger">
     Access Denied
 </div>
-<div class="split left p-4" v-if="!accessDenied" >
+<div class="query-workspace">
+
+  <div class="split left p-4" v-if="!accessDenied">
     <h5>Database Schema</h5>
     <div>
         <ul class="tree">
@@ -195,10 +197,8 @@ var response = fetch('/api/csrf')
                                 <details>
                                     <summary><span draggable="true" @dragstart="handleDragStart" :title="table[1].markdown && table[1].markdown[0].h">
                                         {{ table[0] }}
-                                        <RouterLink :to="{ name: 'database-schema', query: {schema: schemaName, table: table[0]}}">
-                                            <svg width="1em" height="1em" class="theme-icon-active">
-                                                <use href="#icon-question" />
-                                            </svg>
+                                        <RouterLink :to="{ name: 'database-schema', query: {schema: schemaName, table: table[0]}}" class="info-badge" title="View schema details">
+                                            ?
                                         </RouterLink>
                                     </span>
                                     </summary>
@@ -208,10 +208,8 @@ var response = fetch('/api/csrf')
                                                 :class="(table[1].primary_keys || []).includes(col.name) ? 'text-decoration-underline': ''">
                                                 {{col.name}}
                                             </span>
-                                            <svg width="1.5em" height="1.5em" v-if="(table[1].primary_keys || []).includes(col.name)">
-                                                <use href="#icon-key" />
-                                            </svg>
-                                            <sup class="fst-italic"
+                                            <span class="key-icon" v-if="(table[1].primary_keys || []).includes(col.name)" title="Primary Key"></span>
+                                            <sup class="fst-italic" title="Foreign Key"
                                                 v-if="(foreignKeys(table[1]) || []).includes(col.name)">
                                                 FK
                                             </sup>
@@ -229,9 +227,9 @@ var response = fetch('/api/csrf')
             </li>
         </ul>
     </div>
-</div>
+  </div>
 
-<div class="split right p-4"  v-if="!accessDenied">
+  <div class="split right p-4"  v-if="!accessDenied">
 
     <div class="">
 
@@ -265,51 +263,54 @@ var response = fetch('/api/csrf')
 
     </div>
 
+  </div>
 </div>
-
-<svg xmlns="http://www.w3.org/2000/svg" class="base-svgs" width="1em" height="1em">
-    <symbol id="icon-question" fill="currentColor" viewBox="0 0 512 512">
-    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-    <path d="M464 256a208 208 0 1 0 -416 0 208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0 256 256 0 1 1 -512 0zm256-80c-17.7 0-32 14.3-32 32 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-44.2 35.8-80 80-80s80 35.8 80 80c0 47.2-36 67.2-56 74.5l0 3.8c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-8.1c0-20.5 14.8-35.2 30.1-40.2 6.4-2.1 13.2-5.5 18.2-10.3 4.3-4.2 7.7-10 7.7-19.6 0-17.7-14.3-32-32-32zM224 368a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
-    </symbol>
-    <symbol id="icon-key" fill="currentColor" viewBox="0 0 640 640">
-        <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-    <path d="M400 416C497.2 416 576 337.2 576 240C576 142.8 497.2 64 400 64C302.8 64 224 142.8 224 240C224 258.7 226.9 276.8 232.3 293.7L71 455C66.5 459.5 64 465.6 64 472L64 552C64 565.3 74.7 576 88 576L168 576C181.3 576 192 565.3 192 552L192 512L232 512C245.3 512 256 501.3 256 488L256 448L296 448C302.4 448 308.5 445.5 313 441L346.3 407.7C363.2 413.1 381.3 416 400 416zM440 160C462.1 160 480 177.9 480 200C480 222.1 462.1 240 440 240C417.9 240 400 222.1 400 200C400 177.9 417.9 160 440 160z"/>
-    </symbol>
-</svg>
-
 
 </template>
 
 <style scoped>
-/* Split the screen in half */
-.split {
-  height: 90%;
-  position: fixed;
-  z-index: 1;
-  overflow: scroll;
-}
-
-/* Control the left side */
-.left {
-  left: 0;
-  width: 30%;
-}
-
-/* Control the right side */
-.right {
-  right: 0;
-  width: 70%;
-}
-
-#editor {
-    height: 40vh;
+/* =========================================================================
+   PAGE WORKSPACE SPLIT LAYOUT
+   ========================================================================= */
+.query-workspace {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust '60px' to match any navbar/header height */
     width: 100%;
+    overflow: hidden;
+    background-color: var(--bs-body-bg);
 }
-/* Stretch editor to fit inside its containing div */
-.cm-editor {
+
+.split {
+    height: 100%;
+    overflow-y: auto; /* Independent sidebar/editor scrolling */
+}
+
+.left {
+    width: 30%;
+    border-right: 1px solid var(--bs-border-color);
+}
+
+.right {
+    width: 70%;
+}
+
+/* =========================================================================
+   SQL CODEMIRROR WORKSPACE CONSTRAINT FIXES
+   ========================================================================= */
+#editor {
+    height: 50vh;
+    width: 100%;
+    padding: 0; /* Clears Bootstrap .form-control padding overlay issues */
+    overflow: hidden;
+}
+
+/* Targets CodeMirror injected nodes bypassing Vue compile encapsulation */
+:deep(.cm-editor) {
     height: 100%;
     width: 100%;
 }
 
+:deep(.cm-scroller) {
+    overflow: auto; /* Forces internal editor scrolling over infinite block expansion */
+}
 </style>
