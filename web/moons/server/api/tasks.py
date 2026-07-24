@@ -28,7 +28,7 @@ def generate_sql_celery_task(self, task_id: str):
         task.save(update_fields=['status'])
 
         # 1. Fetch entire system schema map
-        raw_schemas = schema_view_schemas(QueryPermissions.AccessType.PUBLIC) or {}
+        raw_schemas = schema_view_schemas(QueryPermissions.AccessType.PROPRIETARY) or {}
         selected_schema_context = {}
         
         schema_key = task.data_release # Get database release context
@@ -38,11 +38,26 @@ def generate_sql_celery_task(self, task_id: str):
             
             # Helper to simplify details
             def simplify(table_def):
+                # Remap references into a clearly named FK structure for the LLM
+                foreign_keys = [
+                    {
+                        "from_columns": ref.get("sourceCol", []),
+                        "to_table": ref.get("target"),
+                        "to_columns": ref.get("targetCol", [])
+                    }
+                    for ref in table_def.get("references", [])
+                ]
+
                 return {
-                    "columns": {k: {"type": v.get("type"), "description": v.get("description")} 
-                               for k, v in table_def.get('columns', {}).items()},
-                    "primary_keys": table_def.get("primary_keys", []),
-                    "foreign_keys": table_def.get("references", [])
+                    "columns": {
+                        k: {
+                            "type": v.get("type"),
+                            "description": v.get("description")
+                        }
+                        for k, v in table_def.get("columns", {}).items()
+                    },
+                    "primary_keys": table_def.get("primary_keys", []),  # e.g. ["specID"]
+                    "foreign_keys": foreign_keys  # clearly structured for the LLM
                 }
 
             # 2. CORE CONTEXT FALLBACK LOGIC
@@ -76,10 +91,26 @@ def generate_sql_celery_task(self, task_id: str):
         # 3. Assemble Prompt
         system_prompt = (
             "You are an expert SQL generation assistant. Return ONLY valid executable SQL "
-            "inside standard markdown blocks:\n\n```sql\nSELECT ...\n```."
+            "inside standard markdown blocks:\n\n```sql\nSELECT ...\n```.\n\n"
+            "STRICT RULES:\n"
+            "1. Only use tables, views and columns that exist in the DATABASE SCHEMAS provided below.\n"
+            "2. Only use JOIN conditions explicitly defined in 'foreign_keys'/'join_on'. "
+            "Do NOT infer or guess relationships from column name similarities.\n"
+            "3. If two tables cannot be directly joined, look for an intermediary table in the schema "
+            "whose foreign keys connect them, and include it in the query.\n"
+            "4. Follow the full foreign key path even if it requires multiple intermediary tables.\n"
+            "5. If no foreign key path exists between two tables, do not attempt to join them.\n"
         )
         if selected_schema_context:
-            system_prompt += f"\n\nDATABASE SCHEMAS:\n{json.dumps(selected_schema_context)}"
+            system_prompt += (
+                "\n\nDATABASE SCHEMAS:\n"
+                "Each table/view entry contains:\n"
+                "- 'columns': available columns and their types\n"
+                "- 'primary_keys': columns that uniquely identify a row\n"
+                "- 'foreign_keys'/'join_on': ONLY valid JOIN conditions. Format is "
+                "from_columns in this table/view match to_columns in to_table.\n\n"
+                f"{json.dumps(selected_schema_context, indent=2)}"
+            )
 
         # OpenAI pipeline setups
         api_key = getattr(settings, "OPENAI_API_KEY", None)

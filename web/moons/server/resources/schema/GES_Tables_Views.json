@@ -6917,6 +6917,15 @@
                         "targetCol": [
                             "targetID"
                         ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
                     }
                 ],
                 "primary_keys": [
@@ -9100,7 +9109,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "LineMol": {
                 "schema": "gesdr5",
@@ -9496,7 +9508,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "LineAtomHfs": {
                 "schema": "gesdr5",
@@ -9895,7 +9910,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "LineAtomNoHfs": {
                 "schema": "gesdr5",
@@ -10294,7 +10312,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "RecommendedAstroAnalysis": {
                 "schema": "gesdr5",
@@ -14159,7 +14180,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "WgRecommendedAstroAnalysis": {
                 "schema": "gesdr5",
@@ -19130,7 +19178,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "WpNaAstroAnalysis": {
                 "schema": "gesdr5",
@@ -24104,7 +24179,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "NpNaAstroAnalysis": {
                 "schema": "gesdr5",
@@ -29075,7 +29177,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "SpectrumAndFrame": {
                 "schema": "gesdr5",
@@ -29501,7 +29630,48 @@
                         "description": "Name of the frame (often the name of the guide star or a bright nearby object)",
                         "casu_keyword": "OBJECT"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specID"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specFrameID"
+                        ],
+                        "target": "SpecFrame",
+                        "targetCol": [
+                            "specFrameID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "SpectrumNightly",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ]
             },
             "RecommendedOutlierAnalysis": {
                 "schema": "gesdr5",
@@ -29680,7 +29850,33 @@
                         "description": "Technical Flag(s): WG14 Dict. 9000\u201315000",
                         "fits_ttype": "NONAME1.TECH"
                     }
-                }
+                },
+                "primary_keys": [
+                    "WG14_specGroupId",
+                    "WG15_specGroupId",
+                    "specId",
+                    "fileName"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "SpectrumAndFrame",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ]
             },
             "SpectrumOutlierAnalysis": {
                 "schema": "gesdr5",
@@ -29828,7 +30024,40 @@
                         "description": "Deprecated flag: coded as current=0 or deprecated !=0",
                         "unified_content_descriptor": "CODE_MISC"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specId",
+                    "fileName"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "targetId"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "SpectrumAndFrame",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -36750,6 +36979,15 @@
                         "targetCol": [
                             "targetID"
                         ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
                     }
                 ],
                 "primary_keys": [
@@ -38933,7 +39171,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "LineMol": {
                 "schema": "gesdr6",
@@ -39329,7 +39570,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "LineAtomHfs": {
                 "schema": "gesdr6",
@@ -39728,7 +39972,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "LineAtomNoHfs": {
                 "schema": "gesdr6",
@@ -40127,7 +40374,10 @@
                         "default": "0",
                         "description": "Deprecation code: a value other than 0 means the data are deprecated and should not be used"
                     }
-                }
+                },
+                "primary_keys": [
+                    "lineID"
+                ]
             },
             "RecommendedAstroAnalysis": {
                 "schema": "gesdr6",
@@ -43992,7 +44242,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "WgRecommendedAstroAnalysis": {
                 "schema": "gesdr6",
@@ -48963,7 +49240,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "WpNaAstroAnalysis": {
                 "schema": "gesdr6",
@@ -53937,7 +54241,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "NpNaAstroAnalysis": {
                 "schema": "gesdr6",
@@ -58908,7 +59239,34 @@
                         "default": "-99999999",
                         "description": "Unique identifier of ingestion event"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specGroupID",
+                    "nodeID",
+                    "wg",
+                    "isWgParams",
+                    "uniqueness"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specGroupId"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specGroupId"
+                        ]
+                    }
+                ]
             },
             "SpectrumAndFrame": {
                 "schema": "gesdr6",
@@ -59334,7 +59692,48 @@
                         "description": "Name of the frame (often the name of the guide star or a bright nearby object)",
                         "casu_keyword": "OBJECT"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specID"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "targetID"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specFrameID"
+                        ],
+                        "target": "SpecFrame",
+                        "targetCol": [
+                            "specFrameID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "SpectrumNightly",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specID"
+                        ],
+                        "target": "SpectrumGroup",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ]
             },
             "RecommendedOutlierAnalysis": {
                 "schema": "gesdr6",
@@ -59513,7 +59912,33 @@
                         "description": "Technical Flag(s): WG14 Dict. 9000\u201315000",
                         "fits_ttype": "NONAME1.TECH"
                     }
-                }
+                },
+                "primary_keys": [
+                    "WG14_specGroupId",
+                    "WG15_specGroupId",
+                    "specId",
+                    "fileName"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "SpectrumAndFrame",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ]
             },
             "SpectrumOutlierAnalysis": {
                 "schema": "gesdr6",
@@ -59661,7 +60086,40 @@
                         "description": "Deprecated flag: coded as current=0 or deprecated !=0",
                         "unified_content_descriptor": "CODE_MISC"
                     }
-                }
+                },
+                "primary_keys": [
+                    "specId",
+                    "fileName"
+                ],
+                "references": [
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "Spectrum",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "targetId"
+                        ],
+                        "target": "Target",
+                        "targetCol": [
+                            "targetID"
+                        ]
+                    },
+                    {
+                        "sourceCol": [
+                            "specId"
+                        ],
+                        "target": "SpectrumAndFrame",
+                        "targetCol": [
+                            "specID"
+                        ]
+                    }
+                ]
             }
         }
     }
