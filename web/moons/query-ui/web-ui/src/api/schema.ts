@@ -4,8 +4,9 @@ export type Schemas = {
     [key: string]: Schema,
 }
 export interface Schema {
-    tables: TablesMap,
-    views: TablesMap,
+    tables: TablesMap;
+    views: TablesMap;
+    defaults?: string[];
 }
 export type TablesMap = Record<string, TableDefinition>;
 type MarkdownEntry = { h?: string; t?: string };

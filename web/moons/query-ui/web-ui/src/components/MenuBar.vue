@@ -46,7 +46,7 @@ setTheme(getPreferredTheme())
                   <li><RouterLink class="dropdown-item" :to="{ name: 'query-form'}">New Query</RouterLink></li>
                   <li><RouterLink class="dropdown-item" :to="{ name: 'query-templates'}">Query Templates</RouterLink></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><RouterLink class="dropdown-item" :to="{ name: 'query-chat'}">Experimental: Generate Query</RouterLink></li>
+                  <li><RouterLink class="dropdown-item" :to="{ name: 'query-new-chat'}">Experimental: Generate Query</RouterLink></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">

@@ -6,6 +6,7 @@ import SchemaView from '@/views/SchemaView.vue'
 import QueryTemplateView from '@/views/QueryTemplateView.vue'
 import TargetView from '@/views/TargetView.vue'
 import GenerateSQLView from '@/views/GenerateSQLView.vue'
+import CombinedSQLView from '@/views/CombinedSQLView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,16 @@ const router = createRouter({
       path: '/result/:id(\\d+)',
       name: 'query-result',
       component: ResultView,
+    },
+    {
+      path: '/query/edit-chat',
+      name: 'query-new-chat',
+      component: CombinedSQLView,
+    },
+    {
+      path: '/query/edit-chat/:id(\\d+)',
+      name: 'query-edit-chat',
+      component: CombinedSQLView,
     },
     {
       path: '/resultfile/:id(\\d+)',

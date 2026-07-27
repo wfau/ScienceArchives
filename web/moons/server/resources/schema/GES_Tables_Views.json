@@ -1,5 +1,11 @@
 {
     "gesdr5": {
+        "defaults": [
+            "Target",
+            "RecommendedAstroAnalysis",
+            "Spectrum",
+            "SpectrumGroup"
+        ],
         "tables": {
             "SpecFrame": {
                 "schema": "gesdr5",
@@ -30062,6 +30068,12 @@
         }
     },
     "gesdr6": {
+        "defaults": [
+            "Target",
+            "RecommendedAstroAnalysis",
+            "Spectrum",
+            "SpectrumGroup"
+        ],
         "tables": {
             "SpecFrame": {
                 "schema": "gesdr6",
