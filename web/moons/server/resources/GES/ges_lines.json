@@ -1,0 +1,212 @@
+[
+  {
+    "label": "Hβ (Abs)",
+    "element": "H I",
+    "wavelength_air_angstrom": 4861.33,
+    "type": "absorption",
+    "description": "Balmer beta hydrogen absorption line"
+  },
+  {
+    "label": "Hβ (Em)",
+    "element": "H I",
+    "wavelength_air_angstrom": 4861.33,
+    "type": "emission",
+    "description": "Balmer beta hydrogen emission (activity/nebular)"
+  },
+  {
+    "label": "[O III] 4959",
+    "element": "[O III]",
+    "wavelength_air_angstrom": 4958.91,
+    "type": "emission",
+    "description": "Forbidden oxygen nebular emission line"
+  },
+  {
+    "label": "[O III] 5007",
+    "element": "[O III]",
+    "wavelength_air_angstrom": 5006.84,
+    "type": "emission",
+    "description": "Forbidden oxygen nebular emission line"
+  },
+  {
+    "label": "Mg I 5167",
+    "element": "Mg I",
+    "wavelength_air_angstrom": 5167.32,
+    "type": "absorption",
+    "description": "Magnesium b triplet component 1"
+  },
+  {
+    "label": "Mg I 5173",
+    "element": "Mg I",
+    "wavelength_air_angstrom": 5172.68,
+    "type": "absorption",
+    "description": "Magnesium b triplet component 2"
+  },
+  {
+    "label": "Mg I 5184",
+    "element": "Mg I",
+    "wavelength_air_angstrom": 5183.60,
+    "type": "absorption",
+    "description": "Magnesium b triplet component 3"
+  },
+  {
+    "label": "Fe I 5270",
+    "element": "Fe I",
+    "wavelength_air_angstrom": 5270.36,
+    "type": "absorption",
+    "description": "Strong iron absorption feature"
+  },
+  {
+    "label": "Fe II 5317",
+    "element": "Fe II",
+    "wavelength_air_angstrom": 5316.61,
+    "type": "absorption",
+    "description": "Ionized iron abundance line"
+  },
+  {
+    "label": "Fe I 5405",
+    "element": "Fe I",
+    "wavelength_air_angstrom": 5405.77,
+    "type": "absorption",
+    "description": "Photospheric iron diagnostic line"
+  },
+  {
+    "label": "[O I] 5577",
+    "element": "[O I]",
+    "wavelength_air_angstrom": 5577.34,
+    "type": "emission",
+    "description": "Forbidden oxygen / telluric sky line"
+  },
+  {
+    "label": "[N II] 5755",
+    "element": "[N II]",
+    "wavelength_air_angstrom": 5754.59,
+    "type": "emission",
+    "description": "Forbidden nitrogen emission line"
+  },
+  {
+    "label": "He I 5876 (Abs)",
+    "element": "He I",
+    "wavelength_air_angstrom": 5875.62,
+    "type": "absorption",
+    "description": "Neutral helium absorption (hot stars)"
+  },
+  {
+    "label": "He I 5876 (Em)",
+    "element": "He I",
+    "wavelength_air_angstrom": 5875.62,
+    "type": "emission",
+    "description": "Neutral helium emission (accretion/shocks)"
+  },
+  {
+    "label": "Na I D2",
+    "element": "Na I",
+    "wavelength_air_angstrom": 5889.95,
+    "type": "absorption",
+    "description": "Sodium doublet D2 component"
+  },
+  {
+    "label": "Na I D1",
+    "element": "Na I",
+    "wavelength_air_angstrom": 5895.92,
+    "type": "absorption",
+    "description": "Sodium doublet D1 component"
+  },
+  {
+    "label": "Si I 6108",
+    "element": "Si I",
+    "wavelength_air_angstrom": 6108.12,
+    "type": "absorption",
+    "description": "Alpha-element silicon feature"
+  },
+  {
+    "label": "Ca I 6162 (Abs)",
+    "element": "Ca I",
+    "wavelength_air_angstrom": 6162.17,
+    "type": "absorption",
+    "description": "Calcium alpha line absorption"
+  },
+  {
+    "label": "Ca I 6162 (Em)",
+    "element": "Ca I",
+    "wavelength_air_angstrom": 6162.17,
+    "type": "emission",
+    "description": "Calcium chromospheric core emission"
+  },
+  {
+    "label": "[O I] 6300",
+    "element": "[O I]",
+    "wavelength_air_angstrom": 6300.30,
+    "type": "emission",
+    "description": "Forbidden neutral oxygen line"
+  },
+  {
+    "label": "[O I] 6364",
+    "element": "[O I]",
+    "wavelength_air_angstrom": 6363.78,
+    "type": "emission",
+    "description": "Forbidden neutral oxygen doublet line"
+  },
+  {
+    "label": "Fe I 6400",
+    "element": "Fe I",
+    "wavelength_air_angstrom": 6400.00,
+    "type": "absorption",
+    "description": "Photospheric iron line"
+  },
+  {
+    "label": "Fe I 6431",
+    "element": "Fe I",
+    "wavelength_air_angstrom": 6430.85,
+    "type": "absorption",
+    "description": "Photospheric temperature indicator"
+  },
+  {
+    "label": "Hα (Abs)",
+    "element": "H I",
+    "wavelength_air_angstrom": 6562.81,
+    "type": "absorption",
+    "description": "Balmer alpha hydrogen absorption line"
+  },
+  {
+    "label": "Hα (Em)",
+    "element": "H I",
+    "wavelength_air_angstrom": 6562.81,
+    "type": "emission",
+    "description": "Balmer alpha hydrogen emission (activity/nebular)"
+  },
+  {
+    "label": "[N II] 6583",
+    "element": "[N II]",
+    "wavelength_air_angstrom": 6583.45,
+    "type": "emission",
+    "description": "Forbidden nitrogen nebular feature"
+  },
+  {
+    "label": "Li I 6708 (Abs)",
+    "element": "Li I",
+    "wavelength_air_angstrom": 6707.80,
+    "type": "absorption",
+    "description": "Lithium resonance line (stellar age diagnostic)"
+  },
+  {
+    "label": "Li I 6708 (Em)",
+    "element": "Li I",
+    "wavelength_air_angstrom": 6707.80,
+    "type": "emission",
+    "description": "Lithium emission (extreme accretion/outflow)"
+  },
+  {
+    "label": "[S II] 6716",
+    "element": "[S II]",
+    "wavelength_air_angstrom": 6716.44,
+    "type": "emission",
+    "description": "Forbidden sulfur density-sensitive line"
+  },
+  {
+    "label": "[S II] 6731",
+    "element": "[S II]",
+    "wavelength_air_angstrom": 6730.82,
+    "type": "emission",
+    "description": "Forbidden sulfur density-sensitive line"
+  }
+]

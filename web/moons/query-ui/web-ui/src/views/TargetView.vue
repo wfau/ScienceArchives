@@ -18,14 +18,203 @@ const resultId:Number = parseInt(route.params.id as string)
 const cname = route.query.cname as string
 const schema = route.query.schema
 
+type LineFeature = {
+    label: string,
+    element: string,
+    wavelength_air_angstrom: number,
+    type: 'absorption' | 'emission',
+    description?: string,
+}
+
 const loading = ref(true)
 const metadataUrl = `${api_url}/metadata?cname=${encodeURIComponent(cname)}&schema=${schema}`
-const metadata = ref<{metadata?:any,files?:string[],thumbnails?:string[],cname?:string}>({})
+const metadata = ref<{metadata?:any,files?:string[],thumbnails?:string[],cname?:string,lineList?:LineFeature[]}>({})
 
 const graphRefs = ref<any[]>([])
 const graphs = ref<any[]>([])
 const hasError = ref<boolean[]>([])
 const hasFiles = ref(false)
+
+const showAbsLines = ref(true)
+const showEmLines = ref(true)
+
+// speed of light in km/s
+const cSpeed = 299792.458
+// fixed pixel half-width of the overlay band around each line centre
+const bandHalfWidthPx = 2
+
+// theme-aware line colours (brighter in dark mode)
+const lineColours = {
+    absorption: prefTheme == 'dark' ? '#ff6b6b' : '#e00000',
+    emission: prefTheme == 'dark' ? '#6ea8fe' : '#0050ff',
+}
+const bandFills = {
+    absorption: prefTheme == 'dark' ? 'rgba(255, 107, 107, 0.18)' : 'rgba(255, 0, 0, 0.15)',
+    emission: prefTheme == 'dark' ? 'rgba(110, 168, 254, 0.18)' : 'rgba(0, 0, 255, 0.15)',
+}
+
+function getRadialVelocity(): number {
+    const vRad = metadata.value.metadata?.['Astrophysical Parameters']?.vRad?.value
+    return typeof vRad === 'number' && isFinite(vRad) ? vRad : 0
+}
+
+function shiftedLines(): LineFeature[] {
+    const lines = metadata.value.lineList || []
+    const vRad = getRadialVelocity()
+    const shift = 1 + vRad / cSpeed
+    return lines.map(line => ({
+        ...line,
+        wavelength_air_angstrom: line.wavelength_air_angstrom * shift,
+    }))
+}
+
+function drawBands(dygraph: any, ctx: CanvasRenderingContext2D, area: any) {
+    ctx.save()
+
+    for (const line of shiftedLines()) {
+        const isAbs = line.type === 'absorption'
+        if (isAbs && !showAbsLines.value) continue
+        if (!isAbs && !showEmLines.value) continue
+
+        const cx = dygraph.toDomXCoord(line.wavelength_air_angstrom)
+        if (cx < area.x || cx > area.x + area.w) continue
+
+        ctx.fillStyle = isAbs ? bandFills.absorption : bandFills.emission
+        ctx.fillRect(cx - bandHalfWidthPx, area.y, bandHalfWidthPx * 2, area.h)
+    }
+
+    ctx.restore()
+}
+
+const underlayCallback = (context: CanvasRenderingContext2D, area: any, dygraph: any) => {
+    drawBands(dygraph, context, area)
+}
+
+function nearestDataX(g: any, xval: number, exclude?: number): number | null {
+    const n = g.numRows()
+    if (!n) return null
+    const x0 = g.getValue(0, 0)
+    const xn = g.getValue(n - 1, 0)
+    if (xval <= x0) return x0 === exclude ? x0 + Math.abs(x0 - g.getValue(1, 0)) : x0
+    if (xval >= xn) return xn === exclude ? xn - Math.abs(xn - g.getValue(n - 2, 0)) : xn
+
+    let lo = 0, hi = n - 1
+    while (lo < hi) {
+        const mid = (lo + hi) >> 1
+        if (g.getValue(mid, 0) < xval) lo = mid + 1
+        else hi = mid
+    }
+    const xhi = g.getValue(lo, 0)
+    const xlo = g.getValue(lo - 1, 0)
+    const nearest = (xhi - xval) < (xval - xlo) ? xhi : xlo
+    if (nearest !== exclude) return nearest
+
+    // nearest matches the excluded value; pick the adjacent data point instead
+    const other = (xhi - xval) < (xval - xlo) ? xlo : xhi
+    if (other !== exclude && other !== undefined) return other
+    return null
+}
+
+function applyAnnotations(g: any) {
+    const labels = g.getLabels()
+    const seriesName = labels && labels.length > 1 ? labels[1] : null
+    if (!seriesName) return
+
+    const annotations = []
+    const usedXvals = new Set<number>()
+    for (const line of shiftedLines()) {
+        const isAbs = line.type === 'absorption'
+        if (isAbs && !showAbsLines.value) continue
+        if (!isAbs && !showEmLines.value) continue
+
+        // coincident lines (same snapped wavelength) must anchor to distinct data
+        // points, otherwise dygraphs' (xval,series) annotation map drops one of them
+        let xval = nearestDataX(g, line.wavelength_air_angstrom)
+        if (xval === null) continue
+        if (usedXvals.has(xval)) {
+            xval = nearestDataX(g, line.wavelength_air_angstrom, xval)
+            if (xval === null || usedXvals.has(xval)) continue
+        }
+        usedXvals.add(xval)
+
+        annotations.push({
+            series: seriesName,
+            xval,
+            shortText: line.label,
+            text: line.description || line.label,
+            attachAtBottom: isAbs,
+            tickHeight: 6,
+            tickColor: isAbs ? lineColours.absorption : lineColours.emission,
+            width: Math.ceil(line.label.length * 6.5) + 6,
+            cssClass: isAbs ? 'ges-line-absorption' : 'ges-line-emission',
+        })
+    }
+
+    g.setAnnotations(annotations)
+    requestAnimationFrame(() => repositionAnnotations(g))
+}
+
+function refreshOverlays() {
+    for (const g of graphs.value) {
+        g.updateOptions({ underlayCallback })
+        applyAnnotations(g)
+    }
+}
+
+function layoutLabelRow(divs: HTMLElement[], baseTop: number, direction: 1 | -1) {
+    const gap = 4
+    const lineHeight = 16
+    // rowEnds[r] = rightmost x extent already occupied on row r
+    const rowEnds: number[] = [-Infinity]
+    for (const el of divs) {
+        const left = el.offsetLeft
+        const right = left + el.offsetWidth
+        let row = -1
+        for (let r = 0; r < rowEnds.length; r++) {
+            if (rowEnds[r] + gap <= left) { row = r; break }
+        }
+        if (row === -1) {
+            rowEnds.push(-Infinity)
+            row = rowEnds.length - 1
+        }
+        rowEnds[row] = Math.max(rowEnds[row], right)
+        el.style.top = (baseTop + direction * row * lineHeight) + 'px'
+    }
+}
+
+function repositionAnnotations(g: any) {
+    const area = g.getArea()
+    if (!area) return
+    const container = g.canvas_ ? g.canvas_.parentNode : null
+    if (!container) return
+    const divs = container.querySelectorAll('.dygraph-annotation')
+    const emissions: HTMLElement[] = []
+    const absorptions: HTMLElement[] = []
+    for (const div of divs) {
+        const el = div as HTMLElement
+        if (el.classList.contains('ges-line-emission')) {
+            emissions.push(el)
+        } else {
+            absorptions.push(el)
+        }
+    }
+    // Sort by x so adjacent labels are processed left-to-right
+    const byX = (a: HTMLElement, b: HTMLElement) => a.offsetLeft - b.offsetLeft
+    emissions.sort(byX)
+    absorptions.sort(byX)
+
+    if (emissions.length) {
+        layoutLabelRow(emissions, area.y + 2, 1)
+    }
+    if (absorptions.length) {
+        // sit the first absorption row just above the x-axis (bottom edge of the plot area)
+        layoutLabelRow(absorptions, area.y + area.h - 16 - 2, -1)
+    }
+}
+
+const drawCallback = (dygraph: any, isInitial: boolean) => {
+    repositionAnnotations(dygraph)
+}
 
 function setGraphRef(el:any, index:number) {
   graphRefs.value[index] = el
@@ -78,9 +267,12 @@ async function loadData() {
                         ylabel: colNames[1],
                         customBars: true,
                         axisLineColor: prefTheme == 'dark'? 'white' : 'black',
+                        underlayCallback,
+                        drawCallback,
                     }
                 );
                 graphs.value.push(g)
+                applyAnnotations(g)
                 hasError.value.push(false)
             }
             else {
@@ -163,12 +355,23 @@ onMounted(() => {
             <h1>Spectrum Plot</h1>
             <div v-if="loading">Loading ...</div>
             <div v-else>
-                <div class="small">
-                    This graph is interactive.
-                    Move the mouse over the series to display individual values.
-                    Select regions of the graph to zoom in and
-                    double-click on the graph to reset the zoom (zoom out).
+<div class="small">
+                This graph is interactive.
+                Move the mouse over the series to display individual values.
+                Select regions of the graph to zoom in and
+                double-click on the graph to reset the zoom (zoom out).
+            </div>
+            <div class="my-2 d-flex gap-3 align-items-center">
+                <span class="small text-muted">Overlay lines:</span>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="absLinesToggle" v-model="showAbsLines" @change="refreshOverlays">
+                    <label class="form-check-label small" for="absLinesToggle">Absorption</label>
                 </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="emLinesToggle" v-model="showEmLines" @change="refreshOverlays">
+                    <label class="form-check-label small" for="emLinesToggle">Emission</label>
+                </div>
+            </div>
                 <div
                     v-for="(filename, index) in metadata.files"
                     :key="filename ?? index"
@@ -231,5 +434,37 @@ onMounted(() => {
     object-fit: contain;
     max-height: 200px;
     width: auto;
+}
+
+/* Spectral line annotations (dygraphs appends these divs at runtime) */
+:deep(.dygraph-annotation) {
+    height: auto !important;
+    overflow: visible !important;
+    white-space: nowrap;
+    background-color: transparent !important;
+    border: none !important;
+    font-size: 12px;
+    line-height: normal;
+    text-align: center;
+}
+
+:deep(.ges-line-absorption) {
+    color: #e00000 !important;
+    border-color: #e00000 !important;
+}
+
+:deep(.ges-line-emission) {
+    color: #0050ff !important;
+    border-color: #0050ff !important;
+}
+
+:global([data-bs-theme="dark"] .ges-line-absorption) {
+    color: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+}
+
+:global([data-bs-theme="dark"] .ges-line-emission) {
+    color: #6ea8fe !important;
+    border-color: #6ea8fe !important;
 }
 </style>

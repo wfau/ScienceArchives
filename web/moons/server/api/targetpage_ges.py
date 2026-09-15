@@ -1,4 +1,7 @@
+import json
 from pathlib import Path
+
+from django.conf import settings
 
 from queries.tasks import execute_sync
 from .helpers import validate_path
@@ -44,6 +47,11 @@ def get_rounded(value, ndigits=4):
     except:
         return value
 
+def get_line_list():
+    path = settings.BASE_DIR / 'resources' / 'GES' / 'ges_lines.json'
+    with open(path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 def get_targetpage(schema, cname, user):
     query = metadata_with_fallback.format(cname=cname)
     metadata_table = execute_sync(user, query, schema)
@@ -51,7 +59,7 @@ def get_targetpage(schema, cname, user):
     result = {}
     item = None
     # list files for cname in jpeg folder
-    db_path = Path('/moons-flatfiles/products/ges/jpeg/')
+    db_path = Path(settings.MOONS_DB['BASE_FILE_PATH']) / 'ges' / 'jpeg'
     img_path = validate_path(db_path)
     img_files = list(img_path.glob(f'{cname}*.jpeg'))
     if img_files:
@@ -77,6 +85,7 @@ def get_targetpage(schema, cname, user):
             },
             'files': filenames,
             'thumbnails': thumbnails,
+            'lineList': get_line_list(),
         }
         if item['instrument'] is not None:
             result['metadata'][cname]['Instrument'] = item['instrument']
@@ -109,6 +118,7 @@ def get_targetpage(schema, cname, user):
         result = {
             'cname': cname,
             'thumbnails': thumbnails,
+            'lineList': get_line_list(),
         }
 
     return result
