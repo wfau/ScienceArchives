@@ -19,6 +19,21 @@ from .helpers import schema_view_schemas, validate_path, has_perm_proprietary
 import logging
 logger = logging.getLogger(__name__)
 
+
+def _strip_uid(basename):
+    """Remove a trailing '_UID...' suffix from a basename, keeping the extension.
+
+    Example: 'gir_00090139-2947522_H665.0_UIDXXXYYY.fit' -> 'gir_00090139-2947522_H665.0.fit'
+    A basename without a '_UID' marker is returned unchanged.
+    """
+    idx = basename.find('_UID')
+    if idx == -1:
+        return basename
+    ext_pos = basename.find('.', idx)
+    if ext_pos == -1:
+        return basename[:idx]
+    return basename[:idx] + basename[ext_pos:]
+
 class ExecuteSQLListCreateView(generics.ListCreateAPIView):
     serializer_class = ExecuteSQLSerializer
 
@@ -158,20 +173,58 @@ class ExecuteSQLResultGraphView(APIView):
 
         return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
 
-class ExecuteSQLResultFilenameView(APIView):
+class PublicFileDownloadView(APIView):
+    permission_classes = [permissions.AllowAny]
 
-    def get(self, request, pk, format=None):
+    def get(self, request, format=None):
         try:
-            # check if job id is owned by user
-            job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
             qp = request.query_params.get('filename')
             filename = validate_path(qp)
             if filename is None:
                 raise Exception(f'Invalid filename {qp}')
 
-            return FileResponse(open(filename, 'rb'), filename=filename.name)
+            return FileResponse(open(filename, 'rb'), filename=_strip_uid(filename.name))
         except:
             logger.error('Cannot fetch file for download', exc_info=True)
+
+        return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class ResultWgetView(APIView):
+
+    def get(self, request, pk, format=None):
+        try:
+            job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
+            if not job.results_file:
+                raise Exception('Result has no file data')
+
+            import pyarrow.parquet as pq
+            result_table = pq.read_table(job.results_file)
+            filenames = []
+            for name in result_table.schema.names:
+                if name.lower() == 'filename':
+                    column = result_table.column(name)
+                    seen = set()
+                    for value in column.to_pylist():
+                        if not value or str(value).strip() == '' or str(value).strip().upper() == 'NONE':
+                            continue
+                        f = str(value).strip()
+                        if f not in seen:
+                            seen.add(f)
+                            filenames.append(f)
+                    break
+
+            base_url = request.build_absolute_uri('/api/files/')
+            lines = [f"wget '{base_url}?filename={f}' -O {_strip_uid(f.split('/')[-1])}" for f in filenames]
+            content = '\n'.join(lines) + ('\n' if lines else '')
+
+            response = StreamingHttpResponse(
+                streaming_content=io.StringIO(content),
+                content_type='text/plain',
+            )
+            response['Content-Disposition'] = f'attachment; filename=download-{pk}.txt'
+            return response
+        except:
+            logger.error('Cannot generate wget script', exc_info=True)
 
         return Response({'error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
 

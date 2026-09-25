@@ -29,6 +29,11 @@
 		reverse_proxy web:8000
 	}
 
+	# handle public file downloads
+	handle /api/files* {
+		reverse_proxy web:8000
+	}
+
 	handle {
 
 		forward_auth auth:4180 {

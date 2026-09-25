@@ -213,7 +213,7 @@ function setGraphRef(el:any, index:number) {
 }
 
 const fileDownloadLink = computed(() => {
-    return ((filename:string) => `${api_url}/results/${resultId}/file?filename=${filename}`)
+    return ((filename:string) => `${api_url}/files?filename=${encodeURIComponent(filename)}`)
 })
 
 const getThumbnailTag = (thumbnailPath: string): string => {

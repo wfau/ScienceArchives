@@ -24,6 +24,8 @@ onBeforeMount(async () => {
 
 const colSchema = ref()
 
+const showWgetLink = ref(false)
+
 var headerMenu = function(e:Event, component:any){
     var menu = [];
     var columns = component._column.table.getColumns();
@@ -84,7 +86,7 @@ watchEffect(async () => {
                     const cname = encodeURIComponent(obj.cname)
                     if (f && f != 'NONE') {
                         // get file link
-                        const downloadLoc = `${api_url}/results/${props.result_id}/file?filename=${f}`
+                        const downloadLoc = `${api_url}/files?filename=${encodeURIComponent(f)}`
                         obj.download = `<a href="${downloadLoc}" class="download"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-download"/></svg></a>`
                         const fn = f.split('/').pop()
                         obj.filename = fn
@@ -117,6 +119,7 @@ watchEffect(async () => {
                 }
                 if (name.toLowerCase() == 'filename') {
                     hasFilename = true
+                    showWgetLink.value = true
                     updatedDef['formatter'] = 'html'
                 }
                 columnNames.push(updatedDef)
@@ -136,7 +139,7 @@ watchEffect(async () => {
                 columnNames.push(
                     {
                         field: 'spectrum_plot',
-                        title: 'Spectrum',
+                        title: 'View',
                         formatter: 'html',
                         headerSort: false,
                         headerMenu:headerMenu,
@@ -152,6 +155,12 @@ watchEffect(async () => {
 
 <template>
     <div class="m-4">
+        <div v-if="showWgetLink" class="mb-2">
+            <a :href="`${api_url}/results/${props.result_id}/wget`" class="btn btn-sm btn-outline-secondary">
+                <svg width="1em" height="1em" class="theme-icon-active me-1"><use href="#icon-download"/></svg>
+                Download wget script
+            </a>
+        </div>
         <div id="table" ref="table"></div>
     </div>
 </template>
