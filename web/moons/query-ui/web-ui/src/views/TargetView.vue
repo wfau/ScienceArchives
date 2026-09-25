@@ -109,17 +109,22 @@ function applyAnnotations(g: any) {
 
     const annotations = []
     const usedXvals = new Set<number>()
+    // only annotate lines within the currently visible x range
+    const [xMin, xMax] = g.xAxisRange()
     for (const line of lineList()) {
         const isAbs = line.type === 'absorption'
         if (isAbs && !showAbsLines.value) continue
         if (!isAbs && !showEmLines.value) continue
 
+        const lam = line.wavelength_display_angstrom
+        if (lam < xMin || lam > xMax) continue
+
         // coincident lines (same snapped wavelength) must anchor to distinct data
         // points, otherwise dygraphs' (xval,series) annotation map drops one of them
-        let xval = nearestDataX(g, line.wavelength_display_angstrom)
+        let xval = nearestDataX(g, lam)
         if (xval === null) continue
         if (usedXvals.has(xval)) {
-            xval = nearestDataX(g, line.wavelength_display_angstrom, xval)
+            xval = nearestDataX(g, lam, xval)
             if (xval === null || usedXvals.has(xval)) continue
         }
         usedXvals.add(xval)
