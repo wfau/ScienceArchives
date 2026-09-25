@@ -6,6 +6,9 @@ from django.conf import settings
 from queries.tasks import execute_sync
 from .helpers import validate_path
 
+# speed of light in km/s
+C_SPEED_KM_S = 299792.458
+
 metadata_query = '''
 SELECT Target.cName, ra, dec, gl, gb, bMag, instrument, gratings, gesType, gesField, gesObject, TEff, logg, FeH, vRad, fileName
 FROM SpectrumGroup, RecommendedAstroAnalysis, Target
@@ -52,6 +55,22 @@ def get_line_list():
     with open(path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
+def shift_line_list(line_list, vrad):
+    """Apply the radial velocity Doppler shift to each line's rest wavelength.
+
+    The display wavelength is passed to the frontend so it does not need to
+    compute the shift itself.
+    """
+    shift = 1 + vrad / C_SPEED_KM_S
+    shifted = []
+    for line in line_list:
+        entry = dict(line)
+        entry['wavelength_display_angstrom'] = get_rounded(
+            entry.pop('wavelength_air_angstrom') * shift, ndigits=4
+        )
+        shifted.append(entry)
+    return shifted
+
 def get_targetpage(schema, cname, user):
     query = metadata_with_fallback.format(cname=cname)
     metadata_table = execute_sync(user, query, schema)
@@ -85,7 +104,7 @@ def get_targetpage(schema, cname, user):
             },
             'files': filenames,
             'thumbnails': thumbnails,
-            'lineList': get_line_list(),
+            'lineList': shift_line_list(get_line_list(), item['vrad'] or 0),
         }
         if item['instrument'] is not None:
             result['metadata'][cname]['Instrument'] = item['instrument']
@@ -118,7 +137,7 @@ def get_targetpage(schema, cname, user):
         result = {
             'cname': cname,
             'thumbnails': thumbnails,
-            'lineList': get_line_list(),
+            'lineList': shift_line_list(get_line_list(), 0),
         }
 
     return result

@@ -21,7 +21,7 @@ const schema = route.query.schema
 type LineFeature = {
     label: string,
     element: string,
-    wavelength_air_angstrom: number,
+    wavelength_display_angstrom: number,
     type: 'absorption' | 'emission',
     description?: string,
 }
@@ -38,8 +38,6 @@ const hasFiles = ref(false)
 const showAbsLines = ref(true)
 const showEmLines = ref(true)
 
-// speed of light in km/s
-const cSpeed = 299792.458
 // fixed pixel half-width of the overlay band around each line centre
 const bandHalfWidthPx = 2
 
@@ -53,30 +51,19 @@ const bandFills = {
     emission: prefTheme == 'dark' ? 'rgba(110, 168, 254, 0.18)' : 'rgba(0, 0, 255, 0.15)',
 }
 
-function getRadialVelocity(): number {
-    const vRad = metadata.value.metadata?.['Astrophysical Parameters']?.vRad?.value
-    return typeof vRad === 'number' && isFinite(vRad) ? vRad : 0
-}
-
-function shiftedLines(): LineFeature[] {
-    const lines = metadata.value.lineList || []
-    const vRad = getRadialVelocity()
-    const shift = 1 + vRad / cSpeed
-    return lines.map(line => ({
-        ...line,
-        wavelength_air_angstrom: line.wavelength_air_angstrom * shift,
-    }))
+function lineList(): LineFeature[] {
+    return metadata.value.lineList || []
 }
 
 function drawBands(dygraph: any, ctx: CanvasRenderingContext2D, area: any) {
     ctx.save()
 
-    for (const line of shiftedLines()) {
+    for (const line of lineList()) {
         const isAbs = line.type === 'absorption'
         if (isAbs && !showAbsLines.value) continue
         if (!isAbs && !showEmLines.value) continue
 
-        const cx = dygraph.toDomXCoord(line.wavelength_air_angstrom)
+        const cx = dygraph.toDomXCoord(line.wavelength_display_angstrom)
         if (cx < area.x || cx > area.x + area.w) continue
 
         ctx.fillStyle = isAbs ? bandFills.absorption : bandFills.emission
@@ -122,17 +109,17 @@ function applyAnnotations(g: any) {
 
     const annotations = []
     const usedXvals = new Set<number>()
-    for (const line of shiftedLines()) {
+    for (const line of lineList()) {
         const isAbs = line.type === 'absorption'
         if (isAbs && !showAbsLines.value) continue
         if (!isAbs && !showEmLines.value) continue
 
         // coincident lines (same snapped wavelength) must anchor to distinct data
         // points, otherwise dygraphs' (xval,series) annotation map drops one of them
-        let xval = nearestDataX(g, line.wavelength_air_angstrom)
+        let xval = nearestDataX(g, line.wavelength_display_angstrom)
         if (xval === null) continue
         if (usedXvals.has(xval)) {
-            xval = nearestDataX(g, line.wavelength_air_angstrom, xval)
+            xval = nearestDataX(g, line.wavelength_display_angstrom, xval)
             if (xval === null || usedXvals.has(xval)) continue
         }
         usedXvals.add(xval)
