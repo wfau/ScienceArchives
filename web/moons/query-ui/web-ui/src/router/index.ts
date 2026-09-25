@@ -5,7 +5,6 @@ import QueryListView from '@/views/QueryListView.vue'
 import SchemaView from '@/views/SchemaView.vue'
 import QueryTemplateView from '@/views/QueryTemplateView.vue'
 import TargetView from '@/views/TargetView.vue'
-import GenerateSQLView from '@/views/GenerateSQLView.vue'
 import CombinedSQLView from '@/views/CombinedSQLView.vue'
 
 const router = createRouter({
@@ -26,11 +25,6 @@ const router = createRouter({
       path: '/query/new',
       name: 'query-form',
       component: QueryView,
-    },
-    {
-      path: '/query/chat',
-      name: 'query-chat',
-      component: GenerateSQLView,
     },
     {
       path: '/query/:id(\\d+)',

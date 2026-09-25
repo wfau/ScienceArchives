@@ -3,7 +3,6 @@
         "defaults": [
             "Target",
             "RecommendedAstroAnalysis",
-            "Spectrum",
             "SpectrumGroup"
         ],
         "tables": {
@@ -30071,7 +30070,6 @@
         "defaults": [
             "Target",
             "RecommendedAstroAnalysis",
-            "Spectrum",
             "SpectrumGroup"
         ],
         "tables": {

@@ -8,9 +8,8 @@ from openai import OpenAI
 
 from .models import SQLGenerationTask
 from .helpers import schema_view_schemas
+from .schema_graph import all_objects, build_join_paths
 from queries.models import QueryPermissions
-
-from collections import defaultdict, deque
 
 import logging
 logger = logging.getLogger(__name__)
@@ -71,12 +70,12 @@ def generate_sql_celery_task(self, task_id: str):
                 selected_schema_context[schema_key] = {}
                 
                 # Combine both tables map and views map
-                all_objects = {
+                combined_objects = {
                     **schema_data.get('tables', {}),
                     **schema_data.get('views', {})
                 }
                 
-                for obj_name, defs in all_objects.items():
+                for obj_name, defs in combined_objects.items():
                     selected_schema_context[schema_key][obj_name] = simplify(defs)
                     
             # Else, grab only the user's selected tables
@@ -129,6 +128,27 @@ def generate_sql_celery_task(self, task_id: str):
                 "from_columns in this table/view match to_columns in to_table.\n\n"
                 f"{json.dumps(selected_schema_context, indent=2)}"
             )
+
+        # Inject concrete join-path hints (from the schema graph) so the model
+        # does not have to re-derive joins. This never changes the table set.
+        if schema_key in raw_schemas and len(task.tables or []) >= 2:
+            selected_names = []
+            for composite_key in task.tables:
+                if "." in composite_key:
+                    selected_names.append(composite_key.split(".", 1)[1])
+            if selected_names:
+                join_edges = build_join_paths(
+                    all_objects(raw_schemas[schema_key]), selected_names
+                )
+                if join_edges:
+                    hint_lines = [
+                        f"{e['left_table']}.{e['left']} = {e['right_table']}.{e['right']}"
+                        for e in join_edges
+                    ]
+                    system_prompt += (
+                        "\n\nKNOWN JOIN PATHS (use these exact conditions; do not invent "
+                        "others):\n" + "\n".join(hint_lines)
+                    )
 
         # OpenAI pipeline setups
         api_key = getattr(settings, "OPENAI_API_KEY", None)
