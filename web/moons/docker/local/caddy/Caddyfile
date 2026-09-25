@@ -21,6 +21,12 @@
 		reverse_proxy web:8000
 	}
 
+	# handle public CILogon instructions page
+	handle /login/* {
+		reverse_proxy web:8000
+	}
+
+	# handle public file downloads
 	handle /api/files* {
 		reverse_proxy web:8000
     }
