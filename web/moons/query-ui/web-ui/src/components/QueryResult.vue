@@ -171,9 +171,9 @@ const deleteQuery = (async () => {
                 </button>
             </div>
         </div>
-        <div class="border border-3 rounded p-2 m-2 my-4 d-flex justify-content-between">
+        <div class="border border-3 rounded p-2 m-2 my-4 d-flex justify-content-between align-items-start">
             <pre>{{ queryStatus?.query }}</pre>
-            <button class="btn" @click="copyQueryText()" v-if="queryStatus?.query">
+            <button class="btn mt-1" @click="copyQueryText()" v-if="queryStatus?.query">
                 <svg width="1em" height="1em" class="theme-icon-active" ><use href="#icon-copy"/></svg>
             </button>
         </div>

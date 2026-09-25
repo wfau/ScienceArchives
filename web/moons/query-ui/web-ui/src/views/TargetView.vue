@@ -295,6 +295,14 @@ onMounted(() => {
             </nav>
         </div>
 
+        <div v-if="loading" class="text-center py-5">
+            <div class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <template v-else>
+
         <div class="row">
             <div class="col-lg-8">
             <div v-if="!metadata.metadata" class="card-header p-2 m-2 rounded">
@@ -345,7 +353,11 @@ onMounted(() => {
 
         <div class="m-4" v-if="hasFiles">
             <h1>Spectrum Plot</h1>
-            <div v-if="loading">Loading ...</div>
+            <div v-if="loading" class="text-center py-5">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Loading spectra...</span>
+                </div>
+            </div>
             <div v-else>
 <div class="small">
                 This graph is interactive.
@@ -384,6 +396,8 @@ onMounted(() => {
                 </div>
             </div>
         </div>
+
+        </template>
     </main>
 
     <svg xmlns="http://www.w3.org/2000/svg" class="base-svgs" width="1em" height="1em">
