@@ -265,7 +265,7 @@ LOGGING = {
 }
 
 MOONS_DB = {
-    'BASE_FILE_PATH': '/moons-flatfiles/products/',
+    'BASE_FILE_PATH': '/moons-flatfiles/products/ges/',
     'SPECTRA_CONVERTER': {
         'gesdr5': 'api.spec_csv',
         'gesdr6': 'api.spec_csv',
