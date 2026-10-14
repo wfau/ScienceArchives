@@ -1,0 +1,12 @@
+{
+    "gesdr5": {
+        "driver": "adbc_driver_postgresql.dbapi",
+        "proprietary": "postgresql://<PG_USER>:<PG_PASSWORD>@<PG_HOST>:<PG_PORT>/<PG_DATABASE>",
+        "public": "postgresql://<PG_USER>:<PG_PASSWORD>@<PG_HOST>:<PG_PORT>/<PG_DATABASE>"
+    },
+    "gesdr6": {
+        "driver": "mssql",
+        "proprietary": "Server=<MSSQL_HOST>;Database=gesdr6;Uid=<MSSQL_USER>;Pwd=<MSSQL_PASSWORD>;TrustServerCertificate=yes",
+        "public": "Server=<MSSQL_HOST>;Database=gesdr6;Uid=<MSSQL_USER>;Pwd=<MSSQL_PASSWORD>;TrustServerCertificate=yes"
+    }
+}

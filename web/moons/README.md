@@ -38,6 +38,28 @@ Copy the environment template `env-template` to `.env` and update the entries as
     ADBC (Arrow Database Connectivity) https://arrow.apache.org/adbc/current/index.html provides drivers for SQLite and Postgres.
     (The file `mock-gesiDR5.sqlite3` is a mock database for testing.)
 
+    Microsoft SQL Server is also supported as a query database. Set
+    `QUERY_DB_DRIVER=mssql` and point `QUERY_DB_CONNECTION` (and
+    `QUERY_PUBLIC_DB_CONNECTION` for public users) at an mssql-python
+    connection string, e.g.
+    `Server=mssql;Database=moons;Uid=sa;Pwd=...;TrustServerCertificate=yes`.
+    The `mssql` container in `docker-compose.yaml` is dev-only and has no
+    healthcheck/depends_on; in production MSSQL is an external, already-running
+    host. Results are written to a parquet file for every backend.
+
+    Each Postgres schema is a data release and maps to a separate MSSQL
+    database (one database per release). Configure per-release connections
+    with `QUERY_DB_CONNECTION_STRINGS` (JSON mapping schema ->
+    {proprietary, public}); the `Database=` value in each connection string
+    names the release. Any schema not listed falls back to the defaults above.
+    For example:
+    ```
+    QUERY_DB_CONNECTION_STRINGS={"gesdr5":{"proprietary":"Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes","public":"Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes"}}
+    ```
+    Create the per-release databases with the migration utility:
+    `database/postgres_to_mssql.py --create-databases` (this also copies the
+    tables/views/data into each release database).
+
 1.  Choose a superuser for Django. The user will be created on startup but not changed if it exists already.
     ```
     DJANGO_SUPERUSER_USERNAME=moons

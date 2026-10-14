@@ -24,3 +24,4 @@ tests/screenshots/
 .eggs/
 db.sqlite3
 files/
+server/resources/query_databases.json

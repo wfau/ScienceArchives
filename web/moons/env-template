@@ -17,6 +17,25 @@ QUERY_DB_DRIVER=adbc_driver_sqlite.dbapi
 QUERY_DB_CONNECTION=file:///app/resources/mock-gesiDR5.sqlite3
 QUERY_PUBLIC_DB_CONNECTION=file:///app/resources/mock-gesiDR5.sqlite3
 
+# --- Microsoft SQL Server query database (optional) ---
+# The mssql container is dev-only; in production MSSQL is an external,
+# already-running host. Point the connection strings at it via env.
+# QUERY_DB_DRIVER=mssql
+# QUERY_DB_CONNECTION=Server=mssql;Database=moons;Uid=sa;Pwd=${MSSQL_SA_PASSWORD};TrustServerCertificate=yes
+# QUERY_PUBLIC_DB_CONNECTION=Server=mssql;Database=moons;Uid=sa;Pwd=${MSSQL_SA_PASSWORD};TrustServerCertificate=yes
+#
+# Per-release query backends (optional). Each Postgres schema is a data release;
+# map it to {driver?, proprietary, public} where driver selects the backend for
+# that release ('mssql' or an ADBC module path such as 'adbc_driver_postgresql.dbapi')
+# and proprietary/public are connection strings naming that release's database.
+# Load the mapping from a JSON file (preferred):
+# Copy server/resources/query_databases.json.example -> query_databases.json and
+# fill in the <...> placeholders (this file is gitignored).
+QUERY_DB_CONNECTION_STRINGS_FILE=/app/resources/query_databases.json
+# ...or inline as a single JSON string:
+# QUERY_DB_CONNECTION_STRINGS={"gesdr5":{"driver":"mssql","proprietary":"Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes","public":"Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes"}}
+MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+
 CELERY_BROKER=amqp://rabbitmq:5672/
 
 # optional - all are required if creating a superuser

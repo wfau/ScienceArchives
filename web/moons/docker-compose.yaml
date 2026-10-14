@@ -23,7 +23,7 @@ services:
       - OAUTH2_PROXY_AUTH_LOGGING=true
       - OAUTH2_PROXY_STANDARD_LOGGING=true
       - OAUTH2_PROXY_REQUEST_LOGGING=true
-      - OAUTH2_PROXY_SCOPE = "openid email profile"
+      - OAUTH2_PROXY_SCOPE=openid email profile
     # ports:
     #   - 4180:4180
 
@@ -46,7 +46,7 @@ services:
     command: /start
     volumes:
       - ./server/:/app
-      - /Users/amy/MOONS/development/data/:/files
+      - /Users/amy/MOONS/development/data/products/ges/:/files
     # ports:
     #   - 9000:8000
     env_file:
@@ -71,6 +71,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # Dev-only Microsoft SQL Server used as the query (data) database when
+  # QUERY_DB_DRIVER=mssql. No healthcheck and no depends_on: it is contacted
+  # lazily at query-execution time, so the web/frontend load regardless.
+  mssql:
+    restart: always
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      MSSQL_PID: Developer
+    volumes:
+      - mssql_data:/var/opt/mssql
 
   rabbitmq:
     restart: always
@@ -136,3 +149,4 @@ services:
 
 volumes:
   postgres_data:
+  mssql_data:

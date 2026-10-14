@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import json
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -158,11 +159,44 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
 
 LOCAL_FILE_DIR = BASE_DIR / 'files' / 'moons-web'
+
+
+def _load_connection_strings():
+    """Load per-release query connection strings.
+
+    Prefers a JSON file referenced by QUERY_DB_CONNECTION_STRINGS_FILE, falling
+    back to the inline QUERY_DB_CONNECTION_STRINGS env string. The file maps each
+    data release (schema) to {driver?, proprietary, public}.
+    """
+    path = os.environ.get('QUERY_DB_CONNECTION_STRINGS_FILE')
+    if path:
+        with open(path) as f:
+            return json.load(f)
+    return json.loads(os.environ.get('QUERY_DB_CONNECTION_STRINGS', '{}'))
+
+
 QUERY_DATABASE = {
+    # Backend for the query (data) database. ADBC module paths such as
+    # 'adbc_driver_sqlite.dbapi' or 'adbc_driver_postgresql.dbapi' connect
+    # with a URL string. Use 'mssql' to query Microsoft SQL Server via
+    # mssql-python; the CONNECTION_STRING* values are then mssql-python
+    # connection strings (e.g. 'Server=...;Database=...;Uid=...;Pwd=...').
+    # NOTE: the mssql container is dev-only; in production MSSQL is an
+    # external, already-running host referenced by the connection string.
     'DRIVER': os.environ.get('QUERY_DB_DRIVER', 'adbc_driver_sqlite.dbapi'),
     'CONNECTION_STRING': os.environ.get('QUERY_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
     'CONNECTION_STRING_PUBLIC': os.environ.get('QUERY_PUBLIC_DB_CONNECTION', 'file:///app/resources/mock-gesiDR5.sqlite3'),
     'PERMISSION_PROPRIETARY': 'queries.view_executesql',
+    # Optional per-release query backends. Each Postgres schema is a data
+    # release; map it to {driver?, proprietary, public}. driver selects the
+    # backend for that release (e.g. 'mssql' or an ADBC module path such as
+    # 'adbc_driver_postgresql.dbapi') and defaults to the global DRIVER above.
+    # proprietary/public are connection strings naming that release's database.
+    # Loaded from a JSON file (QUERY_DB_CONNECTION_STRINGS_FILE) or the inline
+    # QUERY_DB_CONNECTION_STRINGS env string. Unmapped schemas fall back to
+    # CONNECTION_STRING*. Example:
+    #   {"gesdr5": {"driver": "mssql", "proprietary": "...", "public": "..."}}
+    'CONNECTION_STRINGS': _load_connection_strings(),
     # 'CONNECTION_STRING': 'postgresql://postgres:12345@localhost:5432/',
     # 'DRIVER': 'adbc_driver_postgresql.dbapi',
 }
@@ -231,7 +265,7 @@ LOGGING = {
 }
 
 MOONS_DB = {
-    'BASE_FILE_PATH': '/moons-flatfiles/products/ges/',
+    'BASE_FILE_PATH': '/moons-flatfiles/products/',
     'SPECTRA_CONVERTER': {
         'gesdr5': 'api.spec_csv',
         'gesdr6': 'api.spec_csv',
