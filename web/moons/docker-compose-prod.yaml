@@ -48,7 +48,7 @@ services:
     command: /start
     volumes:
       - ./server/:/app
-      - /Users/amy/MOONS/development/data/:/files
+      - /Users/amy/MOONS/development/data/products/ges/:/files
     env_file:
       - ./.env
     depends_on:
