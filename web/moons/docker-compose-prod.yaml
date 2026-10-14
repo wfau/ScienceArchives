@@ -23,34 +23,21 @@ services:
       - OAUTH2_PROXY_AUTH_LOGGING=true
       - OAUTH2_PROXY_STANDARD_LOGGING=true
       - OAUTH2_PROXY_REQUEST_LOGGING=true
-      - OAUTH2_PROXY_SCOPE = "openid email profile"
+      - OAUTH2_PROXY_SCOPE=openid email profile
     # ports:
     #   - 4180:4180
 
-  build-frontend:
-    build:
-      context: .
-      dockerfile: ./docker/${DEPLOYMENT}/frontend/Dockerfile
-    command: /build-prod.sh
-    environment:
-      - CI=true
-    volumes:
-      - ./docker/${DEPLOYMENT}/frontend/build-prod.sh:/build-prod.sh
-      - ./query-ui/web-ui:/mnt/web-ui
- 
   proxy:
     restart: always
-    image: caddy
+    build:
+      context: .
+      dockerfile: ./docker/production/frontend/Dockerfile
     volumes:
       - ./server/:/app
       - ./docker/${DEPLOYMENT}/caddy/Caddyfile/:/etc/caddy/Caddyfile
-      - ./query-ui/web-ui/dist/:/frontend/frontend/
     ports:
       - 9000:80
       - 9443:443
-    depends_on:
-      build-frontend:
-        condition: service_completed_successfully
 
   web:
     restart: always

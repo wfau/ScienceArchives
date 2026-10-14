@@ -13,15 +13,101 @@ from celery import shared_task
 import pyarrow as pa
 import pyarrow.parquet as pq
 from astropy.table import Table
+
 # import adbc_driver_postgresql.dbapi
 # import adbc_driver_sqlite.dbapi
 
 # db_url = 'file:///Users/amy/MOONS/development/mockdb/mock-gesiDR5.sqlite3'
 # db_url = 'postgresql://postgres:12345@localhost:5432/'
 
-db_api = import_module(settings.QUERY_DATABASE['DRIVER'])
-db_url = settings.QUERY_DATABASE['CONNECTION_STRING']
-db_public_url = settings.QUERY_DATABASE['CONNECTION_STRING_PUBLIC']
+# The query database may be an ADBC-backed store (SQLite, PostgreSQL) or
+# Microsoft SQL Server. The backend is chosen per data release via
+# settings.QUERY_DATABASE, defaulting to the global DRIVER:
+#   * ADBC drivers are module paths, e.g. 'adbc_driver_sqlite.dbapi' or
+#     'adbc_driver_postgresql.dbapi', and connect with a URL string.
+#   * MSSQL uses the 'mssql' driver and connects with an mssql-python
+#     connection string (e.g. 'Server=...;Database=...;Uid=...;Pwd=...').
+MSSQL_DRIVER = 'mssql'
+
+
+def _resolve_driver(schema=None):
+    """Return the driver id for a schema.
+
+    A schema may override the global driver via its entry in
+    QUERY_DATABASE['CONNECTION_STRINGS'][schema]['driver']. Falls back to the
+    global QUERY_DATABASE['DRIVER'].
+    """
+    if schema:
+        entry = (settings.QUERY_DATABASE.get('CONNECTION_STRINGS', {}) or {}).get(schema)
+        driver = (entry or {}).get('driver')
+        if driver:
+            return driver
+    return settings.QUERY_DATABASE['DRIVER']
+
+
+def _is_mssql(schema=None):
+    return _resolve_driver(schema) == MSSQL_DRIVER
+
+
+def _get_db_api(driver):
+    if driver == MSSQL_DRIVER:
+        from mssql_python import connect
+        return connect
+    return import_module(driver).connect
+
+
+def _db_urls(schema=None):
+    """Return (driver, proprietary, public) connection strings for a schema.
+
+    Each data release (Postgres schema) maps to its own backend via
+    QUERY_DATABASE['CONNECTION_STRINGS'][schema] = {driver?, proprietary, public}.
+    Unmapped schemas fall back to the global driver and CONNECTION_STRING* values.
+    """
+    driver = _resolve_driver(schema)
+    default = (
+        settings.QUERY_DATABASE['CONNECTION_STRING'],
+        settings.QUERY_DATABASE['CONNECTION_STRING_PUBLIC'],
+    )
+    if not schema:
+        return driver, default[0], default[1]
+    entry = (settings.QUERY_DATABASE.get('CONNECTION_STRINGS', {}) or {}).get(schema)
+    if not entry:
+        return driver, default[0], default[1]
+    return (
+        driver,
+        entry.get('proprietary') or default[0],
+        entry.get('public') or default[1],
+    )
+
+
+class _MssqlCursor:
+    """Wraps an mssql-python cursor so it exposes the same record-batch
+    interface as an ADBC cursor (``fetch_record_batch()``)."""
+
+    def __init__(self, cursor):
+        self._cursor = cursor
+
+    def execute(self, query):
+        return self._cursor.execute(query)
+
+    def fetch_record_batch(self):
+        return self._cursor.arrow_reader()
+
+    def fetch_arrow_table(self):
+        return self._cursor.arrow()
+
+    def close(self):
+        return self._cursor.close()
+
+
+def get_connection(url, schema=None):
+    """Return a connection whose cursor exposes ``execute``, ``fetch_record_batch``
+    and ``fetch_arrow_table`` regardless of the underlying backend."""
+    driver = _resolve_driver(schema)
+    connect = _get_db_api(driver)
+    if driver == MSSQL_DRIVER:
+        return connect(connection_str=url)
+    return connect(url)
 
 from .models import ExecuteSQL
 
@@ -68,11 +154,12 @@ def to_json(schema):
     return result
 
 def get_db_url(user, schema):
+    db_url, db_public_url = _db_urls(schema)[1:]
     if user.has_perm(settings.QUERY_DATABASE['PERMISSION_PROPRIETARY']):
         url = db_url
     else:
         url = db_public_url
-    if schema:
+    if schema and not _is_mssql(schema):
         # this is PostgreSQL specific
         options = urlencode({'options': f'--search_path={schema}'})
         url = f'{url}?{options}'
@@ -87,8 +174,10 @@ def execute(exec_pk):
     job.save()
     try:
         url = get_db_url(job.user, job.schema)
-        conn = db_api.connect(url)
+        conn = get_connection(url, job.schema)
         cursor = conn.cursor()
+        if _is_mssql(job.schema):
+            cursor = _MssqlCursor(cursor)
         cursor.execute(job.query)
         row_count = write_results(cursor, results_file)
         # print(f'row count: {row_count}')
@@ -116,8 +205,10 @@ def execute_sync(user, query, schema=None):
     which only contains one or two rows.
     '''
     url = get_db_url(user, schema)
-    conn = db_api.connect(url)
+    conn = get_connection(url, schema)
     cursor = conn.cursor()
+    if _is_mssql(schema):
+        cursor = _MssqlCursor(cursor)
     cursor.execute(query)
     table = cursor.fetch_arrow_table()
     cursor.close()
