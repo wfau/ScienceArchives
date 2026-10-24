@@ -130,6 +130,20 @@ def construct_view(view_file, tables_schema):
                                 })
 
                 view_data = {'columns': columns}
+
+                # A view is a straight pass-through when it projects all columns
+                # of a single base table unchanged (optionally filtered by WHERE).
+                # Any join, aliased/renamed output column, or computed expression
+                # makes it "complex" (its output shape cannot be derived directly
+                # from one base table).
+                source_tables = {src_table for src_table, _ in col_source_map.values()}
+                renamed_columns = any(
+                    src_col != view_col
+                    for view_col, (_, src_col) in col_source_map.items()
+                )
+                if len(source_tables) > 1 or renamed_columns:
+                    view_data['is_complex'] = True
+
                 if view_primary_keys:
                     view_data['primary_keys'] = view_primary_keys
                 if view_references:

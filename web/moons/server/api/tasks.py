@@ -8,11 +8,73 @@ from openai import OpenAI
 
 from .models import SQLGenerationTask
 from .helpers import schema_view_schemas
-from .schema_graph import all_objects, build_join_paths
 from queries.models import QueryPermissions
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+def compress_markdown(markdown_blocks):
+    """Flatten markdown block fragments into one readable paragraph.
+
+    The h/t keys only distinguish header vs text (purely presentational),
+    so we collapse them into plain text and join the line fragments.
+    """
+    if not markdown_blocks:
+        return ""
+    parts = []
+    for block in markdown_blocks:
+        text = (block.get("t") or block.get("h") or "").strip()
+        if text:
+            parts.append(text)
+    return " ".join(parts)
+
+
+def simplify_table(table_def):
+    # Remap references into a clearly named FK structure for the LLM
+    foreign_keys = [
+        {
+            "from_columns": ref.get("sourceCol", []),
+            "to_table": ref.get("target"),
+            "to_columns": ref.get("targetCol", [])
+        }
+        for ref in table_def.get("references", [])
+    ]
+
+    return {
+        "kind": "table",
+        "purpose": compress_markdown(table_def.get("markdown", [])),  # compact paragraph
+        "columns": {
+            k: {
+                "type": v.get("type"),
+                "description": v.get("description")
+            }
+            for k, v in table_def.get("columns", {}).items()
+        },
+        "primary_keys": table_def.get("primary_keys", []),  # e.g. ["specID"]
+        "foreign_keys": foreign_keys  # clearly structured for the LLM
+    }
+
+def simplify_view(view_def):
+    # Simple views are SELECT/WHERE pass-throughs over a single base table,
+    # so we do NOT repeat their columns (they come from the base table).
+    sql = " ".join(view_def.get("statement", [])) or ""
+
+    entry = {
+        "kind": "view",
+        "sql": sql,
+        "purpose": compress_markdown(view_def.get("markdown", [])),
+    }
+
+    # Complex views (joins/aliasing) expose their aliased output columns,
+    # which cannot be derived from base tables.
+    if view_def.get("is_complex"):
+        entry["columns"] = {
+            k: {"type": v.get("type"), "description": v.get("description")}
+            for k, v in (view_def.get("columns") or {}).items()
+        }
+
+    return entry
 
 @shared_task(bind=True, max_retries=3)
 def generate_sql_celery_task(self, task_id: str):
@@ -34,80 +96,50 @@ def generate_sql_celery_task(self, task_id: str):
         # 1. Fetch entire system schema map
         raw_schemas = schema_view_schemas(QueryPermissions.AccessType.PROPRIETARY) or {}
         selected_schema_context = {}
-        
-        schema_key = task.data_release # Get database release context
-        
+
+        schema_key = task.data_release  # Get database release context
+
         if schema_key in raw_schemas:
             schema_data = raw_schemas[schema_key]
-            
-            # Helper to simplify details
-            def simplify(table_def):
-                # Remap references into a clearly named FK structure for the LLM
-                foreign_keys = [
-                    {
-                        "from_columns": ref.get("sourceCol", []),
-                        "to_table": ref.get("target"),
-                        "to_columns": ref.get("targetCol", [])
-                    }
-                    for ref in table_def.get("references", [])
-                ]
 
-                return {
-                    "columns": {
-                        k: {
-                            "type": v.get("type"),
-                            "description": v.get("description")
-                        }
-                        for k, v in table_def.get("columns", {}).items()
-                    },
-                    "primary_keys": table_def.get("primary_keys", []),  # e.g. ["specID"]
-                    "foreign_keys": foreign_keys  # clearly structured for the LLM
-                }
+            # Always load the full schema: tables get full detail (with
+            # compressed markdown), views are slimmed to their pass-through
+            # delta (sql + purpose), except complex views which keep columns.
+            selected_schema_context[schema_key] = {}
 
-            # 2. CORE CONTEXT FALLBACK LOGIC
-            # If NO tables are specified, grab EVERYTHING in this data release
-            if not task.tables:
-                selected_schema_context[schema_key] = {}
-                
-                # Combine both tables map and views map
-                combined_objects = {
-                    **schema_data.get('tables', {}),
-                    **schema_data.get('views', {})
-                }
-                
-                for obj_name, defs in combined_objects.items():
-                    selected_schema_context[schema_key][obj_name] = simplify(defs)
-                    
-            # Else, grab only the user's selected tables
-            else:
-                for composite_key in task.tables:
-                    if '.' not in composite_key:
-                        continue
-                    s_name, object_name = composite_key.split('.', 1)
-                    
-                    if s_name == schema_key: # Safety context alignment
-                        table_def = schema_data.get('tables', {}).get(object_name) or schema_data.get('views', {}).get(object_name)
-                        if table_def:
-                            if schema_key not in selected_schema_context:
-                                selected_schema_context[schema_key] = {}
-                            selected_schema_context[schema_key][object_name] = simplify(table_def)
+            for obj_name, defs in schema_data.get('tables', {}).items():
+                selected_schema_context[schema_key][obj_name] = simplify_table(defs)
 
-        # 3. Assemble Prompt
+            for obj_name, defs in schema_data.get('views', {}).items():
+                selected_schema_context[schema_key][obj_name] = simplify_view(defs)
+
+        # 2. Assemble Prompt
         system_prompt = (
-            "You are an expert SQL generation assistant. Return ONLY valid executable SQL "
-            "inside standard markdown blocks:\n\n```sql\nSELECT ...\n```.\n\n"
+            "You are an expert SQL generation assistant. "
+            "Output ONLY the executable SQL statement — no markdown fences, no explanations, "
+            "no commentary, and no code-block wrappers. "
+            "Format the SQL itself neatly with line breaks and indentation for readability.\n\n"
             "STRICT RULES:\n"
             "1. Only use tables, views and columns that exist in the DATABASE SCHEMAS provided below.\n"
-            "2. Only use JOIN conditions explicitly defined in 'foreign_keys'/'join_on'. "
+            "2. Only use JOIN conditions explicitly defined in 'foreign_keys'. "
             "Do NOT infer or guess relationships from column name similarities.\n"
             "3. If two tables cannot be directly joined, look for an intermediary table in the schema "
             "whose foreign keys connect them, and include it in the query.\n"
             "4. Follow the full foreign key path even if it requires multiple intermediary tables.\n"
             "5. If no foreign key path exists between two tables, do not attempt to join them.\n\n"
             "COLUMN NAMES:\n"
-            "- Use ONLY column names exactly as they appear in the 'columns' field of the schema.\n"
+            "- For tables, use ONLY column names exactly as they appear in the 'columns' field.\n"
+            "- For views, use the column names as shown in the view's 'sql' definition "
+            "(for 'SELECT *' / pass-through views, this is all columns of the view's source table; "
+            "for complex views, use the view's own 'columns' field).\n"
             "- Do NOT invent, abbreviate, or modify column names.\n"
-            "- Do NOT assume a column exists in a table unless it is explicitly listed in that table's 'columns'.\n"
+            "- Do NOT assume a column exists unless it is explicitly listed (tables) or "
+            "appears in the view's defining SELECT (views).\n\n"
+            "VIEWS:\n"
+            "- Views are pre-filtered logical datasets. When a user asks about the data a view "
+            "represents, query the view directly (e.g. SELECT ... FROM view_name) rather than "
+            "rebuilding its logic from base tables, unless the query needs data or filters that "
+            "the view does not provide.\n"
         )
         # add data release specific instructions
         try:
@@ -122,33 +154,42 @@ def generate_sql_celery_task(self, task_id: str):
             system_prompt += (
                 "\n\nDATABASE SCHEMAS:\n"
                 "Each table/view entry contains:\n"
-                "- 'columns': available columns and their types\n"
-                "- 'primary_keys': columns that uniquely identify a row\n"
-                "- 'foreign_keys'/'join_on': ONLY valid JOIN conditions. Format is "
-                "from_columns in this table/view match to_columns in to_table.\n\n"
-                f"{json.dumps(selected_schema_context, indent=2)}"
+                "- 'kind': 'table' or 'view'\n"
+                "- 'purpose': human-readable description/legend of the table or view\n"
+                "- 'columns': available columns and their types (tables only; also present on complex views)\n"
+                "- 'primary_keys': columns that uniquely identify a row (tables only)\n"
+                "- 'foreign_keys': ONLY valid JOIN conditions (tables only). "
+                "Format is from_columns in this table match to_columns in to_table.\n"
+                "- 'sql': the view's defining SELECT statement (views only)\n\n"
+                "IMPORTANT — VIEWS:\n"
+                "- Views have no 'foreign_keys'; their contents/relationships are defined by "
+                "'sql' (base tables + filters) and described by 'purpose'.\n"
+                "- To join a view, resolve its base table from its 'sql', then use that base "
+                "table's 'foreign_keys'.\n"
+                "- Simple pass-through views expose the columns of their source table (given in "
+                "the base table's 'columns'); complex views (marked with a 'columns' field) define "
+                "their own output columns and are aliased.\n\n"
+                f"{json.dumps(selected_schema_context)}"
             )
 
-        # Inject concrete join-path hints (from the schema graph) so the model
-        # does not have to re-derive joins. This never changes the table set.
-        if schema_key in raw_schemas and len(task.tables or []) >= 2:
-            selected_names = []
-            for composite_key in task.tables:
-                if "." in composite_key:
-                    selected_names.append(composite_key.split(".", 1)[1])
-            if selected_names:
-                join_edges = build_join_paths(
-                    all_objects(raw_schemas[schema_key]), selected_names
-                )
-                if join_edges:
-                    hint_lines = [
-                        f"{e['left_table']}.{e['left']} = {e['right_table']}.{e['right']}"
-                        for e in join_edges
-                    ]
-                    system_prompt += (
-                        "\n\nKNOWN JOIN PATHS (use these exact conditions; do not invent "
-                        "others):\n" + "\n".join(hint_lines)
-                    )
+        # Inject the user's preferred view hints (if any) so the model
+        # knows which views are likely relevant. This is a hint, not a
+        # filter: the full schema is still available above.
+        if task.tables:
+            preferred = [
+                v.split(".", 1)[-1] if "." in v else v
+                for v in task.tables
+            ]
+            system_prompt += (
+                "\n\nPREFERRED VIEWS (USER-SELECTED):\n"
+                "The user explicitly indicated the following views for this query. "
+                "When a preferred view is relevant to the request, SELECT from that view "
+                "directly (e.g. SELECT ... FROM view_name) rather than from its base table(s). "
+                "Do not substitute the view's base table unless the query needs data, columns "
+                "or filters that the view does not provide.\n"
+                + "\n".join(f"- {name}" for name in preferred)
+                + "\n"
+            )
 
         # OpenAI pipeline setups
         api_key = getattr(settings, "OPENAI_API_KEY", None)
@@ -164,20 +205,21 @@ def generate_sql_celery_task(self, task_id: str):
             ],
             temperature=0.1
         )
-        
+
         ai_msg = response.choices[0].message.content
-        
+
         sql = ai_msg
         if "```sql" in ai_msg:
             sql = ai_msg.split("```sql")[1].split("```")[0].strip()
         elif "```" in ai_msg:
             sql = ai_msg.split("```")[1].split("```")[0].strip()
+        sql = sql.strip()
 
         task.generated_sql = sql
         task.status = SQLGenerationTask.Status.SUCCESS
         task.completed_at = timezone.now()
         task.save(update_fields=['generated_sql', 'status', 'completed_at'])
-        
+
         return f"Successfully generated SQL for task: {task_id}"
 
     except Exception as exc:

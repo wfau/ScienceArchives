@@ -29213,6 +29213,7 @@
             },
             "SpectrumAndFrame": {
                 "schema": "gesdr5",
+                "is_complex": true,
                 "name": "SpectrumAndFrame",
                 "markdown": [
                     {
@@ -29680,6 +29681,7 @@
             },
             "RecommendedOutlierAnalysis": {
                 "schema": "gesdr5",
+                "is_complex": true,
                 "name": "RecommendedOutlierAnalysis",
                 "markdown": [
                     {
@@ -29885,6 +29887,7 @@
             },
             "SpectrumOutlierAnalysis": {
                 "schema": "gesdr5",
+                "is_complex": true,
                 "name": "SpectrumOutlierAnalysis",
                 "markdown": [
                     {
@@ -59280,6 +59283,7 @@
             },
             "SpectrumAndFrame": {
                 "schema": "gesdr6",
+                "is_complex": true,
                 "name": "SpectrumAndFrame",
                 "markdown": [
                     {
@@ -59747,6 +59751,7 @@
             },
             "RecommendedOutlierAnalysis": {
                 "schema": "gesdr6",
+                "is_complex": true,
                 "name": "RecommendedOutlierAnalysis",
                 "markdown": [
                     {
@@ -59952,6 +59957,7 @@
             },
             "SpectrumOutlierAnalysis": {
                 "schema": "gesdr6",
+                "is_complex": true,
                 "name": "SpectrumOutlierAnalysis",
                 "markdown": [
                     {

@@ -5,6 +5,13 @@
     <p class="fs-7 text-secondary">{{ accessDeniedDetail }}</p>
   </div>
 
+  <div v-else-if="hasAccess === null || loading" class="d-flex flex-column align-items-center justify-content-center py-5">
+    <div class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-4 text-info fw-semibold">Synchronizing schemas and components...</p>
+  </div>
+
   <div v-else class="query-workspace">
     <!-- PERSISTENT LEFT PANEL: SCHEMA TREE -->
     <div class="split left p-4" v-if="schemaData && Object.keys(schemaData).length">
@@ -26,7 +33,7 @@
                           <summary>
                             <span 
                               draggable="true" 
-                              @dragstart="handleTreeDragStart($event, table[0], schemaName)" 
+                              @dragstart="handleTreeDragStart($event, table[0])" 
                               :title="table[1].markdown && table[1].markdown[0]?.h"
                               class="draggable-asset text-light-emphasis"
                             >
@@ -93,22 +100,14 @@
         </li>
       </ul>
 
-      <!-- Loading State -->
-      <div v-if="loading && !activeTaskId" class="text-center py-5">
-        <div class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status">
-          <span class="visually-hidden">Loading workspace components...</span>
-        </div>
-        <p class="mt-4 text-info fw-semibold">Synchronizing schemas and components...</p>
-      </div>
-
-      <div v-else class="tab-content">
+      <div class="tab-content">
         <!-- TAB 1: SQL GENERATION SYSTEM -->
         <div v-show="activeTab === 'generator'" class="tab-pane fade show active">
           <div class="card border mb-4">
             <div class="card-header bg-body-secondary border-bottom py-3 d-flex justify-content-between align-items-center">
               <div>
                 <h5 class="mb-0 text-body-emphasis">Generate SQL Code</h5>
-                <small class="text-body-secondary">Select a data release, describe your goal, and provide a table context.</small>
+                <small class="text-body-secondary">Select a data release and describe your goal.</small>
               </div>
               <span v-if="jobStatus" class="badge" :class="statusBadgeClass">Status: {{ jobStatus }}</span>
             </div>
@@ -152,100 +151,35 @@
                   ></textarea>
                 </div>
 
-                <!-- Context tables manager -->
+                <!-- Optional view hints -->
                 <div class="mb-4">
-                <label class="form-label fw-bold d-flex align-items-center gap-2">
-                    <span class="step-badge">3</span> Related Table Context Map 
-                    <span class="text-body-secondary fw-normal fs-7">(Drag or click any row, or drag from left schema tree)</span>
-                </label>
-                <div class="row g-3">
-                    
-                    <!-- Available Assets -->
-                    <div class="col-md-6">
-                    <div class="card h-100 border bg-body-tertiary" @dragover.prevent @drop="onDrop($event, 'available')">
-                        <div class="card-header bg-body-secondary py-2 border-bottom d-flex justify-content-between align-items-center">
-                        <span class="fs-8 text-uppercase fw-semibold font-monospace">Available Assets</span>
-                        <span class="badge text-bg-secondary">{{ filteredAvailable.length }}</span>
-                        </div>
-                        <div class="p-2 border-bottom">
-                        <input v-model="searchAvailable" type="search" class="form-control form-control-sm" placeholder="Filter tables & views..." />
-                        </div>
-                        <div class="card-body list-column-scroll p-2" style="max-height: 250px; overflow-y: auto;">
-                        <div class="list-group list-group-flush">
-                            <div 
-                            v-for="item in filteredAvailable" 
-                            :key="`${item.schema}-${item.name}`" 
-                            class="list-group-item list-group-item-action border mb-1 rounded p-2 d-flex justify-content-between align-items-center asset-row-interactive"
-                            draggable="true"
-                            @dragstart="onAssetDragStart($event, item)"
-                            @click="toggleSelection(item)"
-                            >
-                            <!-- Info Block (Clicks bubble up freely to toggle selection) -->
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="bi bi-grip-vertical text-muted fs-7"></i>
-                                <code class="text-info fs-7 fw-bold">{{ item.name }}</code>
-                                <span class="badge bg-secondary-subtle text-secondary fs-8">{{ item.type }}</span>
-                            </div>
-                            
-                            <!-- Action Button (Stop propagation to prevent double-fires) -->
-                            <div>
-                                <button 
-                                type="button" 
-                                class="btn btn-sm btn-outline-primary py-0 px-2 fw-semibold" 
-                                @click.stop="toggleSelection(item)"
-                                >
-                                Add
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
+                  <details class="border rounded p-2" :open="selectedViews.length > 0">
+                    <summary class="form-label fw-bold d-flex align-items-center gap-2 mb-0">
+                      <span class="step-badge">3</span> Prefer Specific Views (optional)
+                      <span v-if="selectedViews.length" class="badge text-bg-info">{{ selectedViews.length }}</span>
+                    </summary>
+                    <div class="mt-2">
+                      <small class="text-body-secondary fs-7">
+                        Indicate views likely relevant to your request (e.g. <code>RecommendedAstroAnalysis</code>). This is a hint to the AI, not a restriction.
+                      </small>
+                      <div class="view-options mt-2">
+                        <button
+                          v-for="viewName in viewNames"
+                          :key="viewName"
+                          type="button"
+                          class="btn btn-sm"
+                          :class="selectedViews.includes(viewName) ? 'btn-primary' : 'btn-outline-secondary'"
+                          :title="viewDescriptions[viewName] || viewName"
+                          @click="toggleView(viewName)"
+                        >
+                          {{ viewName }}
+                        </button>
+                      </div>
+                      <small v-if="!viewNames.length" class="text-body-secondary fs-7">No views available in this data release.</small>
                     </div>
-                    </div>
-
-                    <!-- Selected Target Context -->
-                    <div class="col-md-6">
-                        <div class="card h-100 border-primary bg-body-tertiary" @dragover.prevent @drop="onDrop($event, 'selected')">
-                            <div class="card-header bg-primary text-white py-2 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="fs-8 text-uppercase fw-semibold font-monospace">Selected Context</span>
-                                <span class="badge bg-white text-primary">{{ selectedKeys.length }}</span>
-                            </div>
-                            <div class="p-2 border-bottom">
-                                <input v-model="searchSelected" type="search" class="form-control form-control-sm" placeholder="Filter selected..." />
-                            </div>
-                            <div class="card-body list-column-scroll p-2" style="max-height: 250px; overflow-y: auto;">
-                                <div class="list-group list-group-flush">
-                                    <div v-for="item in filteredSelectedObjects" 
-                                        :key="`sel-${item.schema}-${item.name}`" 
-                                        class="list-group-item list-group-item-action border border-primary mb-1 rounded p-2 d-flex justify-content-between align-items-center asset-row-selected-interactive"
-                                        draggable="true"
-                                        @dragstart="onAssetDragStart($event, item)"
-                                        @click="toggleSelection(item)"
-                                    >
-                                        <!-- Info Block (Clicks bubble up freely to toggle selection) -->
-                                        <div class="d-flex align-items-center gap-2">
-                                            <i class="bi bi-grip-vertical text-primary fs-7"></i>
-                                            <strong class="text-primary font-monospace fs-7">{{ item.name }}</strong>
-                                        </div>
-                                        
-                                        <!-- Action Remove Button -->
-                                        <div>
-                                            <button 
-                                                type="button" 
-                                                class="btn p-0 border-0 text-danger fs-3 lh-1" 
-                                                @click.stop="toggleSelection(item)"
-                                            >
-                                                &times;
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                  </details>
                 </div>
-                </div>
+
                 <!-- Run Compilation -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
                   <button v-if="jobStatus === 'PROCESSING' || jobStatus === 'PENDING'" type="button" class="btn btn-outline-danger btn-sm" @click="stopMonitoring">
@@ -375,13 +309,6 @@ import { getQueryResult } from '@/api/get_result';
 import { getQueryTemplate, postQuery } from '@/api/query'
 import { getDatabaseSchema, type Schemas, type TableDefinition } from '@/api/schema';
 
-interface FlattenedAsset {
-  schema: string;
-  name: string;
-  type: 'table' | 'view';
-  definition: TableDefinition;
-}
-
 const route = useRoute()
 
 // ── Shared Workspace States ──────────────────────────────────────────────────
@@ -397,9 +324,7 @@ const activeTab = ref<'generator' | 'editor'>('generator')
 
 // ── Generator States ────────────────────────────────────────────────────────
 const promptText = ref<string>('')
-const selectedKeys = ref<string[]>([])
-const searchAvailable = ref<string>('')
-const searchSelected = ref<string>('')
+const selectedViews = ref<string[]>([])
 const queryTextResult = ref<string | null>(null)
 const activeTaskId = ref<string | null>(null)
 const jobStatus = ref<'PENDING' | 'PROCESSING' | 'SUCCESS' | 'FAILED' | null>(null)
@@ -436,6 +361,30 @@ const codeSchema = computed(() => {
 
 const schemaKeys = computed<string[]>(() => Object.keys(schemaData.value))
 
+const viewNames = computed<string[]>(() => {
+  const cs = currentSchema.value ? schemaData.value[currentSchema.value] : undefined;
+  if (!cs) return [];
+  return Object.keys(cs.views || {}).sort();
+})
+
+const viewDescriptions = computed<Record<string, string>>(() => {
+  const cs = currentSchema.value ? schemaData.value[currentSchema.value] : undefined;
+  if (!cs) return {};
+  const desc: Record<string, string> = {};
+  for (const [name, def] of Object.entries(cs.views || {})) {
+    const first = (def.markdown || [])[0];
+    const text = first?.h || first?.t || '';
+    desc[name] = text.trim();
+  }
+  return desc;
+})
+
+const toggleView = (name: string) => {
+  const idx = selectedViews.value.indexOf(name);
+  if (idx > -1) selectedViews.value.splice(idx, 1);
+  else selectedViews.value.push(name);
+}
+
 const foreignKeys = (table: TableDefinition) => {
   const result: string[] = []
   for (const fk of (table.references || [])) {
@@ -443,43 +392,6 @@ const foreignKeys = (table: TableDefinition) => {
   }
   return result
 }
-
-// ── Asset Flattening Helper mapping for Agent Context ────────────────────────
-const allLocalDatabaseAssets = computed<FlattenedAsset[]>(() => {
-  const list: FlattenedAsset[] = [];
-  for (const [schemaName, schemaObj] of Object.entries(schemaData.value)) {
-    if (!schemaObj) continue;
-    if (schemaObj.tables) {
-      for (const [tableName, details] of Object.entries(schemaObj.tables))
-        list.push({ schema: schemaName, name: tableName, type: 'table', definition: details });
-    }
-    if (schemaObj.views) {
-      for (const [viewName, details] of Object.entries(schemaObj.views))
-        list.push({ schema: schemaName, name: viewName, type: 'view', definition: details });
-    }
-  }
-  return list;
-});
-
-const filteredAvailable = computed<FlattenedAsset[]>(() => {
-  if (!currentSchema.value) return [];
-  const term = searchAvailable.value.toLowerCase().trim();
-  return allLocalDatabaseAssets.value
-    .filter(asset =>
-      asset.schema === currentSchema.value &&
-      !selectedKeys.value.includes(`${asset.schema}.${asset.name}`) &&
-      (term === '' || asset.name.toLowerCase().includes(term))
-    )
-    .sort((a, b) => a.name.localeCompare(b.name));
-});
-
-const filteredSelectedObjects = computed<FlattenedAsset[]>(() => {
-  const term = searchSelected.value.toLowerCase().trim();
-  return allLocalDatabaseAssets.value
-    .filter(asset => selectedKeys.value.includes(`${asset.schema}.${asset.name}`))
-    .filter(asset => term === '' || asset.name.toLowerCase().includes(term))
-    .sort((a, b) => a.name.localeCompare(b.name));
-});
 
 // ── Status Displays ──────────────────────────────────────────────────────────
 const statusBadgeClass = computed(() => {
@@ -586,23 +498,10 @@ watch([codeSchema, currentSchema], () => {
   }
 });
 
-watch(currentSchema, (newSchema) => {
-  searchAvailable.value = '';
-  searchSelected.value = '';
-
-  // Clear previous selections as they relate to the prior schema context
-  selectedKeys.value = [];
-
-  // Automatically seed the context panels if default tables exist for this schema
-  if (newSchema && schemaData.value && schemaData.value[newSchema]) {
-    const activeSchemaObj = schemaData.value[newSchema];
-    if (activeSchemaObj.defaults && Array.isArray(activeSchemaObj.defaults)) {
-      selectedKeys.value = activeSchemaObj.defaults.map(
-        (tableName) => `${newSchema}.${tableName}`
-      );
-    }
-  }
-}, { immediate: true });
+// Views differ per data release; drop any selections that no longer apply
+watch(currentSchema, () => {
+  selectedViews.value = selectedViews.value.filter((v) => viewNames.value.includes(v));
+});
 
 // Refresh / Render CodeMirror viewport on visible tab focus
 const switchTab = async (tab: 'generator' | 'editor') => {
@@ -614,68 +513,11 @@ const switchTab = async (tab: 'generator' | 'editor') => {
 };
 
 // ── Drag & Drop Logic for Left Panel Tree -> Editor text dump ────────────────
-const handleTreeDragStart = (e: DragEvent, text: string, schemaName?: string) => {
+const handleTreeDragStart = (e: DragEvent, text: string) => {
   if (!e.dataTransfer) return;
   
   // CodeMirror uses text/plain to drop code snippets directly at the cursor
   e.dataTransfer.setData('text/plain', text);
-  
-  // If dragging a full table/view, also pack its metadata for our context panels
-  if (schemaName) {
-    e.dataTransfer.effectAllowed = 'copyMove';
-    e.dataTransfer.setData('application/json', JSON.stringify({ 
-      schema: schemaName, 
-      name: text 
-    }));
-  }
-};
-
-// ── Drag & Drop for context Builder (Tab 1 Asset drag details) ───────────────
-const onAssetDragStart = (e: DragEvent, item: FlattenedAsset) => {
-  if (!e.dataTransfer) return;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('application/json', JSON.stringify({ 
-    schema: item.schema, 
-    name: item.name 
-  }));
-};
-
-const onDrop = (e: DragEvent, targetList: 'available' | 'selected') => {
-  if (!e.dataTransfer) return;
-  try {
-    const rawData = e.dataTransfer.getData('application/json');
-    if (!rawData) return;
-    
-    const parsed = JSON.parse(rawData);
-    const key = `${parsed.schema}.${parsed.name}`;
-    
-    // Safety check: ensure the dropped asset is indeed a table or view block
-    const schemaObj = schemaData.value[parsed.schema];
-    if (!schemaObj) return;
-    const isTable = schemaObj.tables && parsed.name in schemaObj.tables;
-    const isView = schemaObj.views && parsed.name in schemaObj.views;
-    if (!isTable && !isView) return; // Prevent columns or random text inputs from loading
-    
-    const keyIndex = selectedKeys.value.indexOf(key);
-    if (targetList === 'selected' && keyIndex === -1) {
-      selectedKeys.value.push(key);
-    } else if (targetList === 'available' && keyIndex > -1) {
-      selectedKeys.value.splice(keyIndex, 1);
-    }
-  } catch (err) {
-    console.error('Context drag validation target read error: ', err);
-  }
-};
-
-// ── Toggle Selection for Context builder list items ──────────────────────────
-const toggleSelection = (item: FlattenedAsset) => {
-  const key = `${item.schema}.${item.name}`;
-  const idx = selectedKeys.value.indexOf(key);
-  if (idx > -1) {
-    selectedKeys.value.splice(idx, 1);
-  } else {
-    selectedKeys.value.push(key);
-  }
 };
 
 // ── Tab 1: AI Call Pipeline and Watchers ─────────────────────────────────────
@@ -692,7 +534,7 @@ const submitGeneratorForm = async (): Promise<void> => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         data_release: currentSchema.value,
-        tables: [...selectedKeys.value],
+        tables: [...selectedViews.value],
         description: promptText.value.trim(),
       }),
     });
@@ -791,24 +633,11 @@ const copyToClipboard = async () => {
 
 const resetFormState = () => {
   promptText.value = '';
+  selectedViews.value = [];
   queryTextResult.value = null;
   activeTaskId.value = null;
   jobStatus.value = null;
-  searchAvailable.value = '';
-  searchSelected.value = '';
   jobErrorMessage.value = null;
-
-  // Restore defaults for the active schema if they exist
-  if (currentSchema.value && schemaData.value && schemaData.value[currentSchema.value]) {
-    const activeSchemaObj = schemaData.value[currentSchema.value];
-    if (activeSchemaObj.defaults && Array.isArray(activeSchemaObj.defaults)) {
-      selectedKeys.value = activeSchemaObj.defaults.map(
-        (tableName) => `${currentSchema.value}.${tableName}`
-      );
-      return;
-    }
-  }
-  selectedKeys.value = [];
 };
 
 // ── Retrieve CSRF and Initial Routing hooks ──────────────────────────────────
@@ -940,6 +769,13 @@ onMounted(async () => {
 .cursor-grab { cursor: grab; }
 .fs-7 { font-size: 0.85rem; }
 .fs-8 { font-size: 0.74rem; }
+
+/* Optional view selection (Step 3) */
+.view-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
 
 /* Processing Visual Pulses */
 @keyframes glow-pulse {
