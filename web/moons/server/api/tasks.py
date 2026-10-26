@@ -47,7 +47,8 @@ def simplify_table(table_def):
         "columns": {
             k: {
                 "type": v.get("type"),
-                "description": v.get("description")
+                "description": v.get("description"),
+                "default": v.get("default")
             }
             for k, v in table_def.get("columns", {}).items()
         },
@@ -70,7 +71,7 @@ def simplify_view(view_def):
     # which cannot be derived from base tables.
     if view_def.get("is_complex"):
         entry["columns"] = {
-            k: {"type": v.get("type"), "description": v.get("description")}
+            k: {"type": v.get("type"), "description": v.get("description"), "default": v.get("default")}
             for k, v in (view_def.get("columns") or {}).items()
         }
 
@@ -135,6 +136,11 @@ def generate_sql_celery_task(self, task_id: str):
             "- Do NOT invent, abbreviate, or modify column names.\n"
             "- Do NOT assume a column exists unless it is explicitly listed (tables) or "
             "appears in the view's defining SELECT (views).\n\n"
+            "MISSING / UNSPECIFIED VALUES:\n"
+            "- 'default': null means SQL NULL; any other value (e.g. 'NONE', 'U', '  ', "
+            "-99999999, '9999-12-31 23:59:59') is a sentinel meaning the value was never set.\n"
+            "- To find rows without a value, filter on the column's 'default' sentinel (e.g. "
+            "WHERE col1='NONE' or WHERE col1=-99999999) — only use IS NULL when 'default' is null.\n\n"
             "VIEWS:\n"
             "- Views are pre-filtered logical datasets. When a user asks about the data a view "
             "represents, query the view directly (e.g. SELECT ... FROM view_name) rather than "
@@ -156,7 +162,9 @@ def generate_sql_celery_task(self, task_id: str):
                 "Each table/view entry contains:\n"
                 "- 'kind': 'table' or 'view'\n"
                 "- 'purpose': human-readable description/legend of the table or view\n"
-                "- 'columns': available columns and their types (tables only; also present on complex views)\n"
+                "- 'columns': available columns, their types, and 'default' value (tables only; "
+                "also present on complex views). 'default' is the value stored when the column "
+                "is not explicitly set; 'None' means the column is nullable and stores SQL NULL.\n"
                 "- 'primary_keys': columns that uniquely identify a row (tables only)\n"
                 "- 'foreign_keys': ONLY valid JOIN conditions (tables only). "
                 "Format is from_columns in this table match to_columns in to_table.\n"
