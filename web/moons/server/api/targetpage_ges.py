@@ -50,6 +50,19 @@ def get_rounded(value, ndigits=4):
     except:
         return value
 
+def get_field(row, key):
+    """Case-insensitive lookup of a result-row column.
+
+    GES column names are mixed-case (e.g. cName, fileName, bMag) and are
+    preserved verbatim by the Arrow/parquet result rows, so hardcoded lower-
+    case reads would silently fail. Match on case-folded keys instead.
+    """
+    lower = key.lower()
+    for k, v in (row or {}).items():
+        if k.lower() == lower:
+            return v
+    return None
+
 def get_line_list():
     path = settings.BASE_DIR / 'resources' / 'GES' / 'ges_lines.json'
     with open(path, 'r', encoding='utf-8') as f:
@@ -88,48 +101,48 @@ def get_targetpage(schema, cname, user):
     else:
         thumbnails = [ str(db_path / 'unavailable.jpeg') ]
     for item in metadata_table.to_pylist():
-        filenames.append(item.get('filename'))
+        filenames.append(get_field(item, 'filename'))
     # use only the last row (if there were any) as the rest of the data is the same
     if item:
         result = {
             'metadata': {
                 cname: {
-                    'RA': get_rounded(item['ra']),
-                    'DEC': get_rounded(item['dec']),
-                    'gl': get_rounded(item['gl']),
-                    'gb': get_rounded(item['gb']),
-                    'bMag': get_rounded(item['bmag']),
-                    'jMag': get_rounded(item['jmag']),
+                    'RA': get_rounded(get_field(item, 'ra')),
+                    'DEC': get_rounded(get_field(item, 'dec')),
+                    'gl': get_rounded(get_field(item, 'gl')),
+                    'gb': get_rounded(get_field(item, 'gb')),
+                    'bMag': get_rounded(get_field(item, 'bmag')),
+                    'jMag': get_rounded(get_field(item, 'jmag')),
                 },
             },
             'files': filenames,
             'thumbnails': thumbnails,
-            'lineList': shift_line_list(get_line_list(), item['vrad'] or 0),
+            'lineList': shift_line_list(get_line_list(), get_field(item, 'vrad') or 0),
         }
-        if item['instrument'] is not None:
-            result['metadata'][cname]['Instrument'] = item['instrument']
-        if item['gestype'] is not None:
-            result['metadata'][cname]['GES Type'] = item['gestype']
-        if item['gratings'] is not None:
-            result['metadata'][cname]['Gratings'] = item['gratings']
-        if item['gesobject'] is not None:
-            result['metadata'][cname]['GES Object'] = item['gesobject']
-        if item['gesfield'] is not None:
-            result['metadata'][cname]['GES Field'] = item['gesfield']
+        if get_field(item, 'instrument') is not None:
+            result['metadata'][cname]['Instrument'] = get_field(item, 'instrument')
+        if get_field(item, 'gestype') is not None:
+            result['metadata'][cname]['GES Type'] = get_field(item, 'gestype')
+        if get_field(item, 'gratings') is not None:
+            result['metadata'][cname]['Gratings'] = get_field(item, 'gratings')
+        if get_field(item, 'gesobject') is not None:
+            result['metadata'][cname]['GES Object'] = get_field(item, 'gesobject')
+        if get_field(item, 'gesfield') is not None:
+            result['metadata'][cname]['GES Field'] = get_field(item, 'gesfield')
         astro_md = {}
-        if item['teff'] is not None:
+        if get_field(item, 'teff') is not None:
             astro_md['Teff'] = {
                 'unit': 'K',
-                'value': get_rounded(item['teff']),
+                'value': get_rounded(get_field(item, 'teff')),
             }
-        if item['logg'] is not None:
-            astro_md['logg'] = get_rounded(item['logg'])
-        if item['feh'] is not None:
-            astro_md['FeH'] = get_rounded(item['feh'])
-        if item['vrad'] is not None:
+        if get_field(item, 'logg') is not None:
+            astro_md['logg'] = get_rounded(get_field(item, 'logg'))
+        if get_field(item, 'feh') is not None:
+            astro_md['FeH'] = get_rounded(get_field(item, 'feh'))
+        if get_field(item, 'vrad') is not None:
             astro_md['vRad'] = {
                 'unit': 'km/s',
-                'value': get_rounded(item['vrad']),
+                'value': get_rounded(get_field(item, 'vrad')),
             }
         if astro_md:
             result['metadata']['Astrophysical Parameters'] = astro_md

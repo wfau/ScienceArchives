@@ -80,10 +80,14 @@ watchEffect(async () => {
             sortMode:"remote",            
             ajaxURL:api_url + `/results/${props.result_id}/json`,
             ajaxResponse:function(url, params, response){
+                const getField = (obj:any, key:string) => {
+                    const hit = Object.keys(obj).find(k => k.toLowerCase() === key.toLowerCase())
+                    return hit ? obj[hit] : undefined
+                }
                 colSchema.value = response.schema
                 response.data.map((obj:any) => {
-                    const f = obj.filename
-                    const cname = encodeURIComponent(obj.cname)
+                    const f = getField(obj, 'filename')
+                    const cname = encodeURIComponent(getField(obj, 'cname'))
                     if (f && f != 'NONE') {
                         // get file link
                         const downloadLoc = `${api_url}/files?filename=${encodeURIComponent(f)}&schema=${props.schema}`
