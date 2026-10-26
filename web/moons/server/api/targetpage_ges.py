@@ -78,8 +78,8 @@ def get_targetpage(schema, cname, user):
     result = {}
     item = None
     # list files for cname in jpeg folder
-    db_path = Path(settings.MOONS_DB['BASE_FILE_PATH']) / 'jpeg'
-    img_path = validate_path(db_path)
+    db_path = Path(settings.MOONS_DB['BASE_FILE_PATH'][schema]) / 'jpeg'
+    img_path = validate_path(db_path, schema)
     img_files = list(img_path.glob(f'{cname}*.jpeg'))
     if img_files:
         thumbnails = [

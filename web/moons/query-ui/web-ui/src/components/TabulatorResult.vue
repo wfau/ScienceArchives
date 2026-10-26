@@ -86,7 +86,7 @@ watchEffect(async () => {
                     const cname = encodeURIComponent(obj.cname)
                     if (f && f != 'NONE') {
                         // get file link
-                        const downloadLoc = `${api_url}/files?filename=${encodeURIComponent(f)}`
+                        const downloadLoc = `${api_url}/files?filename=${encodeURIComponent(f)}&schema=${props.schema}`
                         obj.download = `<a href="${downloadLoc}" class="download"><svg width="1em" height="1em" class="theme-icon-active"><use href="#icon-download"/></svg></a>`
                         const fn = f.split('/').pop()
                         obj.filename = fn

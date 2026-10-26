@@ -163,7 +163,7 @@ class ExecuteSQLResultGraphView(APIView):
             # check if job id is owned by user
             job = ExecuteSQL.objects.filter(user=self.request.user).get(pk=pk)
             qp = request.query_params.get('filename')
-            filename = validate_path(qp)
+            filename = validate_path(qp, job.schema)
             if filename is None:
                 raise Exception(f'Invalid filename {qp}')
 
@@ -179,7 +179,8 @@ class PublicFileDownloadView(APIView):
     def get(self, request, format=None):
         try:
             qp = request.query_params.get('filename')
-            filename = validate_path(qp)
+            schema = request.query_params.get('schema')
+            filename = validate_path(qp, schema)
             if filename is None:
                 raise Exception(f'Invalid filename {qp}')
 
@@ -214,7 +215,7 @@ class ResultWgetView(APIView):
                     break
 
             base_url = request.build_absolute_uri('/api/files/')
-            lines = [f"wget '{base_url}?filename={f}' -O {_strip_uid(f.split('/')[-1])}" for f in filenames]
+            lines = [f"wget '{base_url}?filename={f}&schema={job.schema}' -O {_strip_uid(f.split('/')[-1])}" for f in filenames]
             content = '\n'.join(lines) + ('\n' if lines else '')
 
             response = StreamingHttpResponse(
