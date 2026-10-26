@@ -35,6 +35,8 @@ services:
     volumes:
       - ./server/:/app
       - ./docker/${DEPLOYMENT}/caddy/Caddyfile/:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     ports:
       - 9000:80
       - 9443:443
@@ -136,3 +138,5 @@ services:
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:
