@@ -88,7 +88,7 @@ def get_targetpage(schema, cname, user):
     else:
         thumbnails = [ str(db_path / 'unavailable.jpeg') ]
     for item in metadata_table.to_pylist():
-        filenames.append(item['filename'])
+        filenames.append(item.get('filename'))
     # use only the last row (if there were any) as the rest of the data is the same
     if item:
         result = {
