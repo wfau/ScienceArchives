@@ -46,8 +46,24 @@ import time
 import pyarrow.parquet as pq
 
 # Base tables used for the data-parity check. These are the only tables that
-# are present in both databases.
-PARITY_TABLES = ["AstroAnalysis", "SpectrumGroup", "Target"]
+# are present in both databases. The physical names differ in case between the
+# two backends: Postgres stores them lowercase, MSSQL uses PascalCase. The keys
+# match the {astro}/{sg}/{target} placeholders used in the query templates.
+PG_TABLES = {
+    "astro": "astroanalysis",
+    "sg": "spectrumgroup",
+    "target": "target",
+}
+MSSQL_TABLES = {
+    "astro": "AstroAnalysis",
+    "sg": "SpectrumGroup",
+    "target": "Target",
+}
+PARITY_NAMES = {
+    "astro": "AstroAnalysis",
+    "sg": "SpectrumGroup",
+    "target": "Target",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -75,8 +91,12 @@ class MssqlStreaming:
 
 
 def pg_connection(pg_url):
+    from urllib.parse import urlencode
     from adbc_driver_postgresql import dbapi as pgdb
-    return pgdb.connect(pg_url)
+    # The GES tables live in the 'gesdr5' schema; mirror the app (tasks.py),
+    # which sets the search_path via the URL so unqualified names resolve.
+    options = urlencode({'options': '--search_path=gesdr5'})
+    return pgdb.connect(f'{pg_url}?{options}')
 
 
 def mssql_connection(mssql_conn):
@@ -138,55 +158,39 @@ def count_rows(make_conn, conn_str, table):
 def check_parity(make_pg, pg_url, make_ms, ms_conn):
     print("Checking data parity (base-table row counts) ...")
     matched = True
-    for t in PARITY_TABLES:
-        p = count_rows(make_pg, pg_url, t)
-        m = count_rows(make_ms, ms_conn, t)
+    for name, pg_table in PG_TABLES.items():
+        ms_table = MSSQL_TABLES[name]
+        display = PARITY_NAMES[name]
+        p = count_rows(make_pg, pg_url, pg_table)
+        m = count_rows(make_ms, ms_conn, ms_table)
         flag = "OK" if p == m else "MISMATCH"
         if p != m:
             matched = False
-        print(f"  {t:<18} postgres={p!s:<12} mssql={m!s:<12} {flag}")
+        print(f"  {display:<18} postgres={p!s:<12} mssql={m!s:<12} {flag}")
     if not matched:
-        print("  WARNING: row counts differ. The two databases hold different")
-        print("  data, so the timing comparison below is NOT apples-to-apples.")
+        print("  NOTE: row counts differ between the two databases.")
     return matched
 
 
 # ---------------------------------------------------------------------------
-# Queries under test. Use only the three tables available in both databases:
-# AstroAnalysis, SpectrumGroup, Target. (Dialect-neutral, unqualified names.)
+# Queries under test. Use only tables that hold the SAME rows in both databases
+# so each PG-vs-MSSQL comparison is apples-to-apples.
+#
+# AstroAnalysis is excluded: the Postgres stand-in holds only a small subset
+# (1000 rows vs ~1.9M), so no query over it can return matching results.
+# SpectrumGroup and Target match exactly (262488 / 82410 rows). They share no
+# direct join column (their only relationship goes through AstroAnalysis), so
+# the comparable queries are full-table selects over each of the two matched
+# tables -- Postgres reads the identical dataset to MSSQL.
 # ---------------------------------------------------------------------------
 DEFAULT_QUERIES = {
-    # Wide, filtered select over the big AstroAnalysis table (non-PK filter).
-    "astro_wg": (
-        "SELECT * FROM AstroAnalysis WHERE wg = 'WG15'"
+    # Full scan of SpectrumGroup (262488 rows, identical in both databases).
+    "sg_scan": (
+        "SELECT * FROM {sg}"
     ),
-    # The RecommendedAstroAnalysis view, as a filter on the base table.
-    "astro_wg15_node1": (
-        "SELECT * FROM AstroAnalysis WHERE nodeID = 1 AND wg = 'WG15'"
-    ),
-    # 2-way join: SpectrumGroup to Target on targetID.
-    "sg_target_join": (
-        "SELECT sg.specGroupID, sg.fileName, t.cName, t.ra, t.dec "
-        "FROM SpectrumGroup sg, Target t "
-        "WHERE sg.targetID = t.targetID"
-    ),
-    # The real target-page 3-way join, mirrored from the production query
-    # (Target ⋈ RecommendedAstroAnalysis ⋈ SpectrumGroup). Uses the base table
-    # with the view's filter (nodeID = 1 AND wg = 'WG15') in case the view is
-    # absent, and drops the cname filter so it is representative (many rows)
-    # rather than a single target.
-    "targetpage_join": (
-        "SELECT t.targetID, t.ra, t.dec, t.cName, t.esoName, "
-        "       t.distVISTA, t.dist2mass, t.distUkidss, t.distSdss, "
-        "       t.distApass, t.distPpmxl, t.distUcac, sg.fileName "
-        "FROM Target t, AstroAnalysis raa, SpectrumGroup sg "
-        "WHERE raa.nodeID = 1 AND raa.wg = 'WG15' "
-        "  AND t.targetID = raa.targetID "
-        "  AND raa.specGroupID = sg.specGroupID"
-    ),
-    # Server-side aggregation (no row transfer).
-    "astro_agg": (
-        "SELECT wg, count(*) FROM AstroAnalysis GROUP BY wg"
+    # Full scan of Target (82410 rows, identical in both databases).
+    "target_scan": (
+        "SELECT * FROM {target}"
     ),
 }
 
@@ -196,6 +200,8 @@ def run_query(name, make_conn, conn_str, query, mssql=False, materialise=False,
     """Run one query once. Return (elapsed_seconds, row_count) or (error, None)."""
     tag = "ms" if mssql else "pg"
     path = f"/tmp/{tag}_{name}.parquet" if write_parquet else None
+    tables = MSSQL_TABLES if mssql else PG_TABLES
+    query = query.format(**tables)
     conn = None
     cur = None
     t0 = time.time()
