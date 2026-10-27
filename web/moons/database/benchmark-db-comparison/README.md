@@ -14,25 +14,25 @@ Dockerfile builds a Python image with the query drivers.
 Because it compares two *separate* databases, the comparison is only valid when
 they hold the **same data**. On every run it first counts the base tables that
 exist in both — `AstroAnalysis`, `SpectrumGroup`, `Target` — and prints the
-counts side by side, warning if they differ. If the row counts don't match, the
-timing numbers are not apples-to-apples — re-point it at databases that contain
-the same release, or use `--no-parity` to skip the check.
+counts side by side, noting if they differ. Only the tables that match are
+timed (see below); a mismatch on any other table is reported so you know the
+numbers for that table are not apples-to-apples. Use `--no-parity` to skip the
+check.
 
 ## What it measures
 
-Runs representative queries that use only the three tables present in both
-databases (`AstroAnalysis`, `SpectrumGroup`, `Target`), timing each against
-both backends. For each query it does a warm-up run (untimed) then `--repeat`
-timed runs and reports the minimum, plus the row count (so you can confirm both
-backends returned the same result set).
+Runs full-table scans over the tables that hold the **same rows in both
+databases** (`SpectrumGroup`, `Target`), timing each against both backends.
+`AstroAnalysis` is excluded: the Postgres stand-in only holds a small subset
+(1000 rows vs ~1.9M in the real MSSQL), so any query over it returns different
+results and would not be apples-to-apples. For each query it does a warm-up run
+(untimed) then `--repeat` timed runs and reports the minimum, plus the row count
+(so you can confirm both backends returned the same result set).
 
-| Query            | What it does                                        |
-|------------------|-----------------------------------------------------|
-| `astro_wg`       | `SELECT * FROM AstroAnalysis WHERE wg = 'WG15'` (wide rows, non-PK filter) |
-| `astro_wg15_node1` | the `RecommendedAstroAnalysis` filter on the base table (`nodeID = 1 AND wg = 'WG15'`) |
-| `sg_target_join` | `SpectrumGroup` to `Target` join on `targetID` |
-| `targetpage_join` | the real target-page 3-way join (Target + AstroAnalysis + SpectrumGroup) |
-| `astro_agg`      | `SELECT wg, count(*) ... GROUP BY wg` (no row transfer) |
+| Query         | What it does                                        |
+|---------------|-----------------------------------------------------|
+| `sg_scan`     | `SELECT * FROM SpectrumGroup` (262488 rows, identical in both DBs) |
+| `target_scan` | `SELECT * FROM Target` (82410 rows, identical in both DBs) |
 
 Postgres uses ADBC `fetch_record_batch()` streaming (app's `write_results`);
 MSSQL uses `arrow_reader(batch_size=...)` streaming (app's `_MssqlCursor`).
@@ -79,10 +79,11 @@ python benchmark.py --pg-url ... --mssql-conn ... --no-parity
 
 ## Interpreting results
 
-- **Parity first.** If the row-count check reports MISMATCH, stop — the two
-  databases don't hold the same data, so the timing comparison is invalid.
+- **Parity first.** The parity check prints each table's row count in both
+  databases. Only tables that match are timed; if the timed tables differ (a
+  MISMATCH in the parity block), stop — the comparison is invalid for them.
 - **Row counts per query** confirm both backends returned the same result set.
-  A difference there usually means a view resolved differently or a data gap.
+  A difference means the datasets differ (or a view resolved differently).
 - **`ratio`** = `mssql / postgres` elapsed; >1.0 = MSSQL slower.
 - Use `--materialise` to see whether the gap is in the streaming reader or in
   the whole-result `arrow()` path.
