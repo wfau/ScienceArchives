@@ -1,0 +1,6 @@
+# Benchmark drivers only (the Python code that does the measurements).
+adbc-driver-manager==1.7.0
+adbc_driver_postgresql==1.7.0
+pyarrow==22.0.0
+mssql-python==1.16.0
+numpy==2.1.3

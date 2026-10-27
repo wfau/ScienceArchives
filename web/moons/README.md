@@ -47,6 +47,12 @@ Copy the environment template `env-template` to `.env` and update the entries as
     healthcheck/depends_on; in production MSSQL is an external, already-running
     host. Results are written to a parquet file for every backend.
 
+    MSSQL query connections are opened in autocommit mode (queries are always
+    SELECT against a read-only user), and the result is streamed in batches.
+    The row batch size is configurable with `QUERY_DB_BATCH_SIZE` (default
+    8192); reduce it for very wide rows to lower memory use and surface rows
+    sooner. Postgres/ADBC is already streaming and ignores this.
+
     Each Postgres schema is a data release and maps to a separate MSSQL
     database (one database per release). Configure per-release connections
     with `QUERY_DB_CONNECTION_STRINGS` (JSON mapping schema ->

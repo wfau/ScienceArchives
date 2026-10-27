@@ -1,0 +1,18 @@
+# Builds the benchmark image only. There are no databases here: point the
+# benchmark at your existing Postgres and MSSQL instances via the PG_URL and
+# MSSQL_CONN environment variables (see README).
+#
+# Run from a machine that can reach both databases, e.g.:
+#   PG_URL=postgresql://user:pass@db:5432/gesdr5 \
+#   MSSQL_CONN='Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes' \
+#   docker compose up --build bench
+services:
+
+  bench:
+    build: .
+    image: db-bench:local
+    environment:
+      # mssql-python result batch size under test (mirrors QUERY_DB_BATCH_SIZE).
+      QUERY_DB_BATCH_SIZE: ${QUERY_DB_BATCH_SIZE:-8192}
+      PG_URL: ${PG_URL:?set PG_URL to your Postgres query database}
+      MSSQL_CONN: ${MSSQL_CONN:?set MSSQL_CONN to your MSSQL query database}

@@ -34,6 +34,9 @@ QUERY_PUBLIC_DB_CONNECTION=file:///app/resources/mock-gesiDR5.sqlite3
 QUERY_DB_CONNECTION_STRINGS_FILE=/app/resources/query_databases.json
 # ...or inline as a single JSON string:
 # QUERY_DB_CONNECTION_STRINGS={"gesdr5":{"driver":"mssql","proprietary":"Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes","public":"Server=mssql;Database=gesdr5;Uid=sa;Pwd=...;TrustServerCertificate=yes"}}
+# MSSQL result batch size (rows per batch). Reduce for very wide rows to lower
+# memory use and surface rows sooner. Postgres/ADBC ignores this.
+# QUERY_DB_BATCH_SIZE=2048
 MSSQL_SA_PASSWORD=YourStrong!Passw0rd
 
 CELERY_BROKER=amqp://rabbitmq:5672/
