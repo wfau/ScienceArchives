@@ -9,6 +9,7 @@ from openai import OpenAI
 from .models import SQLGenerationTask
 from .helpers import schema_view_schemas
 from queries.models import QueryPermissions
+from queries.tasks import _resolve_driver, MSSQL_DRIVER
 
 import logging
 logger = logging.getLogger(__name__)
@@ -100,6 +101,10 @@ def generate_sql_celery_task(self, task_id: str):
 
         schema_key = task.data_release  # Get database release context
 
+        # Resolve the SQL dialect for this release so the prompt can require
+        # dialect-correct SQL (e.g. MSSQL vs PostgreSQL function names).
+        is_mssql = _resolve_driver(schema_key) == MSSQL_DRIVER
+
         if schema_key in raw_schemas:
             schema_data = raw_schemas[schema_key]
 
@@ -128,7 +133,15 @@ def generate_sql_celery_task(self, task_id: str):
             "whose foreign keys connect them, and include it in the query.\n"
             "4. Follow the full foreign key path even if it requires multiple intermediary tables.\n"
             "5. If no foreign key path exists between two tables, do not attempt to join them.\n\n"
-            "COLUMN NAMES:\n"
+            "SQL DIALECT:\n"
+            f"- Generate SQL for {('Microsoft SQL Server (MSSQL/T-SQL)' if is_mssql else 'PostgreSQL')}.\n"
+            "- Use only syntax and functions this database supports; do not mix dialects.\n"
+            + ("- Use TOP for limiting rows, [] (or no quoting) for identifiers, "
+               "GETDATE() for current time, and T-SQL date functions.\n"
+               if is_mssql else
+               "- Use LIMIT for limiting rows, double-quotes for identifiers, "
+               "CURRENT_TIMESTAMP for current time, and PostgreSQL date/time functions.\n")
+            + "COLUMN NAMES:\n"
             "- For tables, use ONLY column names exactly as they appear in the 'columns' field.\n"
             "- For views, use the column names as shown in the view's 'sql' definition "
             "(for 'SELECT *' / pass-through views, this is all columns of the view's source table; "
