@@ -1,6 +1,7 @@
 import json
 import importlib
 import time
+import struct
 from celery import shared_task
 from django.utils import timezone
 from django.conf import settings
@@ -31,6 +32,28 @@ def compress_markdown(markdown_blocks):
     return " ".join(parts)
 
 
+def round_default(col_default, col_type):
+    """Round a numeric default to the precision of its column type.
+
+    The value stored in the database for a numeric column is the nearest value
+    representable in that column's storage type (e.g. a `real`/float32 column
+    stores -999999488 for a -9.999995e+08 default, not -999999500). Returning
+    the type-rounded value keeps the sentinel the LLM sees in step with the
+    value actually stored, so comparisons like 'col > default' match reality.
+    """
+    if col_default is None:
+        return col_default
+    try:
+        num = float(col_default)
+    except (TypeError, ValueError):
+        return col_default
+    if col_type == 'real':
+        return repr(struct.unpack('f', struct.pack('f', num))[0])
+    if col_type in ('int', 'bigint', 'smallint', 'tinyint'):
+        return repr(int(num))
+    return col_default
+
+
 def simplify_table(table_def):
     # Remap references into a clearly named FK structure for the LLM
     foreign_keys = [
@@ -49,7 +72,7 @@ def simplify_table(table_def):
             k: {
                 "type": v.get("type"),
                 "description": v.get("description"),
-                "default": v.get("default")
+                "default": round_default(v.get("default"), v.get("type"))
             }
             for k, v in table_def.get("columns", {}).items()
         },
@@ -72,7 +95,7 @@ def simplify_view(view_def):
     # which cannot be derived from base tables.
     if view_def.get("is_complex"):
         entry["columns"] = {
-            k: {"type": v.get("type"), "description": v.get("description"), "default": v.get("default")}
+            k: {"type": v.get("type"), "description": v.get("description"), "default": round_default(v.get("default"), v.get("type"))}
             for k, v in (view_def.get("columns") or {}).items()
         }
 
