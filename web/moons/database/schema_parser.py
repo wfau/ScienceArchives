@@ -2,6 +2,7 @@
 import argparse
 import json
 import re
+import struct
 
 # column definition
 # type + optional not null, optional default value (scientific notation decimal or a string)
@@ -13,6 +14,27 @@ constraint_pattern = re.compile(constraint_def, re.IGNORECASE)
 
 reference_def = r'\(([^)]+)\)\s*references\s+([A-Za-z_]\w*)\s*\(\s*([^)]+)\s*\)'
 reference_pattern = re.compile(reference_def, re.IGNORECASE)
+
+def round_default(col_default, col_type):
+    """Round a numeric default to the precision of its column type.
+
+    The value stored in the database for a numeric column is the nearest value
+    representable in that column's storage type (e.g. a `real`/float32 column
+    stores -999999488 for a -9.999995e+08 default, not -999999500). Returning
+    the type-rounded value keeps the sentinel in step with the value actually
+    stored, so comparisons like 'col > default' match reality.
+    """
+    if col_default is None:
+        return col_default
+    try:
+        num = float(col_default)
+    except (TypeError, ValueError):
+        return col_default
+    if col_type == 'real':
+        return repr(struct.unpack('f', struct.pack('f', num))[0])
+    if col_type in ('int', 'bigint', 'smallint', 'tinyint'):
+        return repr(int(num))
+    return col_default
 
 def extract_comment(line):
     if line.startswith('/H'):
@@ -51,7 +73,7 @@ def extract_column_info(line):
                     col_length = 1
                 elif col_type == 'timestamp':
                     col_length = 8
-            col_default = groups[5]
+            col_default = round_default(groups[5], col_type)
             col_info = {
                 'name': col_name,
                 'type': col_type,
